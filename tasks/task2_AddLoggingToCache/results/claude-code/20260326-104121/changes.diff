@@ -1,0 +1,2046 @@
+diff --git a/Track/Cache.swift b/Track/Cache.swift
+index fda9dd9..5f49311 100755
+--- a/Track/Cache.swift
++++ b/Track/Cache.swift
+@@ -26,29 +26,29 @@ import Foundation
+  CacheGenerator, support `for...in` loops, it is thread safe.
+  */
+ open class CacheGenerator : IteratorProtocol {
+-    
++
+     public typealias Element = (String, AnyObject)
+-    
++
+     fileprivate var _memoryCacheGenerator: MemoryCacheGenerator
+-    
++
+     fileprivate var _diskCacheGenerator: DiskCacheGenerator
+-    
++
+     fileprivate var _memoryCache: MemoryCache
+-    
++
+     fileprivate let _semaphoreLock: DispatchSemaphore = DispatchSemaphore(value: 1)
+-    
++
+     fileprivate init(memoryCacheGenerator: MemoryCacheGenerator, diskCacheGenerator: DiskCacheGenerator, memoryCache: MemoryCache) {
+         self._memoryCacheGenerator = memoryCacheGenerator
+         self._diskCacheGenerator = diskCacheGenerator
+         self._memoryCache = memoryCache
+     }
+-    
++
+     /**
+      Advance to the next element and return it, or `nil` if no next element exists.
+-     
++
+      - returns: next element
+      */
+-    
++
+     open func next() -> Element? {
+         if let element = _memoryCacheGenerator.next() {
+             self._diskCacheGenerator.shift()
+@@ -84,33 +84,33 @@ let TrackCacheDefauleName: String = "defaultTrackCache"
+  And support thread safe `for`...`in` loops, map, forEach...
+  */
+ open class Cache {
+-    
++
+     /**
+      cache name, used to create disk cache folder
+      */
+     public let name: String
+-    
++
+     /**
+      Thread safe memeory cache
+      */
+     public let memoryCache: MemoryCache
+-    
++
+     /**
+      Thread safe disk cache
+      */
+     public let diskCache: DiskCache
+-    
++
+     fileprivate let _queue: DispatchQueue = DispatchQueue(label: TrackCachePrefix + (String(describing: Cache.self)), attributes: DispatchQueue.Attributes.concurrent)
+-    
++
+     /**
+      A share cache, contain a thread safe memory cache and a thread safe diskcache
+      */
+     public static let shareInstance = Cache(name: TrackCacheDefauleName)!
+-    
++
+     /**
+      Design constructor
+      The same name has the same diskCache, but different memorycache.
+-     
++
+      - parameter name: cache name
+      - parameter path: diskcache path
+      */
+@@ -122,10 +122,10 @@ open class Cache {
+         self.name = name
+         self.memoryCache = MemoryCache.shareInstance
+     }
+-    
++
+     /**
+      Convenience constructor, use default path Library/Caches/
+-     
++
+      - parameter name: cache name
+      */
+     public convenience init?(name: String){
+@@ -140,135 +140,204 @@ public extension Cache {
+     /**
+      Async store an object for the unique key in the memory cache and disk cache
+      completion will be call after object has been store in memory cache and disk cache
+-     
+-     - parameter object:     object must be implement NSCoding protocal
+-     - parameter key:        unique key
+-     - parameter completion: stroe completion call back
++
++     - parameter object:       object must be implement NSCoding protocal
++     - parameter key:          unique key
++     - parameter completion:   store completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: NSCoding, forKey key: String, completion: CacheAsyncCompletion?) {
++    func set(object: NSCoding, forKey key: String, completion: CacheAsyncCompletion?,
++             traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, object); return }
+-            strongSelf.set(object: object, forKey: key)
++            strongSelf.set(object: object, forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, object)
+         }
+-     }
+-    
++    }
++
+     /**
+      Async search object according to unique key
+      search from memory cache first, if not found, will search from diskCache
+-     
+-     - parameter key:        object unique key
+-     - parameter completion: search completion call back
++
++     - parameter key:          object unique key
++     - parameter completion:   search completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func object(forKey key: String, completion: CacheAsyncCompletion?) {
++    func object(forKey key: String, completion: CacheAsyncCompletion?,
++                traceContext: TraceContext? = nil) {
++        // Capture context before the queue hop so each concurrent call has its
++        // own independent reference — no shared mutable state, no leakage.
++        let capturedContext = traceContext
++
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { return }
+-            strongSelf.memoryCache.object(forKey: key) { [weak self] (memCache, memKey, memObject) in
+-                guard let strongSelf = self else { return }
+-                if memObject != nil {
+-                    strongSelf._queue.async { [weak self] in
+-                        completion?(self, memKey, memObject)
++
++            // Start the top-level Cache.get span inside the async block for
++            // accurate wall-clock timing. Use capturedContext as parent.
++            let backend = TraceConfiguration.backend
++            let topSpan: TraceContext? = capturedContext.flatMap { parent in
++                backend.startSpan(
++                    named: "Cache.get",
++                    parent: parent,
++                    attributes: CacheSpanAttributes(
++                        cacheName: strongSelf.name, layer: .unified,
++                        operation: .get, key: key,
++                        outcome: .miss,   // placeholder; overwritten when span ends
++                        byteSize: nil, trimDimension: nil
++                    )
++                )
++            }
++            // Sub-operations (MemoryCache.get, DiskCache.get, promotion set)
++            // are children of the Cache.get span, not the original caller context.
++            let subContext: TraceContext? = topSpan ?? capturedContext
++
++            strongSelf.memoryCache.object(forKey: key, completion: { [weak strongSelf] (_, memKey, memObject) in
++                guard let s = strongSelf else { return }
++
++                if let memObject = memObject {
++                    // Memory hit — end Cache.get span immediately.
++                    if let topSpan = topSpan {
++                        backend.endSpan(topSpan, finalAttributes: CacheSpanAttributes(
++                            cacheName: s.name, layer: .unified,
++                            operation: .get, key: key,
++                            outcome: .hit, byteSize: nil, trimDimension: nil
++                        ), error: nil)
+                     }
+-                }
+-                else {
+-                    strongSelf.diskCache.object(forKey: key) { [weak self] (diskCache, diskKey, diskObject) in
+-                        guard let strongSelf = self else { return }
+-                        if let diskKey = diskKey, let diskCache = diskCache {
+-                            strongSelf.memoryCache.set(object: diskCache, forKey: diskKey, completion: nil)
++                    s._queue.async { [weak s] in completion?(s, memKey, memObject) }
++                } else {
++                    // Memory miss — fall through to disk.
++                    s.diskCache.object(forKey: key, completion: { [weak s] (_, diskKey, diskObject) in
++                        guard let s = s else { return }
++
++                        // Promote disk hit into memory cache as child of Cache.get.
++                        if let dk = diskKey, let dobj = diskObject as? AnyObject {
++                            s.memoryCache.set(object: dobj, forKey: dk, completion: nil,
++                                              traceContext: subContext)
+                         }
+-                        strongSelf._queue.async { [weak self] in
+-                            completion?(self, diskKey, diskObject)
++
++                        let outcome: CacheOutcome = diskObject != nil ? .hit : .miss
++                        if let topSpan = topSpan {
++                            backend.endSpan(topSpan, finalAttributes: CacheSpanAttributes(
++                                cacheName: s.name, layer: .unified,
++                                operation: .get, key: key,
++                                outcome: outcome, byteSize: nil, trimDimension: nil
++                            ), error: nil)
+                         }
+-                    }
++                        s._queue.async { [weak s] in completion?(s, diskKey, diskObject) }
++
++                    }, traceContext: subContext)   // DiskCache.get is child of Cache.get
+                 }
+-            }
++            }, traceContext: subContext)           // MemoryCache.get is child of Cache.get
+         }
+     }
+-    
++
+     /**
+      Async remove object from memory cache and disk cache
+-     
+-     - parameter key:        object unique key
+-     - parameter completion: remove completion call back
++
++     - parameter key:          object unique key
++     - parameter completion:   remove completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String, completion: CacheAsyncCompletion?) {
++    func removeObject(forKey key: String, completion: CacheAsyncCompletion?,
++                      traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, nil); return }
+-            strongSelf.removeObject(forKey: key)
++            strongSelf.removeObject(forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, nil)
+         }
+-
+     }
+-    
++
+     /**
+      Async remove all objects
+-     
+-     - parameter completion: remove completion call back
++
++     - parameter completion:   remove completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects(_ completion: CacheAsyncCompletion?) {
++    func removeAllObjects(_ completion: CacheAsyncCompletion?,
++                          traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.removeAllObjects()
++            strongSelf.removeAllObjects(traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+-
+     }
+-    
++
+     //  MARK: Sync
+     /**
+      Sync store an object for the unique key in the memory cache and disk cache
+-     
+-     - parameter object:     object must be implement NSCoding protocal
+-     - parameter key:        unique key
+-     - parameter completion: stroe completion call back
++
++     - parameter object:       object must be implement NSCoding protocal
++     - parameter key:          unique key
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: NSCoding, forKey key: String) {
+-        memoryCache.set(object: object, forKey: key)
+-        diskCache.set(object: object, forKey: key)
++    func set(object: NSCoding, forKey key: String, traceContext: TraceContext? = nil) {
++        _withSpan(named: "Cache.set", operation: .set, key: key,
++                  cacheName: name, layer: .unified, context: traceContext) { childSpan in
++            memoryCache.set(object: object, forKey: key, traceContext: childSpan)
++            diskCache.set(object: object, forKey: key, traceContext: childSpan)
++            return ((), .set, nil)
++        }
+     }
+-    
++
+     /**
+      Sync search an object according to unique key
+      search from memory cache first, if not found, will search from diskCache
+-     
+-     - parameter key:        object unique key
+-     - parameter completion: search completion call back
++
++     - parameter key:          object unique key
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    
+-    func object(forKey key: String) -> AnyObject? {
+-        if let object = memoryCache.object(forKey: key) {
+-            return object
+-        }
+-        else {
+-            if let object = diskCache.object(forKey: key) {
+-                memoryCache.set(object: object, forKey: key)
+-                return object
++    func object(forKey key: String, traceContext: TraceContext? = nil) -> AnyObject? {
++        return _withSpan(named: "Cache.get", operation: .get, key: key,
++                         cacheName: name, layer: .unified, context: traceContext) { childSpan in
++            if let object = memoryCache.object(forKey: key, traceContext: childSpan) {
++                return (object, .hit, nil)
++            }
++            if let object = diskCache.object(forKey: key, traceContext: childSpan) {
++                memoryCache.set(object: object, forKey: key, traceContext: childSpan)
++                return (object, .hit, nil)
+             }
++            return (nil, .miss, nil)
+         }
+-        return nil
+     }
+-    
++
+     /**
+      Sync remove object from memory cache and disk cache
+-     
+-     - parameter key:        object unique key
++
++     - parameter key:          object unique key
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String) {
+-        memoryCache.removeObject(forKey: key)
+-        diskCache.removeObject(forKey: key)
++    func removeObject(forKey key: String, traceContext: TraceContext? = nil) {
++        _withSpan(named: "Cache.remove", operation: .remove, key: key,
++                  cacheName: name, layer: .unified, context: traceContext) { childSpan in
++            memoryCache.removeObject(forKey: key, traceContext: childSpan)
++            diskCache.removeObject(forKey: key, traceContext: childSpan)
++            return ((), .removed, nil)
++        }
+     }
+-    
++
+     /**
+      Sync remove all objects
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects() {
+-        memoryCache.removeAllObjects()
+-        diskCache.removeAllObjects()
++    func removeAllObjects(traceContext: TraceContext? = nil) {
++        _withSpan(named: "Cache.removeAll", operation: .removeAll, key: nil,
++                  cacheName: name, layer: .unified, context: traceContext) { childSpan in
++            memoryCache.removeAllObjects(traceContext: childSpan)
++            diskCache.removeAllObjects(traceContext: childSpan)
++            return ((), .removed, nil)
++        }
+     }
+-    
++
+     /**
+      subscript method, sync set and get
+-     
++
++     Note: subscript access is not traced. Use object(forKey:traceContext:) and
++     set(object:forKey:traceContext:) for traced access.
++
+      - parameter key: object unique key
+      */
+     subscript(key: String) -> NSCoding? {
+@@ -295,15 +364,15 @@ extension Cache : Sequence {
+      CacheGenerator
+      */
+     public typealias Iterator = CacheGenerator
+-    
++
+     /**
+      Returns a generator over the elements of this sequence.
+      It is thread safe, if you call `generate()`, remember release it,
+      otherwise maybe it lead to deadlock.
+-     
++
+      - returns: A generator
+      */
+-    
++
+     public func makeIterator() -> CacheGenerator {
+         var generatror: CacheGenerator
+         generatror = CacheGenerator(memoryCacheGenerator: memoryCache.makeIterator(), diskCacheGenerator: diskCache.makeIterator(), memoryCache: memoryCache)
+diff --git a/Track/DiskCache.swift b/Track/DiskCache.swift
+index 9be215a..ca9f4e5 100755
+--- a/Track/DiskCache.swift
++++ b/Track/DiskCache.swift
+@@ -20,15 +20,15 @@
+ //OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ //SOFTWARE.
+ 
+-/** 
++/**
+  DiskCache
+- 
++
+  thread safe = concurrent + semaphore lock
+- 
++
+  sync
+  thread safe write = write + semaphore lock
+  thread safe read = read + semaphore lokc
+- 
++
+  async
+  thread safe write = async concurrent queue + thread safe sync write
+  thread safe read = async concurrent queue + thread safe sync read
+@@ -41,7 +41,7 @@ import QuartzCore
+  *  FastGeneratorType, inherit GeneratorType and provide a method to shift offset.
+  */
+ public protocol FastGeneratorType: IteratorProtocol {
+-    
++
+     /**
+      Shift like next, but there is no return value.
+      If you just shift offset, it`s implementation should fast than `next()`
+@@ -53,27 +53,27 @@ public protocol FastGeneratorType: IteratorProtocol {
+  DiskCacheGenerator, support `for...in` `map` `forEach`..., it is thread safe.
+  */
+ open class DiskCacheGenerator : FastGeneratorType {
+-    
++
+     public typealias Element = (String, Any)
+-    
++
+     fileprivate var _lruGenerator: LRUGenerator<DiskCacheObject>
+-    
++
+     fileprivate var _diskCache: DiskCache
+-    
++
+     fileprivate var _completion: (() -> Void)?
+-    
++
+     fileprivate init(generate: LRUGenerator<DiskCacheObject>, diskCache: DiskCache, completion: (() -> Void)?) {
+         self._lruGenerator = generate
+         self._diskCache = diskCache
+         self._completion = completion
+     }
+-    
++
+     /**
+      Advance to the next element and return it, or `nil` if no next element exists.
+-     
++
+      - returns: next element
+      */
+-    
++
+     open func next() -> Element? {
+         if let key = _lruGenerator.next()?.key {
+             if  let value = _diskCache._unsafeObject(forKey: key) {
+@@ -82,31 +82,31 @@ open class DiskCacheGenerator : FastGeneratorType {
+         }
+         return nil
+     }
+-    
++
+     /**
+      Shift like next, but there is no return value and shift fast.
+      */
+     open func shift() {
+         let _ = _lruGenerator.shift()
+     }
+-    
++
+     deinit {
+         _completion?()
+     }
+ }
+ 
+ private class DiskCacheObject: LRUObject {
+-    
++
+     var key: String = ""
+     var cost: UInt = 0
+     var date: Date = Date()
+-    
++
+     init (key: String, cost: UInt = 0, date: Date) {
+         self.key = key
+         self.cost = cost
+         self.date = date
+     }
+-    
++
+     convenience init (key: String, cost: UInt = 0) {
+         self.init(key: key, cost: cost, date: Date())
+     }
+@@ -121,17 +121,17 @@ public typealias DiskCacheAsyncCompletion = (_ cache: DiskCache?, _ key: String?
+  And support thread safe `for`...`in` loops, map, forEach...
+  */
+ open class DiskCache {
+-    
++
+     /**
+      DiskCache folder name
+      */
+     public let name: String
+-    
++
+     /**
+      DiskCache folder path URL
+      */
+     public let cacheURL: URL
+-    
++
+     /**
+      Disk cache object total count
+      */
+@@ -143,7 +143,7 @@ open class DiskCache {
+             return count
+         }
+     }
+-    
++
+     /**
+      Disk cache object total cost (byte)
+      */
+@@ -155,9 +155,9 @@ open class DiskCache {
+             return cost
+         }
+     }
+-    
++
+     fileprivate var _countLimit: UInt = UInt.max
+-    
++
+     /**
+      The maximum total quantity
+      */
+@@ -175,9 +175,9 @@ open class DiskCache {
+             return countLimit
+         }
+     }
+-    
++
+     fileprivate var _costLimit: UInt = UInt.max
+-    
++
+     /**
+      The maximum disk cost limit
+      */
+@@ -195,9 +195,9 @@ open class DiskCache {
+             return costLimit
+         }
+     }
+-    
++
+     fileprivate var _ageLimit: TimeInterval = Double.greatestFiniteMagnitude
+-    
++
+     /**
+      Disk cache object age limit
+      */
+@@ -215,25 +215,25 @@ open class DiskCache {
+             return ageLimit
+         }
+     }
+-    
++
+     fileprivate let _cache: LRU = LRU<DiskCacheObject>()
+-    
++
+     fileprivate let _queue: DispatchQueue = DispatchQueue(label: TrackCachePrefix + (String(describing: DiskCache.self)), attributes: DispatchQueue.Attributes.concurrent)
+-    
++
+     fileprivate let _semaphoreLock: DispatchSemaphore = DispatchSemaphore(value: 1)
+-    
++
+     /**
+      A share disk cache, name "defauleTrackCache" path "Library/Caches/"
+      */
+     public static let shareInstance = DiskCache(name: TrackCacheDefauleName)!
+-    
++
+     /**
+      Design constructor
+      The same name and path has the same disk folder Cache
+-     
++
+      - parameter name: disk cache folder name
+      - parameter path: disk cache folder path
+-     
++
+      - returns: if no name or path will be fail
+      */
+     public init?(name: String, path: String) {
+@@ -242,7 +242,7 @@ open class DiskCache {
+         }
+         self.name = name
+         self.cacheURL = URL(fileURLWithPath: path).appendingPathComponent(TrackCachePrefix + name, isDirectory: false)
+-        
++
+         _lock()
+         _queue.async {
+             _ = self._createCacheDir()
+@@ -250,12 +250,12 @@ open class DiskCache {
+             self._unlock()
+         }
+     }
+-    
++
+     /**
+      convenience constructor
+-     
++
+      - parameter name: disk cache foler name
+-     
++
+      - returns: if no name will be fail
+      */
+     public convenience init?(name: String) {
+@@ -264,214 +264,313 @@ open class DiskCache {
+ }
+ 
+ //  MARK:
+-//  MARK: Public 
++//  MARK: Public
+ public extension DiskCache {
+     //  MARK: Async
+     /**
+      Async store an object for the unique key in disk cache and store object info to linked list head
+      completion will be call after object has been store in disk
+-     
+-     - parameter object:     object must be implement NSCoding protocal
+-     - parameter key:        unique key
+-     - parameter completion: stroe completion call back
++
++     - parameter object:       object must be implement NSCoding protocal
++     - parameter key:          unique key
++     - parameter completion:   store completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: NSCoding, forKey key: String, completion: DiskCacheAsyncCompletion?) {
++    func set(object: NSCoding, forKey key: String, completion: DiskCacheAsyncCompletion?,
++             traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, object); return }
+-            strongSelf.set(object: object, forKey: key)
++            strongSelf.set(object: object, forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, object)
+         }
+     }
+-    
++
+     /**
+      Async search object according to unique key
+      if find object, object info will move to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func object(forKey key: String, completion: DiskCacheAsyncCompletion?) {
++    func object(forKey key: String, completion: DiskCacheAsyncCompletion?,
++                traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, nil); return }
+-            let object = strongSelf.object(forKey: key)
++            let object = strongSelf.object(forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, object)
+         }
+     }
+-    
++
+     /**
+      Async remove object according to unique key from disk and remove object info from linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String, completion: DiskCacheAsyncCompletion?) {
++    func removeObject(forKey key: String, completion: DiskCacheAsyncCompletion?,
++                      traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, nil); return }
+-            strongSelf.removeObject(forKey: key)
++            strongSelf.removeObject(forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, nil)
+         }
+     }
+-    
++
+     /**
+      Async remove all object and info from disk and linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects(_ completion: DiskCacheAsyncCompletion?) {
++    func removeAllObjects(_ completion: DiskCacheAsyncCompletion?,
++                          traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.removeAllObjects()
++            strongSelf.removeAllObjects(traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim disk cache total to countLimit according LRU
+-     
+-     - parameter countLimit: maximum countLimit
++
++     - parameter countLimit:   maximum countLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCount countLimit: UInt, completion: DiskCacheAsyncCompletion?) {
++    func trim(toCount countLimit: UInt, completion: DiskCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toCount: countLimit)
++            strongSelf.trim(toCount: countLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim disk cache totalcost to costLimit according LRU
+-     
+-     - parameter costLimit:  maximum costLimit
++
++     - parameter costLimit:   maximum costLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCost costLimit: UInt, completion: DiskCacheAsyncCompletion?) {
++    func trim(toCost costLimit: UInt, completion: DiskCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toCost: costLimit)
++            strongSelf.trim(toCost: costLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim disk cache objects which age greater than ageLimit
+-     
+-     - parameter ageLimit:  maximum ageLimit
++
++     - parameter ageLimit:    maximum ageLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toAge ageLimit: TimeInterval, completion: DiskCacheAsyncCompletion?) {
++    func trim(toAge ageLimit: TimeInterval, completion: DiskCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toAge: ageLimit)
++            strongSelf.trim(toAge: ageLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     //  MARK: Sync
+     /**
+      Sync store an object for the unique key in disk cache and store object info to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: NSCoding, forKey key: String) {
++    func set(object: NSCoding, forKey key: String, traceContext: TraceContext? = nil) {
+         guard let fileURL = _generateFileURL(key, path: cacheURL) else { return }
+         let filePath = fileURL.path
+-        _lock()
+-        if NSKeyedArchiver.archiveRootObject(object, toFile: filePath) == true {
+-            do {
+-                let date: Date = Date()
+-                try FileManager.default.setAttributes([FileAttributeKey.modificationDate : date], ofItemAtPath: filePath)
+-                let infosDic: [URLResourceKey : AnyObject] = try (fileURL as NSURL).resourceValues(forKeys: [URLResourceKey.totalFileAllocatedSizeKey]) as [URLResourceKey : AnyObject]
+-                var fileSize: UInt = 0
+-                if let fileSizeNumber = infosDic[URLResourceKey.totalFileAllocatedSizeKey] as? NSNumber {
+-                    fileSize = fileSizeNumber.uintValue
+-                }
+-                _cache.set(object: DiskCacheObject(key: key, cost: fileSize, date: date), forKey: key)
+-            } catch {}
+-        }
+-        if _cache.cost > _costLimit {
+-            _unsafeTrim(toCost: _costLimit)
++
++        // Capture eviction info inside the lock; emit sub-span outside.
++        var evictionContext: TraceContext? = nil
++        var evictedBytes: UInt = 0
++        var evictedCount: Int = 0
++        var writtenBytes: UInt = 0
++
++        _withSpan(named: "DiskCache.set", operation: .set, key: key,
++                  cacheName: name, layer: .disk, context: traceContext) { childSpan in
++            _lock()
++            if NSKeyedArchiver.archiveRootObject(object, toFile: filePath) == true {
++                do {
++                    let date: Date = Date()
++                    try FileManager.default.setAttributes([FileAttributeKey.modificationDate : date], ofItemAtPath: filePath)
++                    let infosDic: [URLResourceKey : AnyObject] = try (fileURL as NSURL).resourceValues(forKeys: [URLResourceKey.totalFileAllocatedSizeKey]) as [URLResourceKey : AnyObject]
++                    var fileSize: UInt = 0
++                    if let fileSizeNumber = infosDic[URLResourceKey.totalFileAllocatedSizeKey] as? NSNumber {
++                        fileSize = fileSizeNumber.uintValue
++                    }
++                    _cache.set(object: DiskCacheObject(key: key, cost: fileSize, date: date), forKey: key)
++                    writtenBytes = fileSize
++                } catch {}
++            }
++            let beforeCount = Int(_cache.count)
++            let beforeCost  = _cache.cost
++            if _cache.cost > _costLimit {
++                _unsafeTrim(toCost: _costLimit)
++            }
++            if _cache.count > _countLimit {
++                _unsafeTrim(toCount: _countLimit)
++            }
++            let afterCount = Int(_cache.count)
++            let afterCost  = _cache.cost
++            _unlock()
++
++            evictedCount = max(0, beforeCount - afterCount)
++            evictedBytes = beforeCost > afterCost ? beforeCost - afterCost : 0
++            evictionContext = childSpan
++
++            return ((), .set, writtenBytes)
+         }
+-        if _cache.count > _countLimit {
+-            _unsafeTrim(toCount: _countLimit)
++
++        // Emit inline eviction sub-span outside the lock
++        if evictedCount > 0, let evCtx = evictionContext {
++            let backend = TraceConfiguration.backend
++            let evAttrs = CacheSpanAttributes(
++                cacheName: name, layer: .disk, operation: .trim,
++                key: nil, outcome: .evicted,
++                byteSize: evictedBytes, trimDimension: nil
++            )
++            if let evSpan = backend.startSpan(named: "DiskCache.autoEvict",
++                                              parent: evCtx, attributes: evAttrs) {
++                backend.endSpan(evSpan, finalAttributes: evAttrs, error: nil)
++            }
+         }
+-        _unlock()
+     }
+-    
++
+     /**
+      Sync search object according to unique key
+      if find object, object info will move to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    
+-    func object(forKey key: String) -> AnyObject? {
+-        _lock()
+-        let object = _unsafeObject(forKey: key)
+-        _unlock()
+-        return object
++    func object(forKey key: String, traceContext: TraceContext? = nil) -> AnyObject? {
++        return _withSpan(named: "DiskCache.get", operation: .get, key: key,
++                         cacheName: name, layer: .disk, context: traceContext) { _ in
++            _lock()
++            let obj = _unsafeObject(forKey: key)
++            let bytes = _cache.object(forKey: key)?.cost
++            _unlock()
++            let outcome: CacheOutcome = obj != nil ? .hit : .miss
++            return (obj, outcome, bytes)
++        }
+     }
+-    
++
+     /**
+      Sync remove object according to unique key from disk and remove object info from linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String) {
++    func removeObject(forKey key: String, traceContext: TraceContext? = nil) {
+         guard let fileURL = _generateFileURL(key, path: cacheURL) else { return }
+         let filePath = fileURL.path
+-        _lock()
+-        if FileManager.default.fileExists(atPath: filePath) {
+-            do {
+-                try FileManager.default.removeItem(atPath: filePath)
+-                _ = _cache.removeObject(forKey: key)
+-            } catch {}
++        _withSpan(named: "DiskCache.remove", operation: .remove, key: key,
++                  cacheName: name, layer: .disk, context: traceContext) { _ in
++            _lock()
++            var existed = false
++            if FileManager.default.fileExists(atPath: filePath) {
++                existed = true
++                do {
++                    try FileManager.default.removeItem(atPath: filePath)
++                    _ = _cache.removeObject(forKey: key)
++                } catch {}
++            }
++            _unlock()
++            let outcome: CacheOutcome = existed ? .removed : .notFound
++            return ((), outcome, nil)
+         }
+-        _unlock()
+     }
+-    
++
+     /**
+      Sync remove all object and info from disk and linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects() {
+-        _lock()
+-        if FileManager.default.fileExists(atPath: self.cacheURL.path) {
+-            do {
+-                try FileManager.default.removeItem(atPath: self.cacheURL.path)
+-                _cache.removeAllObjects()
+-            } catch {}
++    func removeAllObjects(traceContext: TraceContext? = nil) {
++        _withSpan(named: "DiskCache.removeAll", operation: .removeAll, key: nil,
++                  cacheName: name, layer: .disk, context: traceContext) { _ in
++            _lock()
++            if FileManager.default.fileExists(atPath: self.cacheURL.path) {
++                do {
++                    try FileManager.default.removeItem(atPath: self.cacheURL.path)
++                    _cache.removeAllObjects()
++                } catch {}
++            }
++            _unlock()
++            return ((), .removed, nil)
+         }
+-        _unlock()
+     }
+-    
++
+     /**
+-     Async trim disk cache total to countLimit according LRU
++     Sync trim disk cache total to countLimit according LRU
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCount countLimit: UInt) {
+-        if self.totalCount <= countLimit {
+-            return
+-        }
++    func trim(toCount countLimit: UInt, traceContext: TraceContext? = nil) {
++        if self.totalCount <= countLimit { return }
+         if countLimit == 0 {
+-            removeAllObjects()
++            removeAllObjects(traceContext: traceContext)
+             return
+         }
+-        _lock()
+-        _unsafeTrim(toCount: countLimit)
+-        _unlock()
++        _withSpan(named: "DiskCache.trim.toCount", operation: .trim, key: nil,
++                  cacheName: name, layer: .disk,
++                  trimDimension: .count(countLimit), context: traceContext) { _ in
++            _lock()
++            let removedBytes = _unsafeTrim(toCount: countLimit)
++            _unlock()
++            return ((), .evicted, removedBytes)
++        }
+     }
+-    
++
+     /**
+      Sync trim disk cache totalcost to costLimit according LRU
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCost costLimit: UInt) {
+-        if self.totalCost <= costLimit {
+-            return
+-        }
++    func trim(toCost costLimit: UInt, traceContext: TraceContext? = nil) {
++        if self.totalCost <= costLimit { return }
+         if costLimit == 0 {
+-            removeAllObjects()
++            removeAllObjects(traceContext: traceContext)
+             return
+         }
+-        _lock()
+-        _unsafeTrim(toCost: costLimit)
+-        _unlock()
++        _withSpan(named: "DiskCache.trim.toCost", operation: .trim, key: nil,
++                  cacheName: name, layer: .disk,
++                  trimDimension: .cost(costLimit), context: traceContext) { _ in
++            _lock()
++            let removedBytes = _unsafeTrim(toCost: costLimit)
++            _unlock()
++            return ((), .evicted, removedBytes)
++        }
+     }
+-    
++
+     /**
+      Sync trim disk cache objects which age greater than ageLimit
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toAge ageLimit: TimeInterval) {
++    func trim(toAge ageLimit: TimeInterval, traceContext: TraceContext? = nil) {
+         if ageLimit <= 0 {
+-            removeAllObjects()
++            removeAllObjects(traceContext: traceContext)
+             return
+         }
+-        _lock()
+-        _unsafeTrim(toAge: ageLimit)
+-        _unlock()
++        _withSpan(named: "DiskCache.trim.toAge", operation: .trim, key: nil,
++                  cacheName: name, layer: .disk,
++                  trimDimension: .age(ageLimit), context: traceContext) { _ in
++            _lock()
++            let removedBytes = _unsafeTrim(toAge: ageLimit)
++            _unlock()
++            return ((), .evicted, removedBytes)
++        }
+     }
+-    
++
+     subscript(key: String) -> NSCoding? {
+         get {
+             if let returnValue = object(forKey: key) as? NSCoding {
+@@ -496,15 +595,15 @@ extension DiskCache : Sequence {
+      MemoryCacheGenerator
+      */
+     public typealias Iterator = DiskCacheGenerator
+-    
++
+     /**
+      Returns a generator over the elements of this sequence.
+      It is thread safe, if you call `generate()`, remember release it,
+      otherwise maybe it lead to deadlock.
+-     
++
+      - returns: A generator
+      */
+-    
++
+     public func makeIterator() -> DiskCacheGenerator {
+         var generatror: DiskCacheGenerator
+         _lock()
+@@ -530,7 +629,7 @@ private extension DiskCache {
+         }
+         return true
+     }
+-    
++
+     func _loadFilesInfo() -> Bool {
+         var fileInfos: [DiskCacheObject] = [DiskCacheObject]()
+         let fileInfoKeys: [URLResourceKey] = [URLResourceKey.contentModificationDateKey, URLResourceKey.totalFileAllocatedSizeKey]
+@@ -539,7 +638,7 @@ private extension DiskCache {
+             for fileURL: URL in filesURL {
+                 do {
+                     let infosDic: [URLResourceKey : AnyObject] = try (fileURL as NSURL).resourceValues(forKeys: fileInfoKeys) as [URLResourceKey : AnyObject]
+-                    
++
+                     if let key = fileURL.lastPathComponent as String?,
+                         let date = infosDic[URLResourceKey.contentModificationDateKey] as? Date,
+                         let fileSize = infosDic[URLResourceKey.totalFileAllocatedSizeKey] as? NSNumber {
+@@ -559,13 +658,17 @@ private extension DiskCache {
+         }
+         return true
+     }
+-    
+-    func _unsafeTrim(toCount countLimit: UInt) {
++
++    /// Trim to count. Returns total bytes removed. Must be called while holding the semaphore.
++    @discardableResult
++    func _unsafeTrim(toCount countLimit: UInt) -> UInt {
++        var removedBytes: UInt = 0
+         if var lastObject: DiskCacheObject = _cache.lastObject() {
+             while (_cache.count > countLimit) {
+                 if let fileURL = _generateFileURL(lastObject.key, path: cacheURL), FileManager.default.fileExists(atPath: fileURL.path) {
+                     do {
+                         try FileManager.default.removeItem(atPath: fileURL.path)
++                        removedBytes += lastObject.cost
+                         _cache.removeLastObject()
+                         guard let newLastObject = _cache.lastObject() else { break }
+                         lastObject = newLastObject
+@@ -573,14 +676,19 @@ private extension DiskCache {
+                 }
+             }
+         }
++        return removedBytes
+     }
+-    
+-    func _unsafeTrim(toCost costLimit: UInt) {
++
++    /// Trim to cost. Returns total bytes removed. Must be called while holding the semaphore.
++    @discardableResult
++    func _unsafeTrim(toCost costLimit: UInt) -> UInt {
++        var removedBytes: UInt = 0
+         if var lastObject: DiskCacheObject = _cache.lastObject() {
+             while (_cache.cost > costLimit) {
+                 if let fileURL = _generateFileURL(lastObject.key, path: cacheURL) , FileManager.default.fileExists(atPath: fileURL.path) {
+                     do {
+                         try FileManager.default.removeItem(atPath: fileURL.path)
++                        removedBytes += lastObject.cost
+                         _cache.removeLastObject()
+                         guard let newLastObject = _cache.lastObject() else { break }
+                         lastObject = newLastObject
+@@ -588,14 +696,19 @@ private extension DiskCache {
+                 }
+             }
+         }
++        return removedBytes
+     }
+-    
+-    func _unsafeTrim(toAge ageLimit: TimeInterval) {
++
++    /// Trim by age. Returns total bytes removed. Must be called while holding the semaphore.
++    @discardableResult
++    func _unsafeTrim(toAge ageLimit: TimeInterval) -> UInt {
++        var removedBytes: UInt = 0
+         if var lastObject: DiskCacheObject = _cache.lastObject() {
+             while (lastObject.date.timeIntervalSince1970 < Date().timeIntervalSince1970 - ageLimit) {
+                 if let fileURL = _generateFileURL(lastObject.key, path: cacheURL) , FileManager.default.fileExists(atPath: fileURL.path) {
+                     do {
+                         try FileManager.default.removeItem(atPath: fileURL.path)
++                        removedBytes += lastObject.cost
+                         _cache.removeLastObject()
+                         guard let newLastObject = _cache.lastObject() else { break }
+                         lastObject = newLastObject
+@@ -603,8 +716,9 @@ private extension DiskCache {
+                 }
+             }
+         }
++        return removedBytes
+     }
+-    
++
+     func _unsafeObject(forKey key: String) -> AnyObject? {
+         guard let fileURL = _generateFileURL(key, path: cacheURL) else { return nil }
+         var object: AnyObject? = nil
+@@ -619,20 +733,20 @@ private extension DiskCache {
+                     }
+                 }
+             } catch {
+-                
++
+             }
+         }
+         return object
+     }
+-    
++
+     func _generateFileURL(_ key: String, path: URL) -> URL? {
+         return path.appendingPathComponent(key)
+     }
+-    
++
+     func _lock() {
+         _ = _semaphoreLock.wait(timeout: DispatchTime.distantFuture)
+     }
+-    
++
+     func _unlock() {
+         _semaphoreLock.signal()
+     }
+diff --git a/Track/MemoryCache.swift b/Track/MemoryCache.swift
+index ebc3926..fc39ba2 100755
+--- a/Track/MemoryCache.swift
++++ b/Track/MemoryCache.swift
+@@ -22,17 +22,17 @@
+ 
+ /**
+     MemoryCache
+- 
++
+     thread safe = concurrent + semaphore lock
+- 
++
+     sync
+     thread safe write = write + semaphore lock
+     thread safe read = read + semaphore lokc
+-    
++
+     async
+     thread safe write = async concurrent queue + thread safe sync write
+     thread safe read = async concurrent queue + thread safe sync read
+- 
++
+  */
+ 
+ import Foundation
+@@ -42,43 +42,43 @@ import UIKit
+  MemoryCacheGenerator, support `for...in` `map` `forEach`..., it is thread safe.
+  */
+ open class MemoryCacheGenerator : IteratorProtocol {
+-    
++
+     public typealias Element = (String, AnyObject)
+-    
++
+     fileprivate var _lruGenerator: LRUGenerator<MemoryCacheObject>
+-    
++
+     fileprivate var _completion: (() -> Void)?
+-    
++
+     fileprivate init(generate: LRUGenerator<MemoryCacheObject>, cache: MemoryCache, completion: (() -> Void)?) {
+         self._lruGenerator = generate
+         self._completion = completion
+     }
+-    
++
+     /**
+     Advance to the next element and return it, or `nil` if no next element exists.
+-     
++
+      - returns: next element
+      */
+-    
++
+     open func next() -> Element? {
+         if let object = _lruGenerator.next() {
+             return (object.key, object.value)
+         }
+         return nil
+     }
+-    
++
+     deinit {
+         _completion?()
+     }
+ }
+ 
+ private class MemoryCacheObject: LRUObject {
+-    
++
+     var key: String = ""
+     var cost: UInt = 0
+     var time: TimeInterval = CACurrentMediaTime()
+     var value: AnyObject
+-    
++
+     init(key: String, value: AnyObject, cost: UInt = 0) {
+         self.key = key
+         self.value = value
+@@ -95,7 +95,12 @@ public typealias MemoryCacheAsyncCompletion = (_ cache: MemoryCache?, _ key: Str
+  And support thread safe `for`...`in` loops, map, forEach...
+  */
+ open class MemoryCache {
+-    
++
++    /**
++     Cache name, used as an attribute in trace spans.
++     */
++    public let name: String
++
+     /**
+      Memory cache object total count
+      */
+@@ -107,7 +112,7 @@ open class MemoryCache {
+             return count
+         }
+     }
+-    
++
+     /**
+      Memory cache object total cost, if not set cost when set object, total cost may be zero
+      */
+@@ -119,9 +124,9 @@ open class MemoryCache {
+             return cost
+         }
+     }
+-    
++
+     fileprivate var _countLimit: UInt = UInt.max
+-    
++
+     /**
+      The maximum total count limit
+      */
+@@ -139,9 +144,9 @@ open class MemoryCache {
+             return countLimit
+         }
+     }
+-    
++
+     fileprivate var _costLimit: UInt = UInt.max
+-    
++
+     /**
+      The maximum memory cost limit
+      */
+@@ -159,9 +164,9 @@ open class MemoryCache {
+             return costLimit
+         }
+     }
+-    
++
+     fileprivate var _ageLimit: TimeInterval = Double.greatestFiniteMagnitude
+-    
++
+     /**
+      Memory cache object age limit
+      */
+@@ -179,9 +184,9 @@ open class MemoryCache {
+             return ageLimit
+         }
+     }
+-    
++
+     fileprivate var _autoRemoveAllObjectWhenMemoryWarning: Bool = true
+-    
++
+     /**
+      Auto remove all object when memory warning
+      */
+@@ -198,9 +203,9 @@ open class MemoryCache {
+             return autoRemoveAllObjectWhenMemoryWarning
+         }
+     }
+-    
++
+     fileprivate var _autoRemoveAllObjectWhenEnterBackground = false
+-    
++
+     /**
+      Auto remove all object when enter background
+      */
+@@ -217,22 +222,32 @@ open class MemoryCache {
+             return autoRemoveAllObjectWhenEnterBackground
+         }
+     }
+-    
++
++    /**
++     Optional root TraceContext for system-triggered evictions (memory pressure,
++     app backgrounding). If non-nil, removeAllObjects calls initiated by UIKit
++     notifications will be traced as children of this context.
++     Set this once after configuring TraceConfiguration.configure(backend:).
++     */
++    public var systemEventContext: TraceContext? = nil
++
+     fileprivate let _cache: LRU = LRU<MemoryCacheObject>()
+-    
++
+     fileprivate let _queue: DispatchQueue = DispatchQueue(label: TrackCachePrefix + String(describing: MemoryCache.self), attributes: DispatchQueue.Attributes.concurrent)
+-    
++
+     fileprivate let _semaphoreLock: DispatchSemaphore = DispatchSemaphore(value: 1)
+-    
++
+     /**
+      A share memory cache
+      */
+     public static let shareInstance = MemoryCache()
+-    
++
+     /**
+      Design constructor
++     - parameter name: cache name used in trace span attributes (default: "shared")
+      */
+-    public init () {
++    public init(name: String = "shared") {
++        self.name = name
+         NotificationCenter.default.addObserver(self, selector: #selector(MemoryCache._didReceiveMemoryWarningNotification), name: UIApplication.didReceiveMemoryWarningNotification, object: nil)
+         NotificationCenter.default.addObserver(self, selector: #selector(MemoryCache._didEnterBackgroundNotification), name: UIApplication.didEnterBackgroundNotification, object: nil)
+     }
+@@ -241,170 +256,277 @@ open class MemoryCache {
+ //  MARK:
+ //  MARK: Public
+ public extension MemoryCache {
+-    
++
+     //  MARK: Async
+     /**
+      Async store an object for the unique key in memory cache and add object to linked list head
+      completion will be call after object has been store in memory
+-     
+-     - parameter object:     object
+-     - parameter key:        unique key
+-     - parameter completion: stroe completion call back
++
++     - parameter object:       object
++     - parameter key:          unique key
++     - parameter cost:         memory cost (bytes)
++     - parameter completion:   store completion call back
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: AnyObject, forKey key: String, cost: UInt = 0, completion: MemoryCacheAsyncCompletion?) {
++    func set(object: AnyObject, forKey key: String, cost: UInt = 0,
++             completion: MemoryCacheAsyncCompletion?,
++             traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, object); return }
+-            strongSelf.set(object: object, forKey: key, cost: cost)
++            strongSelf.set(object: object, forKey: key, cost: cost, traceContext: capturedContext)
+             completion?(strongSelf, key, object)
+         }
+     }
+-    
++
+     /**
+      Async search object according to unique key
+      if find object, object will move to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func object(forKey key: String, completion: MemoryCacheAsyncCompletion?) {
++    func object(forKey key: String, completion: MemoryCacheAsyncCompletion?,
++                traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, nil); return }
+-            let object = strongSelf.object(forKey: key)
++            let object = strongSelf.object(forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, object)
+         }
+     }
+-    
++
+     /**
+      Async remove object according to unique key from cache dic and linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String, completion: MemoryCacheAsyncCompletion?) {
++    func removeObject(forKey key: String, completion: MemoryCacheAsyncCompletion?,
++                      traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, key, nil); return }
+-            strongSelf.removeObject(forKey: key)
++            strongSelf.removeObject(forKey: key, traceContext: capturedContext)
+             completion?(strongSelf, key, nil)
+         }
+     }
+-    
++
+     /**
+      Async remove all object and info from cache dic and clean linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects(_ completion: MemoryCacheAsyncCompletion?) {
++    func removeAllObjects(_ completion: MemoryCacheAsyncCompletion?,
++                          traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.removeAllObjects()
++            strongSelf.removeAllObjects(traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim memory cache total to countLimit according LRU
+-     
+-     - parameter countLimit: maximum countLimit
++
++     - parameter countLimit:   maximum countLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCount countLimit: UInt, completion: MemoryCacheAsyncCompletion?) {
++    func trim(toCount countLimit: UInt, completion: MemoryCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toCount: countLimit)
++            strongSelf.trim(toCount: countLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim memory cache totalcost to costLimit according LRU
+-     
+-     - parameter costLimit:  maximum costLimit
++
++     - parameter costLimit:   maximum costLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCost costLimit: UInt, completion: MemoryCacheAsyncCompletion?) {
++    func trim(toCost costLimit: UInt, completion: MemoryCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toCost: costLimit)
++            strongSelf.trim(toCost: costLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     /**
+      Async trim memory cache objects which age greater than ageLimit
+-     
+-     - parameter ageLimit:  maximum ageLimit
++
++     - parameter ageLimit:    maximum ageLimit
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toAge ageLimit: TimeInterval, completion: MemoryCacheAsyncCompletion?) {
++    func trim(toAge ageLimit: TimeInterval, completion: MemoryCacheAsyncCompletion?,
++              traceContext: TraceContext? = nil) {
++        let capturedContext = traceContext
+         _queue.async { [weak self] in
+             guard let strongSelf = self else { completion?(nil, nil, nil); return }
+-            strongSelf.trim(toAge: ageLimit)
++            strongSelf.trim(toAge: ageLimit, traceContext: capturedContext)
+             completion?(strongSelf, nil, nil)
+         }
+     }
+-    
++
+     //  MARK: Sync
+     /**
+      Sync store an object for the unique key in memory cache and add object to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func set(object: AnyObject, forKey key: String, cost: UInt = 0) {
+-        _lock()
+-        _unsafeSet(object: object, forKey: key, cost: cost)
+-        _unlock()
++    func set(object: AnyObject, forKey key: String, cost: UInt = 0,
++             traceContext: TraceContext? = nil) {
++        // Capture eviction info outside the lock so the eviction sub-span
++        // can be emitted after _unlock() — never while holding the semaphore.
++        var evictionContext: TraceContext? = nil
++        var evictedBytes: UInt = 0
++        var evictedCount: Int = 0
++
++        _withSpan(named: "MemoryCache.set", operation: .set, key: key,
++                  cacheName: name, layer: .memory, byteSize: cost,
++                  context: traceContext) { childSpan in
++            _lock()
++            let beforeCount = Int(_cache.count)
++            let beforeCost  = _cache.cost
++            _unsafeSet(object: object, forKey: key, cost: cost)
++            let afterCount = Int(_cache.count)
++            let afterCost  = _cache.cost
++            _unlock()
++
++            // Detect inline eviction triggered by _unsafeSet
++            evictedCount = max(0, beforeCount - afterCount)
++            evictedBytes = beforeCost > afterCost ? beforeCost - afterCost : 0
++            evictionContext = childSpan
++
++            return ((), .set, cost)
++        }
++
++        // Emit eviction sub-span outside lock
++        if evictedCount > 0, let evCtx = evictionContext {
++            let backend = TraceConfiguration.backend
++            let evAttrs = CacheSpanAttributes(
++                cacheName: name, layer: .memory, operation: .trim,
++                key: nil, outcome: .evicted,
++                byteSize: evictedBytes, trimDimension: nil
++            )
++            if let evSpan = backend.startSpan(named: "MemoryCache.autoEvict",
++                                              parent: evCtx, attributes: evAttrs) {
++                backend.endSpan(evSpan, finalAttributes: evAttrs, error: nil)
++            }
++        }
+     }
+-    
++
+     /**
+-     Async search object according to unique key
++     Sync search object according to unique key
+      if find object, object will move to linked list head
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    
+-    func object(forKey key: String) -> AnyObject? {
+-        var object: AnyObject? = nil
+-        _lock()
+-        let memoryObject: MemoryCacheObject? = _cache.object(forKey: key)
+-        memoryObject?.time = CACurrentMediaTime()
+-        object = memoryObject?.value
+-        _unlock()
+-        return object
++    func object(forKey key: String, traceContext: TraceContext? = nil) -> AnyObject? {
++        return _withSpan(named: "MemoryCache.get", operation: .get, key: key,
++                         cacheName: name, layer: .memory, context: traceContext) { _ in
++            _lock()
++            let memObj: MemoryCacheObject? = _cache.object(forKey: key)
++            memObj?.time = CACurrentMediaTime()
++            let value = memObj?.value
++            let cost  = memObj?.cost
++            _unlock()
++            let outcome: CacheOutcome = value != nil ? .hit : .miss
++            return (value, outcome, cost)
++        }
+     }
+-    
++
+     /**
+      Sync remove object according to unique key from cache dic and linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeObject(forKey key: String) {
+-        _lock()
+-        _ = _cache.removeObject(forKey:key)
+-        _unlock()
++    func removeObject(forKey key: String, traceContext: TraceContext? = nil) {
++        _withSpan(named: "MemoryCache.remove", operation: .remove, key: key,
++                  cacheName: name, layer: .memory, context: traceContext) { _ in
++            _lock()
++            let existed = _cache.object(forKey: key) != nil
++            _ = _cache.removeObject(forKey: key)
++            _unlock()
++            let outcome: CacheOutcome = existed ? .removed : .notFound
++            return ((), outcome, nil)
++        }
+     }
+-    
++
+     /**
+      Sync remove all object and info from cache dic and clean linked list
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func removeAllObjects() {
+-        _lock()
+-        _cache.removeAllObjects()
+-        _unlock()
++    func removeAllObjects(traceContext: TraceContext? = nil) {
++        _withSpan(named: "MemoryCache.removeAll", operation: .removeAll, key: nil,
++                  cacheName: name, layer: .memory, context: traceContext) { _ in
++            _lock()
++            _cache.removeAllObjects()
++            _unlock()
++            return ((), .removed, nil)
++        }
+     }
+-    
++
+     /**
+      Sync trim memory cache totalcost to costLimit according LRU
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCount countLimit: UInt) {
+-        _lock()
+-        _unsafeTrim(toCount: countLimit)
+-        _unlock()
++    func trim(toCount countLimit: UInt, traceContext: TraceContext? = nil) {
++        _withSpan(named: "MemoryCache.trim.toCount", operation: .trim, key: nil,
++                  cacheName: name, layer: .memory,
++                  trimDimension: .count(countLimit), context: traceContext) { _ in
++            _lock()
++            _unsafeTrim(toCount: countLimit)
++            _unlock()
++            return ((), .evicted, nil)
++        }
+     }
+-    
++
+     /**
+      Sync trim memory cache totalcost to costLimit according LRU
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toCost costLimit: UInt) {
+-        _lock()
+-        _unsafeTrim(toCost: costLimit)
+-        _unlock()
++    func trim(toCost costLimit: UInt, traceContext: TraceContext? = nil) {
++        _withSpan(named: "MemoryCache.trim.toCost", operation: .trim, key: nil,
++                  cacheName: name, layer: .memory,
++                  trimDimension: .cost(costLimit), context: traceContext) { _ in
++            _lock()
++            _unsafeTrim(toCost: costLimit)
++            _unlock()
++            return ((), .evicted, nil)
++        }
+     }
+-    
++
+     /**
+      Sync trim memory cache objects which age greater than ageLimit
++
++     - parameter traceContext: optional parent trace context for span propagation
+      */
+-    func trim(toAge ageLimit: TimeInterval) {
+-        _lock()
+-        _unsafeTrim(toAge: ageLimit)
+-        _unlock()
++    func trim(toAge ageLimit: TimeInterval, traceContext: TraceContext? = nil) {
++        _withSpan(named: "MemoryCache.trim.toAge", operation: .trim, key: nil,
++                  cacheName: name, layer: .memory,
++                  trimDimension: .age(ageLimit), context: traceContext) { _ in
++            _lock()
++            _unsafeTrim(toAge: ageLimit)
++            _unlock()
++            return ((), .evicted, nil)
++        }
+     }
+-    
++
+     /**
+      subscript method, sync set and get
+-     
++
++     Note: subscript access is not traced. Use object(forKey:traceContext:) and
++     set(object:forKey:traceContext:) for traced access.
++
+      - parameter key: object unique key
+      */
+     subscript(key: String) -> AnyObject? {
+@@ -427,15 +549,15 @@ extension MemoryCache : Sequence {
+      MemoryCacheGenerator
+      */
+     public typealias Iterator = MemoryCacheGenerator
+-    
++
+     /**
+      Returns a generator over the elements of this sequence.
+      It is thread safe, if you call `generate()`, remember release it,
+      otherwise maybe it lead to deadlock.
+-     
++
+      - returns: A generator
+      */
+-    
++
+     public func makeIterator() -> MemoryCacheGenerator {
+         var generatror: MemoryCacheGenerator
+         _lock()
+@@ -449,19 +571,19 @@ extension MemoryCache : Sequence {
+ //  MARK:
+ //  MARK: Private
+ extension MemoryCache {
+-    
++
+     @objc fileprivate func _didReceiveMemoryWarningNotification() {
+         if self.autoRemoveAllObjectWhenMemoryWarning {
+-            removeAllObjects(nil)
++            removeAllObjects(nil, traceContext: systemEventContext)
+         }
+     }
+-    
++
+     @objc fileprivate func _didEnterBackgroundNotification() {
+         if self.autoRemoveAllObjectWhenEnterBackground {
+-            removeAllObjects(nil)
++            removeAllObjects(nil, traceContext: systemEventContext)
+         }
+     }
+-    
++
+     fileprivate func _unsafeTrim(toCount countLimit: UInt) {
+         if _cache.count <= countLimit {
+             return
+@@ -477,7 +599,7 @@ extension MemoryCache {
+             }
+         }
+     }
+-    
++
+     fileprivate func _unsafeTrim(toCost costLimit: UInt) {
+         if _cache.cost <= costLimit {
+             return
+@@ -493,7 +615,7 @@ extension MemoryCache {
+             }
+         }
+     }
+-    
++
+     fileprivate func _unsafeTrim(toAge ageLimit: TimeInterval) {
+         if ageLimit <= 0 {
+             _cache.removeAllObjects()
+@@ -507,7 +629,7 @@ extension MemoryCache {
+             }
+         }
+     }
+-    
++
+     func _unsafeSet(object: AnyObject, forKey key: String, cost: UInt = 0) {
+         _cache.set(object: MemoryCacheObject(key: key, value: object, cost: cost), forKey: key)
+         if _cache.cost > _costLimit {
+@@ -517,11 +639,11 @@ extension MemoryCache {
+             _unsafeTrim(toCount: _countLimit)
+         }
+     }
+-    
++
+     fileprivate func _lock() {
+         _ = _semaphoreLock.wait(timeout: DispatchTime.distantFuture)
+     }
+-    
++
+     fileprivate func _unlock() {
+         _semaphoreLock.signal()
+     }
+diff --git a/Track/Tracing.swift b/Track/Tracing.swift
+new file mode 100644
+index 0000000..54a78e7
+--- /dev/null
++++ b/Track/Tracing.swift
+@@ -0,0 +1,223 @@
++// The MIT License (MIT)
++//
++// Copyright (c) 2016 U Are My SunShine
++//
++// Permission is hereby granted, free of charge, to any person obtaining a copy
++// of this software and associated documentation files (the "Software"), to deal
++// in the Software without restriction, including without limitation the rights
++// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
++// copies of the Software, and to permit persons to whom the Software is
++// furnished to do so, subject to the following conditions:
++//
++// The above copyright notice and this permission notice shall be included in all
++// copies or substantial portions of the Software.
++//
++// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
++// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
++// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
++// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
++// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
++// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
++// SOFTWARE.
++
++import Foundation
++
++// MARK: - Public tracing protocols and types
++
++/// Opaque carrier for a trace context. Declared as a class protocol so that
++/// closure captures copy the reference, not the value — each in-flight
++/// operation independently holds its own context without any shared mutable
++/// state. This is the primary mechanism that prevents context leakage across
++/// concurrent GCD operations.
++public protocol TraceContext: AnyObject {}
++
++/// Which cache tier produced the span.
++public enum CacheLayer: String {
++    case memory  = "memory"
++    case disk    = "disk"
++    case unified = "unified"  // Cache facade that spans both tiers
++}
++
++/// Logical operation recorded by the span.
++public enum CacheOperation: String {
++    case get       = "cache.get"
++    case set       = "cache.set"
++    case remove    = "cache.remove"
++    case removeAll = "cache.removeAll"
++    case trim      = "cache.trim"
++}
++
++/// Outcome of the operation, recorded when the span ends.
++public enum CacheOutcome: String {
++    case hit      = "hit"       // read: key found
++    case miss     = "miss"      // read: key absent
++    case set      = "set"       // write completed
++    case removed  = "removed"   // key existed and was deleted
++    case evicted  = "evicted"   // entry(s) expelled by a trim/eviction
++    case notFound = "notFound"  // remove called but key was absent
++}
++
++/// Dimension used by a trim operation.
++public enum TrimDimension {
++    case count(UInt)
++    case cost(UInt)
++    case age(TimeInterval)
++}
++
++/// Immutable snapshot of span attributes. Passed to both `startSpan` and
++/// `endSpan`; the `outcome` and `byteSize` fields are only meaningful when
++/// passed to `endSpan` (they may be placeholder values at start time).
++public struct CacheSpanAttributes {
++    /// Name of the cache instance (e.g. "defaultTrackCache").
++    public let cacheName: String
++    /// Which tier of the cache hierarchy produced this span.
++    public let layer: CacheLayer
++    /// Logical operation.
++    public let operation: CacheOperation
++    /// Cache key. Nil for removeAll and trim operations.
++    public let key: String?
++    /// Operation outcome. A placeholder value is used at span-start time.
++    public let outcome: CacheOutcome
++    /// Byte size of the involved object(s). Nil when not applicable.
++    public let byteSize: UInt?
++    /// Non-nil only for trim spans.
++    public let trimDimension: TrimDimension?
++
++    public init(cacheName: String, layer: CacheLayer, operation: CacheOperation,
++                key: String?, outcome: CacheOutcome, byteSize: UInt?,
++                trimDimension: TrimDimension?) {
++        self.cacheName = cacheName
++        self.layer = layer
++        self.operation = operation
++        self.key = key
++        self.outcome = outcome
++        self.byteSize = byteSize
++        self.trimDimension = trimDimension
++    }
++}
++
++// MARK: - TraceBackend protocol
++
++/// Implement this protocol to connect Track to any distributed tracing system
++/// (OpenTelemetry, Datadog, Zipkin, …). The library never imports or links
++/// against any tracing SDK directly.
++///
++/// All methods may be called from any GCD queue; implementations must be
++/// thread-safe.
++public protocol TraceBackend: AnyObject {
++    /// Called before the operation executes. Return a new child `TraceContext`
++    /// representing this span, or `nil` to suppress all further callbacks for
++    /// this operation (the library will not call `endSpan` for a nil return).
++    func startSpan(named name: String, parent: TraceContext,
++                   attributes: CacheSpanAttributes) -> TraceContext?
++
++    /// Called after the operation completes, always outside any internal lock.
++    /// `span` is the value previously returned by `startSpan`.
++    /// `finalAttributes` carries the definitive outcome and byte size.
++    func endSpan(_ span: TraceContext, finalAttributes: CacheSpanAttributes,
++                 error: Error?)
++}
++
++// MARK: - NoOpTraceBackend
++
++/// Default backend. All methods are empty stubs. The Swift optimizer inlines
++/// the `_withSpan` fast-path (nil context check) so that callers who never
++/// provide a `traceContext` incur zero overhead.
++public final class NoOpTraceBackend: TraceBackend {
++    public static let shared = NoOpTraceBackend()
++    private init() {}
++
++    public func startSpan(named name: String, parent: TraceContext,
++                          attributes: CacheSpanAttributes) -> TraceContext? { nil }
++    public func endSpan(_ span: TraceContext, finalAttributes: CacheSpanAttributes,
++                        error: Error?) {}
++}
++
++// MARK: - TraceConfiguration
++
++/// Global configuration point for the tracing backend.
++/// Call `TraceConfiguration.configure(backend:)` once at app startup before
++/// any cache operations begin. Replacing the backend at runtime is
++/// supported but not recommended in production.
++public struct TraceConfiguration {
++    private static var _backend: TraceBackend = NoOpTraceBackend.shared
++    private static let _lock = DispatchSemaphore(value: 1)
++
++    /// Install a new tracing backend. Thread-safe.
++    public static func configure(backend: TraceBackend) {
++        _lock.wait()
++        _backend = backend
++        _lock.signal()
++    }
++
++    /// Current backend. Called at the start of every public cache method when
++    /// a trace context is provided.
++    internal static var backend: TraceBackend {
++        _lock.wait()
++        let b = _backend
++        _lock.signal()
++        return b
++    }
++}
++
++// MARK: - _withSpan helper
++
++/// Wraps a synchronous cache operation in a child span.
++///
++/// Fast path: when `context` is `nil`, `body` is called immediately with a
++/// nil child-span argument and the backend is never touched. The
++/// `@inline(__always)` attribute collapses this to a direct call in release
++/// builds.
++///
++/// When `context` is non-nil, the backend's `startSpan` is called. If
++/// `startSpan` returns `nil` (the backend chose to suppress this span),
++/// `body` still executes but `endSpan` is never called.
++///
++/// `body` receives the (optional) child span context so it can pass it to
++/// nested operations. It returns `(result, outcome, finalBytes)` which are
++/// used to build the final attributes for `endSpan`.
++@inline(__always)
++internal func _withSpan<T>(
++    named spanName: String,
++    operation: CacheOperation,
++    key: String?,
++    cacheName: String,
++    layer: CacheLayer,
++    byteSize: UInt? = nil,
++    trimDimension: TrimDimension? = nil,
++    context: TraceContext?,
++    body: (_ childSpan: TraceContext?) throws -> (result: T, outcome: CacheOutcome, finalBytes: UInt?)
++) rethrows -> T {
++    guard let parent = context else {
++        // Fast path — no tracing requested.
++        let (result, _, _) = try body(nil)
++        return result
++    }
++
++    let startAttrs = CacheSpanAttributes(
++        cacheName: cacheName, layer: layer, operation: operation,
++        key: key, outcome: .set,  // placeholder outcome, overwritten at end
++        byteSize: byteSize, trimDimension: trimDimension
++    )
++    let backend = TraceConfiguration.backend
++    let span = backend.startSpan(named: spanName, parent: parent, attributes: startAttrs)
++
++    do {
++        let (result, outcome, finalBytes) = try body(span)
++        if let span = span {
++            let endAttrs = CacheSpanAttributes(
++                cacheName: cacheName, layer: layer, operation: operation,
++                key: key, outcome: outcome,
++                byteSize: finalBytes ?? byteSize,
++                trimDimension: trimDimension
++            )
++            backend.endSpan(span, finalAttributes: endAttrs, error: nil)
++        }
++        return result
++    } catch {
++        if let span = span {
++            backend.endSpan(span, finalAttributes: startAttrs, error: error)
++        }
++        throw error
++    }
++}

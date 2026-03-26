@@ -1,0 +1,1 @@
+Add structured logging across the library. Every public method should emit a log event on entry and exit. Log entries should include the cache name, method name, key, and outcome. Errors must be logged with their underlying cause. Log verbosity should be controllable per cache instance via configuration.

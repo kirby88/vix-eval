@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Usage Comparison Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --text-muted: #8b8fa3;
+    --accent: #6c8cff;
+    --accent-b: #f472b6;
+    --green: #4ade80;
+    --red: #f87171;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .controls { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
+  .file-group { display: flex; align-items: center; gap: 8px; }
+  .file-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .file-btn.b { background: var(--accent-b); }
+  .file-btn:hover { opacity: 0.85; }
+  .file-name {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  input[type="file"] { display: none; }
+
+  .stats-table-wrap {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  .stats-table th {
+    text-align: left;
+    padding: 10px 16px;
+    border-bottom: 2px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 600;
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .stats-table th:nth-child(2),
+  .stats-table th:nth-child(3),
+  .stats-table th:nth-child(4) { text-align: right; }
+  .stats-table td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .stats-table td:nth-child(2),
+  .stats-table td:nth-child(3),
+  .stats-table td:nth-child(4) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+  }
+  .stats-table tr:last-child td { border-bottom: none; }
+  .stats-table td:first-child { color: var(--text-muted); font-weight: 500; }
+  .stats-table .val-a { color: var(--accent); font-weight: 600; }
+  .stats-table .val-b { color: var(--accent-b); font-weight: 600; }
+  .delta-pos { color: var(--red); }
+  .delta-neg { color: var(--green); }
+  .delta-zero { color: var(--text-muted); }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 24px 32px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card canvas { max-height: 320px; }
+  .card.wide { grid-column: 1 / -1; }
+
+  .chart-pair {
+    grid-column: 1 / -1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+  .chart-pair-title {
+    grid-column: 1 / -1;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+
+  .table-card { overflow-x: auto; }
+  .table-card table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .table-card th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  .table-card td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .table-card td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .table-card tr:last-child td { border-bottom: none; }
+
+  .bar-compare-wrap {
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+  }
+  .bar-compare-row {
+    display: flex;
+    gap: 24px;
+  }
+  .bar-group {
+    flex: 1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 16px 20px;
+  }
+  .bar-group-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+  .bar-entry {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .bar-entry:last-child { margin-bottom: 0; }
+  .bar-tag {
+    font-size: 12px;
+    font-weight: 600;
+    min-width: 60px;
+    max-width: 120px;
+    flex-shrink: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .bar-tag.a { color: var(--accent); }
+  .bar-tag.b { color: var(--accent-b); }
+  .bar-summary {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin-top: 10px;
+  }
+  .bar-track {
+    flex: 1;
+    height: 22px;
+    background: var(--border);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+  .bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.3s ease;
+  }
+  .bar-fill.a { background: var(--accent); }
+  .bar-fill.b { background: var(--accent-b); }
+  .bar-val {
+    font-size: 13px;
+    font-variant-numeric: tabular-nums;
+    min-width: 70px;
+    text-align: right;
+    color: var(--text);
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    gap: 16px;
+    color: var(--text-muted);
+  }
+  .empty-state p { font-size: 15px; }
+  .empty-state .hint { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Usage Comparison</h1>
+  <div class="controls">
+    <div class="file-group">
+      <button class="file-btn" onclick="document.getElementById('file-a').click()">Load File A</button>
+      <input type="file" id="file-a" accept=".json">
+      <span class="file-name" id="name-a"></span>
+    </div>
+    <div class="file-group">
+      <button class="file-btn b" onclick="document.getElementById('file-b').click()">Load File B</button>
+      <input type="file" id="file-b" accept=".json">
+      <span class="file-name" id="name-b"></span>
+    </div>
+  </div>
+</header>
+
+<div id="empty" class="empty-state">
+  <p>No data loaded</p>
+  <p class="hint">Load two usage.json files to compare (e.g. vix vs cc)</p>
+</div>
+
+<div id="bar-compare-section" class="bar-compare-wrap" style="display:none">
+  <div class="bar-compare-row">
+    <div class="bar-group" id="bar-cost"></div>
+    <div class="bar-group" id="bar-input"></div>
+    <div class="bar-group" id="bar-output"></div>
+  </div>
+</div>
+
+<div id="stats-section" class="stats-table-wrap" style="display:none">
+  <table class="stats-table">
+    <thead>
+      <tr><th>Metric</th><th id="th-a">File A</th><th id="th-b">File B</th><th>Delta</th></tr>
+    </thead>
+    <tbody id="stats-body"></tbody>
+  </table>
+</div>
+
+<div id="dashboard" class="dashboard" style="display:none"></div>
+
+<script>
+const COLORS = [
+  '#6c8cff', '#f472b6', '#4ade80', '#facc15', '#fb923c',
+  '#a78bfa', '#22d3ee', '#f87171', '#34d399', '#e879f9',
+  '#fbbf24', '#60a5fa', '#c084fc', '#2dd4bf', '#fb7185',
+];
+
+function fmt$(v) {
+  if (v >= 1) return '$' + v.toFixed(2);
+  if (v >= 0.01) return '$' + v.toFixed(3);
+  return '$' + v.toFixed(4);
+}
+
+function fmtTokens(v) {
+  if (v >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return (v / 1e3).toFixed(1) + 'K';
+  return v.toString();
+}
+
+function fmtDuration(ms) {
+  if (ms == null || ms === 0) return '—';
+  if (ms < 1000) return ms + 'ms';
+  const s = ms / 1000;
+  if (s < 60) return s.toFixed(1) + 's';
+  const m = Math.floor(s / 60);
+  return m + 'm ' + (s % 60).toFixed(0) + 's';
+}
+
+function $$(entry) { return (entry && typeof entry === 'object') ? (entry.dollars || 0) : (entry || 0); }
+function tok(entry) { return (entry && typeof entry === 'object') ? (entry.tokens || 0) : 0; }
+
+function fmtBytes(b) {
+  if (b == null) return '—';
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function renderTopFiles(elementId, perFile) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const entries = Object.entries(perFile || {});
+  if (entries.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-muted);font-size:13px">No file data available</p>';
+    return;
+  }
+  entries.sort((a, b) => b[1].chars - a[1].chars);
+  const top = entries.slice(0, 10);
+  let html = `<table><thead><tr><th>File</th><th style="text-align:right">Chars</th><th style="text-align:right">File Size</th><th style="text-align:right">Calls</th></tr></thead><tbody>`;
+  for (const [fp, stats] of top) {
+    const short = fp.split('/').slice(-2).join('/');
+    html += `<tr><td title="${fp}">${short}</td><td class="num">${fmtTokens(stats.chars)}</td><td class="num">${fmtBytes(stats.file_size)}</td><td class="num">${stats.calls}</td></tr>`;
+  }
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function getPerFile(data, side) {
+  return ((data?.total?.file_ops || {})[side] || {}).per_file || {};
+}
+
+function sortDesc(labels, values) {
+  const pairs = labels.map((l, i) => [l, values[i]]);
+  pairs.sort((a, b) => b[1] - a[1]);
+  pairs.forEach(([l, v], i) => { labels[i] = l; values[i] = v; });
+}
+
+function fmtDelta(a, b) {
+  if (a === 0 && b === 0) return ['—', 'delta-zero'];
+  if (a === 0) return ['+\u221e', 'delta-pos'];
+  const pct = ((b - a) / a) * 100;
+  const sign = pct > 0 ? '+' : '';
+  const cls = pct > 0.5 ? 'delta-pos' : pct < -0.5 ? 'delta-neg' : 'delta-zero';
+  return [sign + pct.toFixed(1) + '%', cls];
+}
+
+function doughnutConfig(labels, values) {
+  return {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: COLORS.slice(0, labels.length),
+        borderWidth: 0,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#e1e4ed', font: { size: 11 }, padding: 8, usePointStyle: true, pointStyleWidth: 10 }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+              return ` ${ctx.label}: ${fmt$(ctx.raw)} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
+let charts = [];
+let dataA = null, dataB = null;
+let nameA = '', nameB = '';
+
+function destroyCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
+}
+
+function makeChart(canvasId, config) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const chart = new Chart(canvas.getContext('2d'), config);
+  charts.push(chart);
+  return chart;
+}
+
+function getMetrics(data) {
+  if (!data) return null;
+  const total = data.total || {};
+  const cost = total.cost || {};
+  const fileOps = total.file_ops || {};
+  const fileIn = fileOps.input || {};
+  const fileOut = fileOps.output || {};
+  const inputCost = $$(cost.input) + $$(cost.cache_write) + $$(cost.cache_read);
+  const outputCost = $$(cost.output);
+  const totalTokens = tok(cost.input) + tok(cost.cache_write) + tok(cost.cache_read) + tok(cost.output);
+  const reqCount = total.request_count || 0;
+  const timing = total.timing || {};
+  return {
+    totalCost: $$(cost.total),
+    requests: reqCount,
+    tokens: totalTokens,
+    inputCost,
+    outputCost,
+    avgCostReq: reqCount > 0 ? $$(cost.total) / reqCount : 0,
+    filesRead: fileIn.unique_files_read || 0,
+    readChars: fileIn.total_read_chars || 0,
+    filesWritten: fileOut.unique_files_written || 0,
+    writeOps: fileOut.files_written || 0,
+    writeChars: fileOut.total_write_chars || 0,
+    wallClock: timing.wall_clock_ms || 0,
+    totalApiTime: timing.total_duration_ms || 0,
+    avgReqDuration: timing.avg_duration_ms || 0,
+  };
+}
+
+function renderComparison() {
+  destroyCharts();
+
+  const hasAny = dataA || dataB;
+  document.getElementById('empty').style.display = hasAny ? 'none' : '';
+  document.getElementById('bar-compare-section').style.display = hasAny ? '' : 'none';
+  document.getElementById('stats-section').style.display = hasAny ? '' : 'none';
+  document.getElementById('dashboard').style.display = hasAny ? '' : 'none';
+
+  if (!hasAny) return;
+
+  document.getElementById('th-a').textContent = nameA || 'File A';
+  document.getElementById('th-b').textContent = nameB || 'File B';
+
+  const ma = getMetrics(dataA);
+  const mb = getMetrics(dataB);
+
+  // Bar comparisons
+  const labelA = nameA || 'File A';
+  const labelB = nameB || 'File B';
+
+  function renderBarGroup(containerId, title, valA, valB, fmtFn, summaryTpl) {
+    const el = document.getElementById(containerId);
+    const max = Math.max(valA || 0, valB || 0);
+    const pctA = max > 0 ? ((valA || 0) / max) * 100 : 0;
+    const pctB = max > 0 ? ((valB || 0) / max) * 100 : 0;
+    let html = `<div class="bar-group-label">${title}</div>`;
+    if (ma) {
+      html += `<div class="bar-entry"><span class="bar-tag a" title="${labelA}">${labelA}</span><div class="bar-track"><div class="bar-fill a" style="width:${pctA}%"></div></div><span class="bar-val">${fmtFn(valA || 0)}</span></div>`;
+    }
+    if (mb) {
+      html += `<div class="bar-entry"><span class="bar-tag b" title="${labelB}">${labelB}</span><div class="bar-track"><div class="bar-fill b" style="width:${pctB}%"></div></div><span class="bar-val">${fmtFn(valB || 0)}</span></div>`;
+    }
+    // Summary line — framed from the cheaper/smaller side
+    if (ma && mb && (valA > 0 || valB > 0)) {
+      const winner = valA <= valB ? labelA : labelB;
+      const loser = valA <= valB ? labelB : labelA;
+      const hi = Math.max(valA, valB);
+      const lo = Math.min(valA, valB);
+      if (hi > 0 && lo < hi) {
+        const pct = ((hi - lo) / hi) * 100;
+        const pctText = `<span style="color:var(--green);font-weight:600">${pct.toFixed(0)}%</span>`;
+        html += `<div class="bar-summary">${summaryTpl.replace('{w}', winner).replace('{l}', loser).replace('{p}', pctText)}</div>`;
+      } else if (valA === valB) {
+        html += `<div class="bar-summary"><span style="color:var(--green);font-weight:600">Equal</span></div>`;
+      } else {
+        html += `<div class="bar-summary">${summaryTpl.replace('{w}', winner).replace('{l}', loser).replace('{p}', '∞')}</div>`;
+      }
+    }
+    el.innerHTML = html;
+  }
+
+  const costA = ma ? ma.totalCost : 0;
+  const costB = mb ? mb.totalCost : 0;
+  const inputTokensA = ma ? (tok(((dataA.total || {}).cost || {}).input) + tok(((dataA.total || {}).cost || {}).cache_write) + tok(((dataA.total || {}).cost || {}).cache_read)) : 0;
+  const inputTokensB = mb ? (tok(((dataB.total || {}).cost || {}).input) + tok(((dataB.total || {}).cost || {}).cache_write) + tok(((dataB.total || {}).cost || {}).cache_read)) : 0;
+  const outputTokensA = ma ? tok(((dataA.total || {}).cost || {}).output) : 0;
+  const outputTokensB = mb ? tok(((dataB.total || {}).cost || {}).output) : 0;
+
+  renderBarGroup('bar-cost', 'Total Cost ($)', costA, costB, fmt$, '{w} is {p} cheaper than {l}');
+  renderBarGroup('bar-input', 'Input Tokens', inputTokensA, inputTokensB, fmtTokens, '{w} uses {p} less input tokens than {l}');
+  renderBarGroup('bar-output', 'Output Tokens', outputTokensA, outputTokensB, fmtTokens, '{w} uses {p} less output tokens than {l}');
+
+  // Stats table
+  const rows = [
+    ['Total Cost', m => fmt$(m.totalCost), 'totalCost'],
+    ['Requests', m => m.requests.toString(), 'requests'],
+    ['Tokens', m => fmtTokens(m.tokens), 'tokens'],
+    ['Input Cost', m => fmt$(m.inputCost), 'inputCost'],
+    ['Output Cost', m => fmt$(m.outputCost), 'outputCost'],
+    ['Avg Cost/Req', m => fmt$(m.avgCostReq), 'avgCostReq'],
+    ['Files Read', m => `${m.filesRead} (${fmtTokens(m.readChars)} chars)`, 'filesRead'],
+    ['Files Written', m => `${m.filesWritten} / ${m.writeOps} ops (${fmtTokens(m.writeChars)} chars)`, 'filesWritten'],
+    ['Wall Clock', m => fmtDuration(m.wallClock), 'wallClock'],
+    ['Total API Time', m => fmtDuration(m.totalApiTime), 'totalApiTime'],
+    ['Avg Req Duration', m => fmtDuration(m.avgReqDuration), 'avgReqDuration'],
+  ];
+
+  let tbody = '';
+  for (const [label, fmtFn, key] of rows) {
+    const valA = ma ? fmtFn(ma) : '—';
+    const valB = mb ? fmtFn(mb) : '—';
+    let deltaHtml = '—';
+    if (ma && mb) {
+      const [deltaText, deltaCls] = fmtDelta(ma[key], mb[key]);
+      deltaHtml = `<span class="${deltaCls}">${deltaText}</span>`;
+    }
+    tbody += `<tr>
+      <td>${label}</td>
+      <td class="val-a">${valA}</td>
+      <td class="val-b">${valB}</td>
+      <td>${deltaHtml}</td>
+    </tr>`;
+  }
+  document.getElementById('stats-body').innerHTML = tbody;
+
+  // Charts
+  const chartPairs = [
+    {
+      title: 'Input+Output Cost Breakdown',
+      getData: (data) => {
+        const cost = (data.total || {}).cost || {};
+        const inp = $$(cost.input) + $$(cost.cache_write) + $$(cost.cache_read);
+        return { labels: ['Input', 'Output'], values: [inp, $$(cost.output)] };
+      }
+    },
+    {
+      title: 'Input Cost Breakdown',
+      getData: (data) => {
+        const cost = (data.total || {}).cost || {};
+        return { labels: ['Uncached', 'Cache Write', 'Cache Read'], values: [$$(cost.input), $$(cost.cache_write), $$(cost.cache_read)] };
+      }
+    },
+    {
+      title: 'Output Cost Breakdown',
+      getData: (data) => {
+        const outputSrc = ((data.by_source || {}).output) || {};
+        const toolCalls = outputSrc.tool_calls || {};
+        const labels = [], values = [];
+        for (const [k, v] of Object.entries(outputSrc)) {
+          if (k === '__total' || k === 'tool_calls') continue;
+          labels.push(k.replace(/_/g, ' '));
+          values.push(v.dollars || 0);
+        }
+        if (toolCalls.__total) {
+          labels.push('tool calls');
+          values.push(toolCalls.__total.dollars || 0);
+        }
+        return { labels, values };
+      }
+    },
+    {
+      title: 'Input: Tool Results Breakdown',
+      getData: (data) => {
+        const toolResults = ((data.by_source || {}).input || {}).tool_results || {};
+        const labels = [], values = [];
+        for (const [k, v] of Object.entries(toolResults)) {
+          labels.push(k); values.push(v.dollars || 0);
+        }
+        sortDesc(labels, values);
+        return { labels, values };
+      }
+    },
+    {
+      title: 'Input: Tool Use Breakdown',
+      getData: (data) => {
+        const toolCalls = ((data.by_source || {}).input || {}).tool_calls || {};
+        const labels = [], values = [];
+        for (const [k, v] of Object.entries(toolCalls)) {
+          labels.push(k); values.push(v.dollars || 0);
+        }
+        sortDesc(labels, values);
+        return { labels, values };
+      }
+    },
+    {
+      title: 'Output: Tool Calls Breakdown',
+      getData: (data) => {
+        const toolCalls = ((data.by_source || {}).output || {}).tool_calls || {};
+        const labels = [], values = [];
+        for (const [k, v] of Object.entries(toolCalls)) {
+          if (k === '__total') continue;
+          labels.push(k); values.push(v.dollars || 0);
+        }
+        sortDesc(labels, values);
+        return { labels, values };
+      }
+    },
+  ];
+
+  let html = '';
+  chartPairs.forEach((pair, i) => {
+    html += `<div class="chart-pair-title">${pair.title}</div>`;
+    html += `<div class="chart-pair">`;
+    html += `<div class="card"><h2>${nameA || 'File A'}</h2><canvas id="ch-${i}-a"></canvas></div>`;
+    html += `<div class="card"><h2>${nameB || 'File B'}</h2><canvas id="ch-${i}-b"></canvas></div>`;
+    html += `</div>`;
+  });
+
+  // Top files tables (side by side)
+  html += `<div class="chart-pair-title">Top Files Read</div>`;
+  html += `<div class="chart-pair">`;
+  html += `<div class="card table-card"><h2>${nameA || 'File A'}</h2><div id="top-read-a"></div></div>`;
+  html += `<div class="card table-card"><h2>${nameB || 'File B'}</h2><div id="top-read-b"></div></div>`;
+  html += `</div>`;
+  html += `<div class="chart-pair-title">Top Files Written</div>`;
+  html += `<div class="chart-pair">`;
+  html += `<div class="card table-card"><h2>${nameA || 'File A'}</h2><div id="top-write-a"></div></div>`;
+  html += `<div class="card table-card"><h2>${nameB || 'File B'}</h2><div id="top-write-b"></div></div>`;
+  html += `</div>`;
+
+  document.getElementById('dashboard').innerHTML = html;
+
+  // Render top files
+  if (dataA) {
+    renderTopFiles('top-read-a', getPerFile(dataA, 'input'));
+    renderTopFiles('top-write-a', getPerFile(dataA, 'output'));
+  }
+  if (dataB) {
+    renderTopFiles('top-read-b', getPerFile(dataB, 'input'));
+    renderTopFiles('top-write-b', getPerFile(dataB, 'output'));
+  }
+
+  // Render charts
+  chartPairs.forEach((pair, i) => {
+    if (dataA) {
+      const d = pair.getData(dataA);
+      if (d.labels.length > 0) makeChart(`ch-${i}-a`, doughnutConfig(d.labels, d.values));
+    }
+    if (dataB) {
+      const d = pair.getData(dataB);
+      if (d.labels.length > 0) makeChart(`ch-${i}-b`, doughnutConfig(d.labels, d.values));
+    }
+  });
+}
+
+function loadFile(inputId, side) {
+  const input = document.getElementById(inputId);
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      if (side === 'a') {
+        dataA = data;
+        nameA = data.title || file.name;
+        document.getElementById('name-a').textContent = nameA;
+      } else {
+        dataB = data;
+        nameB = data.title || file.name;
+        document.getElementById('name-b').textContent = nameB;
+      }
+      if (data.color) {
+        document.documentElement.style.setProperty(
+          side === 'a' ? '--accent' : '--accent-b',
+          data.color
+        );
+        const btn = document.querySelector(side === 'a' ? '.file-btn:not(.b)' : '.file-btn.b');
+        if (btn) btn.style.background = data.color;
+      }
+      renderComparison();
+    } catch (err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+document.getElementById('file-a').addEventListener('change', () => loadFile('file-a', 'a'));
+document.getElementById('file-b').addEventListener('change', () => loadFile('file-b', 'b'));
+</script>
+</body>
+</html>

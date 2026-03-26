@@ -1,0 +1,62 @@
+diff --git a/src/de.rs b/src/de.rs
+index 942e1c5..fe3aa09 100644
+--- a/src/de.rs
++++ b/src/de.rs
+@@ -2052,6 +2052,11 @@ impl<'de, 'a, R: Read<'de> + 'a> de::EnumAccess<'de> for VariantAccess<'a, R> {
+     where
+         V: de::DeserializeSeed<'de>,
+     {
++        match tri!(self.de.parse_whitespace()) {
++            Some(b'"') => {}
++            Some(_) => return Err(self.de.peek_error(ErrorCode::KeyMustBeAString)),
++            None => return Err(self.de.peek_error(ErrorCode::EofWhileParsingValue)),
++        }
+         let val = tri!(seed.deserialize(&mut *self.de));
+         tri!(self.de.parse_object_colon());
+         Ok((val, self))
+diff --git a/tests/regression/issue979.rs b/tests/regression/issue979.rs
+new file mode 100644
+index 0000000..fa4d65b
+--- /dev/null
++++ b/tests/regression/issue979.rs
+@@ -0,0 +1,27 @@
++use serde::de::{Deserializer, VariantAccess, Visitor};
++
++struct V;
++
++impl<'de> Visitor<'de> for V {
++    type Value = (Vec<bool>, ());
++
++    fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
++        write!(f, "enum")
++    }
++
++    fn visit_enum<A>(self, data: A) -> Result<Self::Value, A::Error>
++    where
++        A: serde::de::EnumAccess<'de>,
++    {
++        let (key, variant_access) = data.variant()?;
++        let value = variant_access.newtype_variant()?;
++        Ok((key, value))
++    }
++}
++
++#[test]
++fn test_issue979_non_string_enum_key_rejected() {
++    let mut de = serde_json::Deserializer::from_str("{[true]: null}");
++    let result = de.deserialize_enum("name", &[], V);
++    assert!(result.is_err(), "expected error for non-string object key");
++}
+diff --git a/tests/test.rs b/tests/test.rs
+index 4e15da7..280f25c 100644
+--- a/tests/test.rs
++++ b/tests/test.rs
+@@ -1311,7 +1311,7 @@ fn test_parse_option() {
+ fn test_parse_enum_errors() {
+     test_parse_err::<Animal>(
+         &[
+-            ("{}", "expected value at line 1 column 2"),
++            ("{}", "key must be a string at line 1 column 2"),
+             ("[]", "expected value at line 1 column 1"),
+             ("\"unknown\"",
+              "unknown variant `unknown`, expected one of `Dog`, `Frog`, `Cat`, `AntHive` at line 1 column 9"),

@@ -1,0 +1,2043 @@
+diff --git a/.coverage b/.coverage
+new file mode 100644
+index 0000000..c1de651
+Binary files /dev/null and b/.coverage differ
+diff --git a/__pycache__/export_flows.cpython-311.pyc b/__pycache__/export_flows.cpython-311.pyc
+new file mode 100644
+index 0000000..12fc81a
+Binary files /dev/null and b/__pycache__/export_flows.cpython-311.pyc differ
+diff --git a/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc
+new file mode 100644
+index 0000000..fb8b816
+Binary files /dev/null and b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc differ
+diff --git a/test_export_flows.py b/test_export_flows.py
+new file mode 100644
+index 0000000..450fdb3
+--- /dev/null
++++ b/test_export_flows.py
+@@ -0,0 +1,2025 @@
++"""Comprehensive test suite for export_flows.py."""
++
++import hashlib
++import json
++import os
++import tempfile
++
++import pytest
++from mitmproxy.http import Headers
++from mitmproxy.io import FlowWriter
++from mitmproxy.test import tflow
++
++import export_flows
++from export_flows import (
++    AGENT_COLORS,
++    MODEL_PRICING,
++    READ_TOOLS,
++    WRITE_TOOLS,
++    _PROJECT_ROOT,
++    _agent_color,
++    _aggregate_by_source,
++    _format_tool_params,
++    _get_file_path,
++    _resolve_read_file_name,
++    _round_by_source,
++    _system_prompt_hash,
++    attribute_tokens,
++    calculate_costs,
++    categorize_input_sources,
++    categorize_output_sources,
++    count_whitespace_stats,
++    export_flows as export_flows_fn,
++    export_parsed_response,
++    export_parsed_responses,
++    extract_file_ops,
++    extract_prompts,
++    extract_read_file_whitespace,
++    extract_stop_reason,
++    extract_usage,
++    format_headers,
++    get_canonical_model,
++    get_pricing,
++    parse_request_body,
++    parse_response_content,
++    redact_flow_files,
++    sanitize_path,
++    summarize_usage,
++    write_request,
++    write_response,
++)
++
++
++# ---------------------------------------------------------------------------
++# Helpers
++# ---------------------------------------------------------------------------
++
++def make_sse_response(events):
++    """Build a raw response_raw.txt string from a list of SSE event dicts."""
++    lines = ["200 OK", "", "content-type: text/event-stream", ""]
++    for event in events:
++        lines.append(f"data: {json.dumps(event)}")
++    return "\n".join(lines)
++
++
++def write_response_raw(path, content):
++    """Write content to path/response_raw.txt."""
++    with open(os.path.join(path, "response_raw.txt"), "w") as f:
++        f.write(content)
++
++
++def write_request_json(path, body):
++    """Write body dict as JSON to path/request.json."""
++    with open(os.path.join(path, "request.json"), "w") as f:
++        json.dump(body, f, indent=2)
++        f.write("\n")
++
++
++def write_usage_json(path, usage):
++    """Write usage dict as JSON to path/usage.json."""
++    with open(os.path.join(path, "usage.json"), "w") as f:
++        json.dump(usage, f, indent=2)
++        f.write("\n")
++
++
++def make_flow(method="POST", url="https://api.anthropic.com/v1/messages",
++              body=None, response_body=None, api_key=None):
++    """Create a mitmproxy HTTPFlow with optional body and response body."""
++    f = tflow.tflow(resp=True)
++    f.request.method = method
++    f.request.url = url
++    if body is not None:
++        if isinstance(body, dict):
++            f.request.content = json.dumps(body).encode()
++        else:
++            f.request.content = body if isinstance(body, bytes) else body.encode()
++    if api_key:
++        f.request.headers["x-api-key"] = api_key
++    if response_body is not None:
++        if isinstance(response_body, str):
++            f.response.content = response_body.encode()
++        else:
++            f.response.content = response_body
++    return f
++
++
++def write_flow_file(path, flows):
++    """Write a list of mitmproxy flows to a .flow file at the given path."""
++    with open(path, "wb") as f:
++        writer = FlowWriter(f)
++        for flow in flows:
++            writer.add(flow)
++
++
++# ---------------------------------------------------------------------------
++# TestCountWhitespaceStats
++# ---------------------------------------------------------------------------
++
++class TestCountWhitespaceStats:
++    def test_empty_string(self):
++        r = count_whitespace_stats("")
++        assert r == {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
++
++    def test_single_newline(self):
++        r = count_whitespace_stats("\n")
++        assert r["line_returns_count"] == 1
++        assert r["unnecessary_space_count"] == 0
++        assert r["total_chars"] == 1
++
++    def test_two_consecutive_spaces(self):
++        # "  " → one run of 2 spaces → len(run) - 1 = 1
++        r = count_whitespace_stats("  ")
++        assert r["unnecessary_space_count"] == 1
++
++    def test_three_consecutive_spaces(self):
++        # "   " → one run of 3 spaces → len(run) - 1 = 2
++        r = count_whitespace_stats("   ")
++        assert r["unnecessary_space_count"] == 2
++
++    def test_multiple_runs(self):
++        # "a  b   c" → run of 2 (1) + run of 3 (2) = 3
++        r = count_whitespace_stats("a  b   c")
++        assert r["unnecessary_space_count"] == 3
++
++    def test_no_whitespace(self):
++        r = count_whitespace_stats("hello")
++        assert r == {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 5}
++
++    def test_mixed_newlines_and_spaces(self):
++        text = "hello\nworld  foo\n  bar"
++        r = count_whitespace_stats(text)
++        assert r["line_returns_count"] == 2
++        assert r["unnecessary_space_count"] == 2  # "  " + "  "
++        assert r["total_chars"] == len(text)
++
++    def test_total_chars(self):
++        text = "abc"
++        r = count_whitespace_stats(text)
++        assert r["total_chars"] == 3
++
++
++# ---------------------------------------------------------------------------
++# TestGetCanonicalModel
++# ---------------------------------------------------------------------------
++
++class TestGetCanonicalModel:
++    def test_exact_match(self):
++        assert get_canonical_model("claude-sonnet-4-5") == "claude-sonnet-4-5"
++
++    def test_with_date_suffix(self):
++        assert get_canonical_model("claude-sonnet-4-5-20250101") == "claude-sonnet-4-5"
++
++    def test_longer_prefix_wins_opus(self):
++        # "claude-opus-4-5" must match before "claude-opus-4"
++        assert get_canonical_model("claude-opus-4-5-20250601") == "claude-opus-4-5"
++
++    def test_shorter_opus4_match(self):
++        assert get_canonical_model("claude-opus-4-20250601") == "claude-opus-4"
++
++    def test_unknown_model(self):
++        assert get_canonical_model("gpt-4") is None
++
++    def test_empty_string(self):
++        assert get_canonical_model("") is None
++
++    def test_haiku_match(self):
++        assert get_canonical_model("claude-haiku-3-5-20241022") == "claude-haiku-3-5"
++
++    def test_all_known_models_exact(self):
++        for key in MODEL_PRICING:
++            assert get_canonical_model(key) == key
++
++
++# ---------------------------------------------------------------------------
++# TestGetPricing
++# ---------------------------------------------------------------------------
++
++class TestGetPricing:
++    def test_known_model_returns_dict(self):
++        p = get_pricing("claude-sonnet-4-5")
++        assert p is not None
++        assert "input" in p
++        assert "output" in p
++        assert "cache_write" in p
++        assert "cache_read" in p
++
++    def test_known_model_with_suffix(self):
++        p = get_pricing("claude-sonnet-4-5-20250101")
++        assert p == MODEL_PRICING["claude-sonnet-4-5"]
++
++    def test_unknown_model(self):
++        assert get_pricing("gpt-4") is None
++
++    def test_empty_string(self):
++        assert get_pricing("") is None
++
++
++# ---------------------------------------------------------------------------
++# TestSanitizePath
++# ---------------------------------------------------------------------------
++
++class TestSanitizePath:
++    def test_path_with_query_string(self):
++        assert sanitize_path("/v1/messages?key=1") == "v1_messages"
++
++    def test_leading_trailing_slashes_stripped(self):
++        assert sanitize_path("/v1/messages/") == "v1_messages"
++
++    def test_special_characters_removed(self):
++        result = sanitize_path("/v1/messages.json")
++        assert "." not in result
++
++    def test_long_path_truncated(self):
++        long = "/" + "a" * 100
++        result = sanitize_path(long)
++        assert len(result) <= 80
++
++    def test_simple_path(self):
++        assert sanitize_path("v1_messages") == "v1_messages"
++
++    def test_hyphens_preserved(self):
++        result = sanitize_path("/v1/some-endpoint")
++        assert "-" in result
++
++    def test_empty_path_after_stripping(self):
++        result = sanitize_path("///")
++        assert result == ""
++
++    def test_path_with_spaces_removed(self):
++        result = sanitize_path("/v1/my messages")
++        assert " " not in result
++
++
++# ---------------------------------------------------------------------------
++# TestFormatHeaders
++# ---------------------------------------------------------------------------
++
++class TestFormatHeaders:
++    def _make_headers(self, pairs):
++        """Create mitmproxy Headers from list of (str, str) pairs."""
++        fields = [(k.encode(), v.encode()) for k, v in pairs]
++        return Headers(fields=fields)
++
++    def test_api_key_redacted(self):
++        h = self._make_headers([("x-api-key", "my-secret")])
++        result = format_headers(h)
++        assert "[REDACTED]" in result
++        assert "my-secret" not in result
++
++    def test_authorization_redacted(self):
++        h = self._make_headers([("authorization", "Bearer token123")])
++        result = format_headers(h)
++        assert "[REDACTED]" in result
++        assert "token123" not in result
++
++    def test_content_type_passes_through(self):
++        h = self._make_headers([("content-type", "application/json")])
++        result = format_headers(h)
++        assert "application/json" in result
++
++    def test_multiple_headers_joined_newlines(self):
++        h = self._make_headers([
++            ("content-type", "application/json"),
++            ("x-request-id", "abc123"),
++        ])
++        result = format_headers(h)
++        lines = result.split("\n")
++        assert len(lines) == 2
++
++    def test_uppercase_api_key_still_redacted(self):
++        h = self._make_headers([("X-API-KEY", "secret")])
++        result = format_headers(h)
++        assert "[REDACTED]" in result
++        assert "secret" not in result
++
++    def test_mixed_sensitive_and_safe(self):
++        h = self._make_headers([
++            ("x-api-key", "secret"),
++            ("content-type", "application/json"),
++        ])
++        result = format_headers(h)
++        assert "[REDACTED]" in result
++        assert "application/json" in result
++
++
++# ---------------------------------------------------------------------------
++# TestExtractStopReason
++# ---------------------------------------------------------------------------
++
++class TestExtractStopReason:
++    def test_sse_without_spaces(self):
++        response = 'data: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}'
++        assert extract_stop_reason(response) == "end_turn"
++
++    def test_sse_with_spaces(self):
++        response = 'data: {"type": "message_delta", "delta": {"stop_reason": "tool_use"}}'
++        assert extract_stop_reason(response) == "tool_use"
++
++    def test_sse_null_stop_reason_then_valid(self):
++        response = (
++            'data: {"type":"message_delta","delta":{"stop_reason":null}}\n'
++            'data: {"type":"message_delta","delta":{"stop_reason":"end_turn"}}'
++        )
++        assert extract_stop_reason(response) == "end_turn"
++
++    def test_non_streaming_json_fallback(self):
++        msg = json.dumps({"type": "message", "stop_reason": "end_turn", "content": []})
++        assert extract_stop_reason(msg) == "end_turn"
++
++    def test_invalid_json_in_data_line_skipped(self):
++        response = (
++            'data: {invalid json}\n'
++            'data: {"type": "message_delta", "delta": {"stop_reason": "end_turn"}}'
++        )
++        assert extract_stop_reason(response) == "end_turn"
++
++    def test_no_relevant_data_returns_unknown(self):
++        assert extract_stop_reason("no data here") == "unknown"
++
++    def test_empty_string_returns_unknown(self):
++        assert extract_stop_reason("") == "unknown"
++
++    def test_sse_takes_priority_over_non_streaming(self):
++        sse_line = 'data: {"type":"message_delta","delta":{"stop_reason":"tool_use"}}'
++        fallback = json.dumps({"type": "message", "stop_reason": "end_turn"})
++        response = sse_line + "\n" + fallback
++        assert extract_stop_reason(response) == "tool_use"
++
++    def test_invalid_json_in_sse_message_delta_skipped(self):
++        # Hits the except JSONDecodeError at line 156-157 in extract_stop_reason
++        response = 'data: {"type":"message_delta","delta":{invalid}}'
++        # This parses as having message_delta type check but fails json.loads → skipped
++        # Then falls through to non-streaming fallback → unknown
++        assert extract_stop_reason(response) == "unknown"
++
++    def test_non_streaming_json_fallback_invalid_line_skipped(self):
++        # Hits the except JSONDecodeError at lines 170-171
++        response = '{"invalid json here'
++        assert extract_stop_reason(response) == "unknown"
++
++
++# ---------------------------------------------------------------------------
++# TestSystemPromptHash
++# ---------------------------------------------------------------------------
++
++class TestSystemPromptHash:
++    def _body(self, system_blocks):
++        return {"system": system_blocks, "messages": []}
++
++    def test_cc_agent_uses_index_2(self):
++        blocks = [
++            {"type": "text", "text": "block0"},
++            {"type": "text", "text": "block1"},
++            {"type": "text", "text": "block2_target"},
++        ]
++        h = _system_prompt_hash(self._body(blocks), "cc")
++        expected = hashlib.sha256("block2_target".encode()).hexdigest()[:12]
++        assert h == expected
++
++    def test_vix_agent_uses_index_0(self):
++        blocks = [{"type": "text", "text": "vix_block"}]
++        h = _system_prompt_hash(self._body(blocks), "vix")
++        expected = hashlib.sha256("vix_block".encode()).hexdigest()[:12]
++        assert h == expected
++
++    def test_unknown_agent_defaults_to_index_0(self):
++        blocks = [{"type": "text", "text": "default_block"}]
++        h = _system_prompt_hash(self._body(blocks), "unknown_agent")
++        expected = hashlib.sha256("default_block".encode()).hexdigest()[:12]
++        assert h == expected
++
++    def test_missing_system_key_returns_none(self):
++        assert _system_prompt_hash({"messages": []}, "cc") is None
++
++    def test_empty_system_list_returns_none(self):
++        assert _system_prompt_hash({"system": []}, "cc") is None
++
++    def test_index_out_of_bounds_returns_none(self):
++        # cc uses index 2, but only 1 block
++        blocks = [{"type": "text", "text": "only_one"}]
++        assert _system_prompt_hash(self._body(blocks), "cc") is None
++
++    def test_empty_text_returns_none(self):
++        blocks = [{"type": "text", "text": ""}]
++        assert _system_prompt_hash(self._body(blocks), "vix") is None
++
++    def test_returns_12_char_hex(self):
++        blocks = [{"type": "text", "text": "hello"}]
++        h = _system_prompt_hash(self._body(blocks), "vix")
++        assert len(h) == 12
++        assert all(c in "0123456789abcdef" for c in h)
++
++    def test_deterministic(self):
++        blocks = [{"type": "text", "text": "consistent"}]
++        body = self._body(blocks)
++        h1 = _system_prompt_hash(body, "vix")
++        h2 = _system_prompt_hash(body, "vix")
++        assert h1 == h2
++
++
++# ---------------------------------------------------------------------------
++# TestResolveReadFileName
++# ---------------------------------------------------------------------------
++
++class TestResolveReadFileName:
++    def test_read_file_compress_mode(self):
++        assert _resolve_read_file_name("read_file", {"mode": "compress"}) == "read_file_compressed"
++
++    def test_read_file_original_mode(self):
++        assert _resolve_read_file_name("read_file", {"mode": "original"}) == "read_file_uncompressed"
++
++    def test_read_file_no_mode(self):
++        assert _resolve_read_file_name("read_file", {}) == "read_file_uncompressed"
++
++    def test_read_file_non_dict_input(self):
++        assert _resolve_read_file_name("read_file", None) == "read_file_uncompressed"
++        assert _resolve_read_file_name("read_file", "string") == "read_file_uncompressed"
++
++    def test_bash_passthrough(self):
++        assert _resolve_read_file_name("bash", {"cmd": "ls"}) == "bash"
++
++    def test_read_passthrough(self):
++        assert _resolve_read_file_name("Read", {"file_path": "/foo"}) == "Read"
++
++    def test_write_file_passthrough(self):
++        assert _resolve_read_file_name("write_file", {}) == "write_file"
++
++
++# ---------------------------------------------------------------------------
++# TestFormatToolParams
++# ---------------------------------------------------------------------------
++
++class TestFormatToolParams:
++    def test_empty_dict(self):
++        assert _format_tool_params({}) == ""
++
++    def test_string_value(self):
++        result = _format_tool_params({"path": "/foo"})
++        assert result == 'path="/foo"'
++
++    def test_non_string_value(self):
++        result = _format_tool_params({"count": 5})
++        assert result == "count=5"
++
++    def test_list_value(self):
++        result = _format_tool_params({"items": [1, 2]})
++        assert result == "items=[1, 2]"
++
++    def test_multiple_params(self):
++        result = _format_tool_params({"a": "x", "b": 3})
++        assert 'a="x"' in result
++        assert "b=3" in result
++        assert ", " in result
++
++    def test_boolean_value(self):
++        result = _format_tool_params({"flag": True})
++        assert "flag=true" in result
++
++
++# ---------------------------------------------------------------------------
++# TestGetFilePath
++# ---------------------------------------------------------------------------
++
++class TestGetFilePath:
++    def test_none_input(self):
++        assert _get_file_path(None) is None
++
++    def test_non_dict_input(self):
++        assert _get_file_path("string") is None
++        assert _get_file_path(42) is None
++
++    def test_absolute_file_path_key(self):
++        assert _get_file_path({"file_path": "/abs/path"}) == "/abs/path"
++
++    def test_absolute_path_key(self):
++        assert _get_file_path({"path": "/abs/path"}) == "/abs/path"
++
++    def test_file_path_takes_priority(self):
++        result = _get_file_path({"file_path": "/fp", "path": "/p"})
++        assert result == "/fp"
++
++    def test_relative_path_joined_with_project_root(self):
++        result = _get_file_path({"file_path": "relative/path.py"})
++        assert os.path.isabs(result)
++        assert result.startswith(_PROJECT_ROOT)
++        assert result.endswith("relative/path.py")
++
++    def test_empty_dict(self):
++        assert _get_file_path({}) is None
++
++
++# ---------------------------------------------------------------------------
++# TestAgentColor
++# ---------------------------------------------------------------------------
++
++class TestAgentColor:
++    def test_returns_hex_string(self):
++        color = _agent_color("unknown_agent")
++        assert color.startswith("#")
++        assert len(color) == 7
++
++    def test_deterministic(self):
++        assert _agent_color("foo") == _agent_color("foo")
++
++    def test_different_names_different_colors(self):
++        assert _agent_color("agent_a") != _agent_color("agent_b")
++
++    def test_known_agents_use_agent_colors(self):
++        # AGENT_COLORS has vix and cc, not _agent_color
++        assert AGENT_COLORS["vix"] == "#7B2FBE"
++        assert AGENT_COLORS["cc"] == "#D77656"
++
++
++# ---------------------------------------------------------------------------
++# TestAttributeTokens
++# ---------------------------------------------------------------------------
++
++class TestAttributeTokens:
++    def _make_usage(self, input_t=100, cw_t=50, cr_t=200, out_t=80, out_d=0.002):
++        return {
++            "cost": {
++                "input": {"tokens": input_t, "dollars": input_t * 3e-6},
++                "cache_write": {"tokens": cw_t, "dollars": cw_t * 3.75e-6},
++                "cache_read": {"tokens": cr_t, "dollars": cr_t * 0.30e-6},
++                "output": {"tokens": out_t, "dollars": out_d},
++            }
++        }
++
++    def _make_pricing(self):
++        return MODEL_PRICING["claude-sonnet-4-5"]
++
++    def test_full_case(self):
++        input_sources = {
++            "total_chars": 1000,
++            "tool_results": {"Read": {"cache_write_chars": 400, "cache_read_chars": 100}},
++            "tool_calls": {"bash": {"cache_write_chars": 200, "cache_read_chars": 100}},
++        }
++        output_sources = {"llm_text": 300, "tool_calls": {"bash": 200}}
++        usage = self._make_usage()
++        pricing = self._make_pricing()
++        by_source = attribute_tokens(input_sources, output_sources, usage, pricing)
++        assert "tool_results" in by_source["input"]
++        assert "tool_calls" in by_source["input"]
++        assert "llm_text" in by_source["output"]
++        assert "tool_calls" in by_source["output"]
++
++    def test_zero_total_chars_skips_input(self):
++        input_sources = {"total_chars": 0, "tool_results": {"Read": {"cache_write_chars": 100, "cache_read_chars": 0}}}
++        output_sources = {"llm_text": 100, "tool_calls": {}}
++        by_source = attribute_tokens(input_sources, output_sources, self._make_usage(), self._make_pricing())
++        assert by_source["input"] == {}
++
++    def test_zero_input_tokens_skips_input(self):
++        input_sources = {"total_chars": 1000, "tool_results": {"Read": {"cache_write_chars": 100, "cache_read_chars": 0}}}
++        output_sources = {"llm_text": 100, "tool_calls": {}}
++        usage = {"cost": {"input": {"tokens": 0}, "cache_write": {"tokens": 0}, "cache_read": {"tokens": 0}, "output": {"tokens": 50, "dollars": 0.001}}}
++        by_source = attribute_tokens(input_sources, output_sources, usage, self._make_pricing())
++        assert by_source["input"] == {}
++
++    def test_none_pricing_skips_input(self):
++        input_sources = {"total_chars": 1000, "tool_results": {"Read": {"cache_write_chars": 100, "cache_read_chars": 0}}}
++        output_sources = {"llm_text": 100, "tool_calls": {}}
++        by_source = attribute_tokens(input_sources, output_sources, self._make_usage(), None)
++        assert by_source["input"] == {}
++
++    def test_zero_total_output_chars_skips_output(self):
++        input_sources = {"total_chars": 1000, "tool_results": {}}
++        output_sources = {"llm_text": 0, "tool_calls": {}}
++        by_source = attribute_tokens(input_sources, output_sources, self._make_usage(), self._make_pricing())
++        assert by_source["output"] == {}
++
++    def test_proportional_output_math(self):
++        input_sources = {"total_chars": 1000, "tool_results": {}}
++        output_sources = {"llm_text": 300, "tool_calls": {"bash": 200}}  # 300+200=500 total
++        usage = {"cost": {"input": {"tokens": 0}, "cache_write": {"tokens": 0}, "cache_read": {"tokens": 0}, "output": {"tokens": 100, "dollars": 0.5}}}
++        by_source = attribute_tokens(input_sources, output_sources, usage, None)
++        llm = by_source["output"]["llm_text"]
++        assert llm["tokens"] == round(100 * (300 / 500))
++        assert llm["chars"] == 300
++
++    def test_output_tool_calls_total_key(self):
++        input_sources = {"total_chars": 1000, "tool_results": {}}
++        output_sources = {"llm_text": 0, "tool_calls": {"bash": 400}}
++        usage = {"cost": {"input": {"tokens": 0}, "cache_write": {"tokens": 0}, "cache_read": {"tokens": 0}, "output": {"tokens": 100, "dollars": 0.1}}}
++        by_source = attribute_tokens(input_sources, output_sources, usage, None)
++        assert "__total" in by_source["output"]["tool_calls"]
++
++    def test_only_llm_text_no_tool_calls(self):
++        input_sources = {"total_chars": 1000, "tool_results": {}}
++        output_sources = {"llm_text": 200, "tool_calls": {}}
++        usage = {"cost": {"input": {"tokens": 0}, "cache_write": {"tokens": 0}, "cache_read": {"tokens": 0}, "output": {"tokens": 50, "dollars": 0.05}}}
++        by_source = attribute_tokens(input_sources, output_sources, usage, None)
++        assert by_source["output"]["llm_text"]["tokens"] == 50
++        assert by_source["output"]["llm_text"]["chars"] == 200
++
++
++# ---------------------------------------------------------------------------
++# TestCategorizeInputSources
++# ---------------------------------------------------------------------------
++
++class TestCategorizeInputSources:
++    def test_no_messages(self):
++        body = {"messages": []}
++        result = categorize_input_sources(body)
++        assert "total_chars" in result
++        assert result["tool_results"] == {}
++        assert result["tool_calls"] == {}
++
++    def test_last_user_message_is_cache_write(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "bash", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "result text"}
++                ]},
++            ]
++        }
++        result = categorize_input_sources(body)
++        assert "bash" in result["tool_results"]
++        assert result["tool_results"]["bash"]["cache_write_chars"] > 0
++        assert result["tool_results"]["bash"]["cache_read_chars"] == 0
++
++    def test_earlier_user_message_is_cache_read(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "bash", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "old result"}
++                ]},
++                {"role": "assistant", "content": [{"type": "text", "text": "ok"}]},
++                {"role": "user", "content": [{"type": "text", "text": "new message"}]},
++            ]
++        }
++        result = categorize_input_sources(body)
++        assert result["tool_results"]["bash"]["cache_read_chars"] > 0
++        assert result["tool_results"]["bash"]["cache_write_chars"] == 0
++
++    def test_second_to_last_assistant_is_cache_write(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "Read", "input": {"file_path": "/f"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "content"}
++                ]},
++            ]
++        }
++        result = categorize_input_sources(body)
++        # second_to_last_idx is 0 (the assistant message), which is also index 0
++        assert result["tool_calls"]["Read"]["cache_write_chars"] > 0
++
++    def test_read_file_compress_resolved(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "read_file", "input": {"mode": "compress"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "data"}
++                ]},
++            ]
++        }
++        result = categorize_input_sources(body)
++        assert "read_file_compressed" in result["tool_results"]
++
++    def test_string_content_in_message_skipped(self):
++        body = {
++            "messages": [
++                {"role": "user", "content": "simple string"},
++            ]
++        }
++        result = categorize_input_sources(body)
++        assert result["tool_results"] == {}
++
++    def test_total_chars_is_json_length(self):
++        body = {"messages": []}
++        result = categorize_input_sources(body)
++        assert result["total_chars"] == len(json.dumps(body))
++
++
++# ---------------------------------------------------------------------------
++# TestExtractReadFileWhitespace
++# ---------------------------------------------------------------------------
++
++class TestExtractReadFileWhitespace:
++    def test_empty_messages(self):
++        result = extract_read_file_whitespace({"messages": []})
++        assert result == {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
++
++    def test_read_file_tool_result_accumulates(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "read_file", "input": {"mode": "original"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "line1\nline2  extra"}
++                ]},
++            ]
++        }
++        result = extract_read_file_whitespace(body)
++        assert result["line_returns_count"] == 1
++        assert result["unnecessary_space_count"] == 1
++
++    def test_bash_tool_ignored(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "bash", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "output  with spaces"}
++                ]},
++            ]
++        }
++        result = extract_read_file_whitespace(body)
++        assert result["unnecessary_space_count"] == 0
++        assert result["total_chars"] == 0
++
++    def test_Read_capitalized_tool_matched(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t2", "name": "Read", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t2", "content": "abc\ndef"}
++                ]},
++            ]
++        }
++        result = extract_read_file_whitespace(body)
++        assert result["line_returns_count"] == 1
++
++    def test_list_content_in_tool_result(self):
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t3", "name": "Read", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t3", "content": [
++                        {"type": "text", "text": "hello\n"},
++                        {"type": "text", "text": "world  "},
++                    ]}
++                ]},
++            ]
++        }
++        result = extract_read_file_whitespace(body)
++        assert result["line_returns_count"] == 1
++        assert result["unnecessary_space_count"] == 1
++
++    def test_unknown_tool_use_id_ignored(self):
++        body = {
++            "messages": [
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "nonexistent_id", "content": "data\n\n"}
++                ]},
++            ]
++        }
++        result = extract_read_file_whitespace(body)
++        assert result["total_chars"] == 0
++
++
++# ---------------------------------------------------------------------------
++# TestAggregateBySource
++# ---------------------------------------------------------------------------
++
++class TestAggregateBySource:
++    def _empty_agg(self):
++        return {"input": {}, "output": {}}
++
++    def test_empty_flow_no_change(self):
++        agg = self._empty_agg()
++        _aggregate_by_source(agg, {"input": {}, "output": {}})
++        assert agg == {"input": {}, "output": {}}
++
++    def test_tool_results_accumulated(self):
++        agg = self._empty_agg()
++        flow = {"input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.001, "chars": 100}}}, "output": {}}
++        _aggregate_by_source(agg, flow)
++        assert agg["input"]["tool_results"]["Read"]["tokens"] == 10
++        _aggregate_by_source(agg, flow)
++        assert agg["input"]["tool_results"]["Read"]["tokens"] == 20
++
++    def test_new_key_created(self):
++        agg = self._empty_agg()
++        flow = {"input": {"tool_calls": {"bash": {"tokens": 5, "dollars": 0.0, "chars": 50}}}, "output": {}}
++        _aggregate_by_source(agg, flow)
++        assert "bash" in agg["input"]["tool_calls"]
++
++    def test_llm_text_accumulated(self):
++        agg = self._empty_agg()
++        flow = {"input": {}, "output": {"llm_text": {"tokens": 20, "dollars": 0.01, "chars": 200}}}
++        _aggregate_by_source(agg, flow)
++        _aggregate_by_source(agg, flow)
++        assert agg["output"]["llm_text"]["tokens"] == 40
++
++    def test_tool_calls_with_total_key(self):
++        agg = self._empty_agg()
++        flow = {"input": {}, "output": {"tool_calls": {
++            "__total": {"tokens": 30, "dollars": 0.02, "chars": 300},
++            "bash": {"tokens": 30, "dollars": 0.02, "chars": 300},
++        }}}
++        _aggregate_by_source(agg, flow)
++        assert "__total" in agg["output"]["tool_calls"]
++        assert agg["output"]["tool_calls"]["bash"]["tokens"] == 30
++
++    def test_non_dict_entry_skipped(self):
++        agg = self._empty_agg()
++        flow = {"input": {"tool_results": {"Read": "not_a_dict"}}, "output": {}}
++        _aggregate_by_source(agg, flow)
++        assert "Read" not in agg["input"].get("tool_results", {})
++
++
++# ---------------------------------------------------------------------------
++# TestRoundBySource
++# ---------------------------------------------------------------------------
++
++class TestRoundBySource:
++    def test_rounds_input_tool_results(self):
++        agg = {
++            "input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.0000001234, "chars": 100}}},
++            "output": {},
++        }
++        _round_by_source(agg)
++        assert agg["input"]["tool_results"]["Read"]["dollars"] == round(0.0000001234, 6)
++
++    def test_rounds_output_llm_text(self):
++        agg = {
++            "input": {},
++            "output": {"llm_text": {"tokens": 10, "dollars": 0.0000009876, "chars": 100}},
++        }
++        _round_by_source(agg)
++        assert agg["output"]["llm_text"]["dollars"] == round(0.0000009876, 6)
++
++    def test_rounds_output_tool_calls(self):
++        agg = {
++            "input": {},
++            "output": {"tool_calls": {"bash": {"tokens": 5, "dollars": 0.00000056789, "chars": 50}}},
++        }
++        _round_by_source(agg)
++        assert agg["output"]["tool_calls"]["bash"]["dollars"] == round(0.00000056789, 6)
++
++    def test_missing_sections_no_error(self):
++        _round_by_source({})
++        _round_by_source({"input": {}, "output": {}})
++
++
++# ---------------------------------------------------------------------------
++# TestParseRequestBody
++# ---------------------------------------------------------------------------
++
++class TestParseRequestBody:
++    def test_valid_json_file(self, tmp_path):
++        p = tmp_path / "request.json"
++        data = {"model": "claude-sonnet-4-5", "messages": []}
++        p.write_text(json.dumps(data))
++        assert parse_request_body(str(p)) == data
++
++    def test_invalid_json_returns_none(self, tmp_path):
++        p = tmp_path / "bad.json"
++        p.write_text("{not valid json}")
++        assert parse_request_body(str(p)) is None
++
++    def test_nested_objects(self, tmp_path):
++        p = tmp_path / "nested.json"
++        data = {"a": {"b": [1, 2, 3]}}
++        p.write_text(json.dumps(data))
++        assert parse_request_body(str(p)) == data
++
++
++# ---------------------------------------------------------------------------
++# TestWriteRequest
++# ---------------------------------------------------------------------------
++
++class TestWriteRequest:
++    def test_creates_header_file(self, tmp_path):
++        f = make_flow(method="POST", url="https://api.anthropic.com/v1/messages",
++                      body=b'{"model":"test"}')
++        write_request(f, str(tmp_path))
++        header_file = tmp_path / "request_headers.txt"
++        assert header_file.exists()
++        content = header_file.read_text()
++        assert "POST" in content
++        assert "api.anthropic.com" in content
++
++    def test_creates_request_json_for_valid_body(self, tmp_path):
++        f = make_flow(body=b'{"model":"claude-sonnet-4-5","messages":[]}')
++        write_request(f, str(tmp_path))
++        rj = tmp_path / "request.json"
++        assert rj.exists()
++        parsed = json.loads(rj.read_text())
++        assert parsed["model"] == "claude-sonnet-4-5"
++
++    def test_raw_body_fallback_for_non_json(self, tmp_path):
++        f = make_flow(body=b"not json at all")
++        write_request(f, str(tmp_path))
++        rj = tmp_path / "request.json"
++        assert rj.exists()
++        assert rj.read_text().strip() == "not json at all"
++
++    def test_no_request_json_when_no_body(self, tmp_path):
++        f = make_flow()
++        f.request.content = b""
++        write_request(f, str(tmp_path))
++        assert not (tmp_path / "request.json").exists()
++
++    def test_sensitive_headers_redacted(self, tmp_path):
++        f = make_flow(api_key="super-secret-key")
++        write_request(f, str(tmp_path))
++        content = (tmp_path / "request_headers.txt").read_text()
++        assert "super-secret-key" not in content
++        assert "[REDACTED]" in content
++
++
++# ---------------------------------------------------------------------------
++# TestWriteResponse
++# ---------------------------------------------------------------------------
++
++class TestWriteResponse:
++    def test_creates_response_raw_txt(self, tmp_path):
++        f = make_flow(response_body=b"data: hello")
++        write_response(f, str(tmp_path))
++        resp_file = tmp_path / "response_raw.txt"
++        assert resp_file.exists()
++        content = resp_file.read_text()
++        assert "200" in content
++        assert "data: hello" in content
++
++    def test_none_response_returns_early(self, tmp_path):
++        f = tflow.tflow(resp=False)
++        write_response(f, str(tmp_path))
++        assert not (tmp_path / "response_raw.txt").exists()
++
++    def test_response_headers_included(self, tmp_path):
++        f = make_flow()
++        f.response.headers["content-type"] = "text/event-stream"
++        write_response(f, str(tmp_path))
++        content = (tmp_path / "response_raw.txt").read_text()
++        assert "content-type" in content
++
++    def test_no_body_written_when_empty(self, tmp_path):
++        f = tflow.tflow(resp=True)
++        f.response.content = b""
++        write_response(f, str(tmp_path))
++        content = (tmp_path / "response_raw.txt").read_text()
++        # No blank line + body section
++        assert "OK" in content  # status line present
++
++
++# ---------------------------------------------------------------------------
++# TestParseResponseContent
++# ---------------------------------------------------------------------------
++
++class TestParseResponseContent:
++    def test_sse_text_block(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "name": ""}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello world"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert len(blocks) == 1
++        assert blocks[0]["type"] == "text"
++        assert blocks[0]["text"] == "Hello world"
++
++    def test_sse_tool_use_block(self, tmp_path):
++        input_json = json.dumps({"file_path": "/foo/bar.py"})
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "read_file", "id": "t1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": input_json}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert len(blocks) == 1
++        assert blocks[0]["type"] == "tool_use"
++        assert blocks[0]["name"] == "read_file"
++        assert blocks[0]["input"]["file_path"] == "/foo/bar.py"
++
++    def test_sse_invalid_json_delta_falls_back(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "bash", "id": "t1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": "{invalid"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert len(blocks) == 1
++        assert blocks[0]["input"] == {}
++
++    def test_non_streaming_fallback(self, tmp_path):
++        msg = json.dumps({"type": "message", "content": [{"type": "text", "text": "hi"}]})
++        write_response_raw(str(tmp_path), msg)
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert len(blocks) == 1
++        assert blocks[0]["text"] == "hi"
++
++    def test_empty_file_returns_empty_list(self, tmp_path):
++        write_response_raw(str(tmp_path), "")
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert blocks == []
++
++    def test_mixed_text_and_tool(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text", "name": ""}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "I'll read the file"}},
++            {"type": "content_block_stop", "index": 0},
++            {"type": "content_block_start", "index": 1, "content_block": {"type": "tool_use", "name": "bash", "id": "t2"}},
++            {"type": "content_block_delta", "index": 1, "delta": {"type": "input_json_delta", "partial_json": json.dumps({"cmd": "ls"})}},
++            {"type": "content_block_stop", "index": 1},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        blocks = parse_response_content(str(tmp_path / "response_raw.txt"))
++        assert len(blocks) == 2
++        assert blocks[0]["type"] == "text"
++        assert blocks[1]["type"] == "tool_use"
++
++
++# ---------------------------------------------------------------------------
++# TestCategorizeOutputSources
++# ---------------------------------------------------------------------------
++
++class TestCategorizeOutputSources:
++    def test_text_chars_counted(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "abcde"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        result = categorize_output_sources(str(tmp_path / "response_raw.txt"))
++        assert result["llm_text"] == 5
++
++    def test_tool_use_chars_counted(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "bash", "id": "t1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": json.dumps({"cmd": "ls"})}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        result = categorize_output_sources(str(tmp_path / "response_raw.txt"))
++        assert "bash" in result["tool_calls"]
++        assert result["tool_calls"]["bash"] > 0
++
++    def test_read_file_compress_resolved_in_output(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "read_file", "id": "t1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": json.dumps({"mode": "compress"})}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        result = categorize_output_sources(str(tmp_path / "response_raw.txt"))
++        assert "read_file_compressed" in result["tool_calls"]
++
++    def test_non_streaming_fallback(self, tmp_path):
++        msg = json.dumps({"type": "message", "content": [{"type": "text", "text": "xyz"}]})
++        write_response_raw(str(tmp_path), msg)
++        result = categorize_output_sources(str(tmp_path / "response_raw.txt"))
++        assert result["llm_text"] == 3
++
++
++# ---------------------------------------------------------------------------
++# TestExportParsedResponse
++# ---------------------------------------------------------------------------
++
++class TestExportParsedResponse:
++    def test_empty_blocks_returns_false(self, tmp_path):
++        write_response_raw(str(tmp_path), "")
++        result = export_parsed_response(
++            str(tmp_path / "response_raw.txt"),
++            str(tmp_path / "response_parsed.txt"),
++        )
++        assert result is False
++        assert not (tmp_path / "response_parsed.txt").exists()
++
++    def test_text_block_written_as_is(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Hello!"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        result = export_parsed_response(
++            str(tmp_path / "response_raw.txt"),
++            str(tmp_path / "response_parsed.txt"),
++        )
++        assert result is True
++        content = (tmp_path / "response_parsed.txt").read_text()
++        assert "Hello!" in content
++
++    def test_tool_use_block_formatted_inline(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "bash", "id": "t1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": json.dumps({"cmd": "ls"})}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        export_parsed_response(
++            str(tmp_path / "response_raw.txt"),
++            str(tmp_path / "response_parsed.txt"),
++        )
++        content = (tmp_path / "response_parsed.txt").read_text()
++        assert "[bash(" in content
++
++    def test_multiple_blocks_concatenated(self, tmp_path):
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "First"}},
++            {"type": "content_block_stop", "index": 0},
++            {"type": "content_block_start", "index": 1, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 1, "delta": {"type": "text_delta", "text": "Second"}},
++            {"type": "content_block_stop", "index": 1},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        export_parsed_response(
++            str(tmp_path / "response_raw.txt"),
++            str(tmp_path / "response_parsed.txt"),
++        )
++        content = (tmp_path / "response_parsed.txt").read_text()
++        assert "First" in content
++        assert "Second" in content
++
++
++# ---------------------------------------------------------------------------
++# TestExportParsedResponses
++# ---------------------------------------------------------------------------
++
++class TestExportParsedResponses:
++    def test_creates_parsed_files(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "Answer"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(req_dir), make_sse_response(events))
++        export_parsed_responses(str(tmp_path))
++        assert (req_dir / "response_parsed.txt").exists()
++
++    def test_skips_dirs_without_response_raw(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        # No response_raw.txt
++        export_parsed_responses(str(tmp_path))
++        assert not (req_dir / "response_parsed.txt").exists()
++
++
++# ---------------------------------------------------------------------------
++# TestExtractUsage
++# ---------------------------------------------------------------------------
++
++class TestExtractUsage:
++    def test_sse_message_delta_usage(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        usage_event = {
++            "type": "message_delta",
++            "delta": {"stop_reason": "end_turn"},
++            "usage": {"input_tokens": 100, "output_tokens": 50, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 200},
++        }
++        write_response_raw(str(req_dir), make_sse_response([usage_event]))
++        extract_usage(str(tmp_path))
++        usage_file = req_dir / "usage.json"
++        assert usage_file.exists()
++        data = json.loads(usage_file.read_text())
++        assert data["input_tokens"] == 100
++        assert data["output_tokens"] == 50
++
++    def test_non_streaming_fallback(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        msg = json.dumps({
++            "type": "message",
++            "usage": {"input_tokens": 10, "output_tokens": 5, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0},
++        })
++        write_response_raw(str(req_dir), msg)
++        extract_usage(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert data["input_tokens"] == 10
++
++    def test_timing_merged_and_file_removed(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        usage_event = {
++            "type": "message_delta",
++            "usage": {"input_tokens": 1, "output_tokens": 1},
++        }
++        write_response_raw(str(req_dir), make_sse_response([usage_event]))
++        timing = {"request_start": 1000.0, "response_end": 1002.0}
++        with open(str(req_dir / "timing.json"), "w") as f:
++            json.dump(timing, f)
++        extract_usage(str(tmp_path))
++        assert not (req_dir / "timing.json").exists()
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "timing" in data
++        assert data["timing"]["duration_ms"] == 2000
++
++    def test_no_usage_skipped(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        write_response_raw(str(req_dir), "no SSE here")
++        extract_usage(str(tmp_path))
++        assert not (req_dir / "usage.json").exists()
++
++    def test_only_token_fields_preserved(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        usage_event = {
++            "type": "message_delta",
++            "usage": {
++                "input_tokens": 100, "output_tokens": 50,
++                "cache_creation_input_tokens": 10, "cache_read_input_tokens": 5,
++                "other_field": "ignored",
++            },
++        }
++        write_response_raw(str(req_dir), make_sse_response([usage_event]))
++        extract_usage(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "other_field" not in data
++        assert "input_tokens" in data
++
++
++# ---------------------------------------------------------------------------
++# TestExtractPrompts
++# ---------------------------------------------------------------------------
++
++class TestExtractPrompts:
++    def test_creates_system_prompt_md(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        body = {
++            "system": [{"type": "text", "text": "You are a helpful assistant."}],
++            "messages": [],
++        }
++        write_request_json(str(req_dir), body)
++        extract_prompts(str(tmp_path))
++        sp = req_dir / "system_prompt.md"
++        assert sp.exists()
++        assert "You are a helpful assistant." in sp.read_text()
++
++    def test_creates_first_user_message_md(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        body = {
++            "messages": [
++                {"role": "user", "content": [{"type": "text", "text": "Hello there"}]}
++            ],
++        }
++        write_request_json(str(req_dir), body)
++        extract_prompts(str(tmp_path))
++        um = req_dir / "first_user_message.md"
++        assert um.exists()
++        assert "Hello there" in um.read_text()
++
++    def test_invalid_request_json_skipped(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        (req_dir / "request.json").write_text("{bad json}")
++        extract_prompts(str(tmp_path))
++        assert not (req_dir / "system_prompt.md").exists()
++
++    def test_no_system_no_system_prompt_file(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        body = {"messages": [{"role": "user", "content": [{"type": "text", "text": "hi"}]}]}
++        write_request_json(str(req_dir), body)
++        extract_prompts(str(tmp_path))
++        assert not (req_dir / "system_prompt.md").exists()
++
++
++# ---------------------------------------------------------------------------
++# TestCalculateCosts
++# ---------------------------------------------------------------------------
++
++class TestCalculateCosts:
++    def _setup_dir(self, tmp_path, model, usage_data, request_body=None):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        body = request_body or {"model": model, "messages": []}
++        write_request_json(str(req_dir), body)
++        write_usage_json(str(req_dir), usage_data)
++        return req_dir
++
++    def test_known_model_computes_costs(self, tmp_path):
++        usage = {"input_tokens": 100, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0, "output_tokens": 50}
++        req_dir = self._setup_dir(tmp_path, "claude-sonnet-4-5", usage)
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "cost" in data
++        assert data["cost"]["input"]["tokens"] == 100
++        assert data["cost"]["output"]["tokens"] == 50
++
++    def test_top_level_token_keys_removed(self, tmp_path):
++        usage = {"input_tokens": 100, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0, "output_tokens": 50}
++        req_dir = self._setup_dir(tmp_path, "claude-sonnet-4-5", usage)
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "input_tokens" not in data
++        assert "output_tokens" not in data
++
++    def test_model_set_to_canonical(self, tmp_path):
++        usage = {"input_tokens": 1, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0, "output_tokens": 1}
++        req_dir = self._setup_dir(tmp_path, "claude-sonnet-4-5-20250101", usage)
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert data["model"] == "claude-sonnet-4-5"
++
++    def test_unknown_model_skipped(self, tmp_path):
++        usage = {"input_tokens": 100, "output_tokens": 50}
++        req_dir = self._setup_dir(tmp_path, "gpt-4", usage)
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "cost" not in data
++
++    def test_missing_model_skipped(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        write_request_json(str(req_dir), {"messages": []})
++        write_usage_json(str(req_dir), {"input_tokens": 1})
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "cost" not in data
++
++    def test_invalid_request_json_skipped(self, tmp_path):
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        (req_dir / "request.json").write_text("{invalid}")
++        write_usage_json(str(req_dir), {"input_tokens": 1})
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "cost" not in data
++
++    def test_cost_math_is_correct(self, tmp_path):
++        usage = {"input_tokens": 1000, "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0, "output_tokens": 500}
++        req_dir = self._setup_dir(tmp_path, "claude-sonnet-4-5", usage)
++        calculate_costs(str(tmp_path))
++        data = json.loads((req_dir / "usage.json").read_text())
++        p = MODEL_PRICING["claude-sonnet-4-5"]
++        expected_input = round(1000 * p["input"], 6)
++        expected_output = round(500 * p["output"], 6)
++        assert data["cost"]["input"]["dollars"] == expected_input
++        assert data["cost"]["output"]["dollars"] == expected_output
++
++
++# ---------------------------------------------------------------------------
++# TestExtractFileOps
++# ---------------------------------------------------------------------------
++
++class TestExtractFileOps:
++    def test_read_file_in_request_counted(self, tmp_path):
++        response_file = tmp_path / "response_raw.txt"
++        write_response_raw(str(tmp_path), make_sse_response([]))
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "Read", "input": {"file_path": "/abs/myfile.py"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "file content here"}
++                ]},
++            ]
++        }
++        result = extract_file_ops(body, str(response_file))
++        assert "/abs/myfile.py" in result["input"]["per_file"]
++        assert result["input"]["per_file"]["/abs/myfile.py"]["chars"] == len("file content here")
++
++    def test_write_file_in_response_counted(self, tmp_path):
++        input_json = json.dumps({"file_path": "/abs/out.py", "content": "print('hello')"})
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "write_file", "id": "w1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": input_json}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        body = {"messages": []}
++        result = extract_file_ops(body, str(tmp_path / "response_raw.txt"))
++        assert "/abs/out.py" in result["output"]["per_file"]
++        assert result["output"]["per_file"]["/abs/out.py"]["chars"] == len("print('hello')")
++
++    def test_edit_file_counts_new_string(self, tmp_path):
++        input_json = json.dumps({"file_path": "/abs/edit.py", "old_string": "old", "new_string": "replacement_text"})
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "edit_file", "id": "e1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": input_json}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        body = {"messages": []}
++        result = extract_file_ops(body, str(tmp_path / "response_raw.txt"))
++        assert result["output"]["per_file"]["/abs/edit.py"]["chars"] == len("replacement_text")
++
++    def test_multiple_reads_same_file_deduplicated(self, tmp_path):
++        write_response_raw(str(tmp_path), make_sse_response([]))
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "Read", "input": {"file_path": "/abs/f.py"}},
++                    {"type": "tool_use", "id": "t2", "name": "Read", "input": {"file_path": "/abs/f.py"}},
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "content_a"},
++                    {"type": "tool_result", "tool_use_id": "t2", "content": "content_b"},
++                ]},
++            ]
++        }
++        result = extract_file_ops(body, str(tmp_path / "response_raw.txt"))
++        pf = result["input"]["per_file"]["/abs/f.py"]
++        assert pf["calls"] == 2
++        assert pf["chars"] == len("content_a") + len("content_b")
++
++    def test_relative_path_absolutized(self, tmp_path):
++        write_response_raw(str(tmp_path), make_sse_response([]))
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "Read", "input": {"file_path": "relative/path.py"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "data"}
++                ]},
++            ]
++        }
++        result = extract_file_ops(body, str(tmp_path / "response_raw.txt"))
++        for fp in result["input"]["per_file"]:
++            assert os.path.isabs(fp)
++
++    def test_non_read_tool_ignored_in_input(self, tmp_path):
++        write_response_raw(str(tmp_path), make_sse_response([]))
++        body = {
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "bash", "input": {"cmd": "ls"}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "output"}
++                ]},
++            ]
++        }
++        result = extract_file_ops(body, str(tmp_path / "response_raw.txt"))
++        assert result["input"]["unique_files_read"] == 0
++
++    def test_file_size_none_when_file_not_exists(self, tmp_path):
++        input_json = json.dumps({"file_path": "/nonexistent/path/file.py", "content": "x"})
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "tool_use", "name": "write_file", "id": "w1"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "input_json_delta", "partial_json": input_json}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_response_raw(str(tmp_path), make_sse_response(events))
++        result = extract_file_ops({"messages": []}, str(tmp_path / "response_raw.txt"))
++        assert result["output"]["per_file"]["/nonexistent/path/file.py"]["file_size"] is None
++
++
++# ---------------------------------------------------------------------------
++# TestExtractSourceAttribution
++# ---------------------------------------------------------------------------
++
++class TestExtractSourceAttribution:
++    def test_runs_and_writes_by_source(self, tmp_path):
++        from export_flows import extract_source_attribution
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++
++        body = {
++            "model": "claude-sonnet-4-5",
++            "messages": [
++                {"role": "assistant", "content": [
++                    {"type": "tool_use", "id": "t1", "name": "bash", "input": {}}
++                ]},
++                {"role": "user", "content": [
++                    {"type": "tool_result", "tool_use_id": "t1", "content": "output"}
++                ]},
++            ],
++        }
++        usage_data = {
++            "cost": {
++                "input": {"tokens": 100, "dollars": 0.0003},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": 50, "dollars": 0.00075},
++            }
++        }
++        events = [
++            {"type": "content_block_start", "index": 0, "content_block": {"type": "text"}},
++            {"type": "content_block_delta", "index": 0, "delta": {"type": "text_delta", "text": "done"}},
++            {"type": "content_block_stop", "index": 0},
++        ]
++        write_request_json(str(req_dir), body)
++        write_usage_json(str(req_dir), usage_data)
++        write_response_raw(str(req_dir), make_sse_response(events))
++
++        extract_source_attribution(str(tmp_path))
++
++        updated = json.loads((req_dir / "usage.json").read_text())
++        assert "by_source" in updated
++        assert "read_file_whitespace" in updated
++        assert "file_ops" in updated
++
++    def test_skips_dir_without_all_required_files(self, tmp_path):
++        from export_flows import extract_source_attribution
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        # Only request.json, no usage.json or response_raw.txt
++        write_request_json(str(req_dir), {"model": "test", "messages": []})
++        extract_source_attribution(str(tmp_path))
++        # No error, no usage.json updated
++
++    def test_skips_invalid_request_body(self, tmp_path):
++        from export_flows import extract_source_attribution
++        req_dir = tmp_path / "agent" / "1" / "1"
++        req_dir.mkdir(parents=True)
++        (req_dir / "request.json").write_text("{bad}")
++        write_usage_json(str(req_dir), {"cost": {}})
++        write_response_raw(str(req_dir), "")
++        extract_source_attribution(str(tmp_path))
++        # No error; usage.json unchanged (no by_source key)
++        data = json.loads((req_dir / "usage.json").read_text())
++        assert "by_source" not in data
++
++
++# ---------------------------------------------------------------------------
++# TestRedactFlowFiles
++# ---------------------------------------------------------------------------
++
++class TestRedactFlowFiles:
++    def test_no_flow_files_returns_silently(self, tmp_path, capsys):
++        # When no .flow files exist, function returns early without printing
++        redact_flow_files(str(tmp_path))
++        out = capsys.readouterr().out
++        assert out == ""
++
++    def test_flow_with_api_key_redacted(self, tmp_path):
++        f = make_flow(api_key="actual-secret-key")
++        flow_path = str(tmp_path / "test.flow")
++        write_flow_file(flow_path, [f])
++        redact_flow_files(str(tmp_path))
++        # Read the modified flow
++        from mitmproxy.io import FlowReader
++        with open(flow_path, "rb") as fp:
++            reader = FlowReader(fp)
++            flows = list(reader.stream())
++        assert flows[0].request.headers.get("x-api-key") == "[REDACTED]"
++
++    def test_flow_without_sensitive_headers_not_counted(self, tmp_path, capsys):
++        f = make_flow(body=b'{"test": true}')
++        flow_path = str(tmp_path / "clean.flow")
++        write_flow_file(flow_path, [f])
++        redact_flow_files(str(tmp_path))
++        out = capsys.readouterr().out
++        assert "0 flow files" in out
++
++    def test_authorization_header_redacted(self, tmp_path):
++        f = make_flow()
++        f.request.headers["authorization"] = "Bearer my-token"
++        flow_path = str(tmp_path / "auth.flow")
++        write_flow_file(flow_path, [f])
++        redact_flow_files(str(tmp_path))
++        from mitmproxy.io import FlowReader
++        with open(flow_path, "rb") as fp:
++            reader = FlowReader(fp)
++            flows = list(reader.stream())
++        assert flows[0].request.headers.get("authorization") == "[REDACTED]"
++
++    def test_corrupt_flow_file_skipped(self, tmp_path, capsys):
++        # Write an invalid .flow file to trigger the exception handler (lines 196-198)
++        bad_flow = tmp_path / "corrupt.flow"
++        bad_flow.write_bytes(b"this is not a valid flow file at all")
++        # Should not raise; should print a skip message
++        redact_flow_files(str(tmp_path))
++        out = capsys.readouterr().out
++        assert "corrupt.flow" in out or "Skipping" in out
++
++
++# ---------------------------------------------------------------------------
++# TestExportFlows
++# ---------------------------------------------------------------------------
++
++class TestExportFlows:
++    def _make_sse_body(self, stop_reason="end_turn"):
++        event = json.dumps({
++            "type": "message_delta",
++            "delta": {"stop_reason": stop_reason},
++            "usage": {"input_tokens": 10, "output_tokens": 5},
++        })
++        return f"data: {event}\n".encode()
++
++    def test_no_flow_files_prints_message(self, tmp_path, capsys):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++        export_flows_fn(str(input_dir), str(output_dir))
++        out = capsys.readouterr().out
++        assert "No *.flow files" in out
++
++    def test_single_flow_creates_directory_structure(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        f = make_flow(
++            method="POST",
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"claude-sonnet-4-5","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        flow_path = str(input_dir / "vix.flow")
++        write_flow_file(flow_path, [f])
++
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        # Should have created vix/1/1/
++        vix_dir = output_dir / "vix"
++        assert vix_dir.exists()
++        step_dirs = list(vix_dir.iterdir())
++        assert len(step_dirs) >= 1
++
++    def test_count_tokens_url_skipped(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        f_skip = make_flow(url="https://api.anthropic.com/v1/count_tokens", body=b'{}')
++        f_keep = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        flow_path = str(input_dir / "vix.flow")
++        write_flow_file(flow_path, [f_skip, f_keep])
++
++        export_flows_fn(str(input_dir), str(output_dir))
++        # Only 1 flow should be in output
++        vix_dir = output_dir / "vix"
++        # step 1 should have only request 1 (not 2)
++        assert (vix_dir / "1" / "1").exists()
++        assert not (vix_dir / "1" / "2").exists()
++
++    def test_quota_message_skipped(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        quota_body = json.dumps({"messages": [{"role": "user", "content": "quota"}]}).encode()
++        f_quota = make_flow(url="https://api.anthropic.com/v1/messages", body=quota_body)
++        f_normal = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        flow_path = str(input_dir / "vix.flow")
++        write_flow_file(flow_path, [f_quota, f_normal])
++
++        export_flows_fn(str(input_dir), str(output_dir))
++        vix_dir = output_dir / "vix"
++        assert (vix_dir / "1" / "1").exists()
++        assert not (vix_dir / "1" / "2").exists()
++
++    def test_existing_output_dir_removed_and_recreated(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        # Create stale file
++        stale = output_dir / "vix" / "stale.txt"
++        stale.parent.mkdir(parents=True)
++        stale.write_text("old data")
++
++        f = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        write_flow_file(str(input_dir / "vix.flow"), [f])
++        export_flows_fn(str(input_dir), str(output_dir))
++        assert not stale.exists()
++
++    def test_vix_step_increments_on_end_turn(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        f1 = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        f2 = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        write_flow_file(str(input_dir / "vix.flow"), [f1, f2])
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        vix_dir = output_dir / "vix"
++        # f1: step 1 req 1, then end_turn → step 2; f2: step 2 req 1
++        assert (vix_dir / "1" / "1").exists()
++        assert (vix_dir / "2" / "1").exists()
++
++    def test_vix_request_increments_without_end_turn(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        f1 = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("tool_use"),
++        )
++        f2 = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        write_flow_file(str(input_dir / "vix.flow"), [f1, f2])
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        vix_dir = output_dir / "vix"
++        assert (vix_dir / "1" / "1").exists()
++        assert (vix_dir / "1" / "2").exists()  # same step, next request
++
++    def test_timing_json_written(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        f = make_flow(
++            url="https://api.anthropic.com/v1/messages",
++            body=b'{"model":"test","messages":[]}',
++            response_body=self._make_sse_body("end_turn"),
++        )
++        write_flow_file(str(input_dir / "vix.flow"), [f])
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        timing_file = output_dir / "vix" / "1" / "1" / "timing.json"
++        assert timing_file.exists()
++        timing_data = json.loads(timing_file.read_text())
++        assert "request_start" in timing_data
++
++    def test_cc_agent_step_increments_on_prompt_change(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        # Two flows with different system prompts → step should increment
++        sys_blocks_1 = [
++            {"type": "text", "text": "block0"},
++            {"type": "text", "text": "block1"},
++            {"type": "text", "text": "system_prompt_v1"},
++        ]
++        sys_blocks_2 = [
++            {"type": "text", "text": "block0"},
++            {"type": "text", "text": "block1"},
++            {"type": "text", "text": "system_prompt_v2_changed"},
++        ]
++        body1 = json.dumps({"model": "test", "system": sys_blocks_1, "messages": []}).encode()
++        body2 = json.dumps({"model": "test", "system": sys_blocks_2, "messages": []}).encode()
++
++        f1 = make_flow(url="https://api.anthropic.com/v1/messages", body=body1,
++                       response_body=self._make_sse_body("tool_use"))
++        f2 = make_flow(url="https://api.anthropic.com/v1/messages", body=body2,
++                       response_body=self._make_sse_body("end_turn"))
++        write_flow_file(str(input_dir / "cc.flow"), [f1, f2])
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        cc_dir = output_dir / "cc"
++        assert (cc_dir / "1" / "1").exists()
++        assert (cc_dir / "2" / "1").exists()
++
++    def test_cc_agent_no_step_increment_same_prompt(self, tmp_path):
++        input_dir = tmp_path / "input"
++        input_dir.mkdir()
++        output_dir = tmp_path / "output"
++        output_dir.mkdir()
++
++        sys_blocks = [
++            {"type": "text", "text": "same_block"},
++            {"type": "text", "text": "same_block_1"},
++            {"type": "text", "text": "same_system_prompt"},
++        ]
++        body = json.dumps({"model": "test", "system": sys_blocks, "messages": []}).encode()
++        f1 = make_flow(url="https://api.anthropic.com/v1/messages", body=body,
++                       response_body=self._make_sse_body("tool_use"))
++        f2 = make_flow(url="https://api.anthropic.com/v1/messages", body=body,
++                       response_body=self._make_sse_body("end_turn"))
++        write_flow_file(str(input_dir / "cc.flow"), [f1, f2])
++        export_flows_fn(str(input_dir), str(output_dir))
++
++        cc_dir = output_dir / "cc"
++        # Same prompt → no step increment; request_index increments for cc
++        assert (cc_dir / "1" / "1").exists()
++        assert (cc_dir / "1" / "2").exists()
++        assert not (cc_dir / "2").exists()
++
++
++# ---------------------------------------------------------------------------
++# TestSummarizeUsage
++# ---------------------------------------------------------------------------
++
++class TestSummarizeUsage:
++    def _make_agent_structure(self, tmp_path, agent_name, steps):
++        """Create agent directory structure.
++        steps: list of lists of usage dicts (steps[step_idx][req_idx])
++        """
++        agent_dir = tmp_path / agent_name
++        agent_dir.mkdir(parents=True)
++        for step_num, requests in enumerate(steps, start=1):
++            step_dir = agent_dir / str(step_num)
++            step_dir.mkdir()
++            for req_num, usage in enumerate(requests, start=1):
++                req_dir = step_dir / str(req_num)
++                req_dir.mkdir()
++                write_usage_json(str(req_dir), usage)
++
++    def _base_usage(self, model="claude-sonnet-4-5", input_t=100, out_t=50,
++                    rs=1000.0, re=1002.0):
++        return {
++            "model": model,
++            "cost": {
++                "input": {"tokens": input_t, "dollars": input_t * 3e-6},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": out_t, "dollars": out_t * 15e-6},
++                "total": {"tokens": input_t + out_t, "dollars": (input_t * 3e-6) + (out_t * 15e-6)},
++            },
++            "timing": {"request_start": rs, "response_end": re, "duration_ms": round((re - rs) * 1000)},
++        }
++
++    def test_skips_dirs_without_numbered_subdirs(self, tmp_path):
++        no_numbered = tmp_path / "agent_no_steps"
++        no_numbered.mkdir()
++        (no_numbered / "some_file.txt").write_text("data")
++        summarize_usage(str(tmp_path))
++        assert not (no_numbered / "usage.json").exists()
++
++    def test_creates_usage_json_summary(self, tmp_path):
++        self._make_agent_structure(tmp_path, "vix", [[self._base_usage()]])
++        summarize_usage(str(tmp_path))
++        summary_file = tmp_path / "vix" / "usage.json"
++        assert summary_file.exists()
++
++    def test_by_model_bucketing(self, tmp_path):
++        usage1 = self._base_usage(model="claude-sonnet-4-5")
++        usage2 = self._base_usage(model="claude-haiku-3-5", input_t=200, out_t=100)
++        self._make_agent_structure(tmp_path, "vix", [[usage1], [usage2]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert "claude-sonnet-4-5" in data["by_model"]
++        assert "claude-haiku-3-5" in data["by_model"]
++
++    def test_by_step_bucketing(self, tmp_path):
++        self._make_agent_structure(tmp_path, "vix", [
++            [self._base_usage()],
++            [self._base_usage()],
++        ])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert "1" in data["by_step"]
++        assert "2" in data["by_step"]
++
++    def test_total_request_count(self, tmp_path):
++        self._make_agent_structure(tmp_path, "vix", [
++            [self._base_usage(), self._base_usage()],
++            [self._base_usage()],
++        ])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert data["total"]["request_count"] == 3
++
++    def test_finalize_timing_wall_clock(self, tmp_path):
++        u1 = self._base_usage(rs=1000.0, re=1005.0)
++        u2 = self._base_usage(rs=1003.0, re=1010.0)
++        self._make_agent_structure(tmp_path, "vix", [[u1, u2]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        # wall_clock_ms = (max_response_end - min_request_start) * 1000 = (1010 - 1000) * 1000 = 10000
++        assert data["total"]["timing"]["wall_clock_ms"] == 10000
++
++    def test_finalize_timing_avg_duration(self, tmp_path):
++        u1 = self._base_usage(rs=1000.0, re=1002.0)  # duration_ms = 2000
++        u2 = self._base_usage(rs=1003.0, re=1007.0)  # duration_ms = 4000
++        self._make_agent_structure(tmp_path, "vix", [[u1, u2]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert data["total"]["timing"]["avg_duration_ms"] == 3000
++
++    def test_finalize_timing_zero_request_count(self, tmp_path):
++        """Empty agent dir with numbered subdirs but no usage files."""
++        agent_dir = tmp_path / "empty_agent"
++        agent_dir.mkdir()
++        step_dir = agent_dir / "1"
++        step_dir.mkdir()
++        # No request dirs with usage.json
++        summarize_usage(str(tmp_path))
++        # No usage.json should be created (request_count = 0, skipped)
++        # Actually the loop still writes even with 0 requests; check timing handles it
++        if (agent_dir / "usage.json").exists():
++            data = json.loads((agent_dir / "usage.json").read_text())
++            assert data["total"]["timing"]["avg_duration_ms"] == 0
++
++    def test_agent_color_from_agent_colors(self, tmp_path):
++        self._make_agent_structure(tmp_path, "vix", [[self._base_usage()]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert data["color"] == AGENT_COLORS["vix"]
++
++    def test_unknown_agent_uses_computed_color(self, tmp_path):
++        self._make_agent_structure(tmp_path, "unknown_agent_xyz", [[self._base_usage()]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "unknown_agent_xyz" / "usage.json").read_text())
++        assert data["color"] == _agent_color("unknown_agent_xyz")
++
++    def test_by_source_aggregated(self, tmp_path):
++        usage = self._base_usage()
++        usage["by_source"] = {
++            "input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.001, "chars": 100}}},
++            "output": {"llm_text": {"tokens": 20, "dollars": 0.002, "chars": 200}},
++        }
++        self._make_agent_structure(tmp_path, "vix", [[usage, usage]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert data["by_source"]["input"]["tool_results"]["Read"]["tokens"] == 20
++        assert data["by_source"]["output"]["llm_text"]["tokens"] == 40
++
++    def test_read_file_whitespace_aggregated(self, tmp_path):
++        usage = self._base_usage()
++        usage["read_file_whitespace"] = {"line_returns_count": 5, "unnecessary_space_count": 2, "total_chars": 100}
++        self._make_agent_structure(tmp_path, "vix", [[usage, usage]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert data["read_file_whitespace"]["line_returns_count"] == 10
++        assert data["read_file_whitespace"]["unnecessary_space_count"] == 4
++
++    def test_file_ops_finalized(self, tmp_path):
++        usage = self._base_usage()
++        usage["file_ops"] = {
++            "input": {
++                "per_file": {"/abs/foo.py": {"tool_ids": {"t1": 50, "t2": 30}, "file_size": None}},
++                "unique_files_read": 1, "total_read_chars": 80,
++            },
++            "output": {
++                "per_file": {},
++                "files_written": 0, "unique_files_written": 0, "total_write_chars": 0,
++            },
++        }
++        self._make_agent_structure(tmp_path, "vix", [[usage]])
++        summarize_usage(str(tmp_path))
++        data = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        pf = data["total"]["file_ops"]["input"]["per_file"]["/abs/foo.py"]
++        assert pf["calls"] == 2
++        assert pf["chars"] == 80
++        assert "tool_ids" not in pf
++
++    def test_non_directory_entries_skipped(self, tmp_path):
++        # A file at top level should be skipped (line 1245)
++        (tmp_path / "somefile.txt").write_text("data")
++        agent_dir = tmp_path / "vix"
++        agent_dir.mkdir()
++        (agent_dir / "1").mkdir()
++        write_usage_json(str(agent_dir / "1" / "1"), self._base_usage())
++        # Should not crash
++        summarize_usage(str(tmp_path))
++
++    def test_non_digit_step_dirs_skipped(self, tmp_path):
++        # A non-digit subdirectory in agent dir should be skipped (line 1269)
++        agent_dir = tmp_path / "vix"
++        agent_dir.mkdir()
++        (agent_dir / "1").mkdir()
++        (agent_dir / "extra_subdir").mkdir()
++        req_dir = agent_dir / "1" / "1"
++        req_dir.mkdir()
++        write_usage_json(str(req_dir), self._base_usage())
++        summarize_usage(str(tmp_path))
++        data = json.loads((agent_dir / "usage.json").read_text())
++        assert data["total"]["request_count"] == 1
++
++    def test_missing_usage_json_skipped(self, tmp_path):
++        # Request dir exists but no usage.json (line 1282)
++        agent_dir = tmp_path / "vix"
++        agent_dir.mkdir()
++        step_dir = agent_dir / "1"
++        step_dir.mkdir()
++        req_dir = step_dir / "1"
++        req_dir.mkdir()
++        # No usage.json written
++        summarize_usage(str(tmp_path))
++        # Should still create summary but with 0 requests
++        data = json.loads((agent_dir / "usage.json").read_text())
++        assert data["total"]["request_count"] == 0

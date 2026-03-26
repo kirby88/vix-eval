@@ -1,0 +1,251 @@
+diff --git a/__pycache__/ef_models.cpython-311.pyc b/__pycache__/ef_models.cpython-311.pyc
+new file mode 100644
+index 0000000..8892af2
+Binary files /dev/null and b/__pycache__/ef_models.cpython-311.pyc differ
+diff --git a/__pycache__/ef_utils.cpython-311.pyc b/__pycache__/ef_utils.cpython-311.pyc
+new file mode 100644
+index 0000000..133ec9c
+Binary files /dev/null and b/__pycache__/ef_utils.cpython-311.pyc differ
+diff --git a/__pycache__/export_flows.cpython-311.pyc b/__pycache__/export_flows.cpython-311.pyc
+new file mode 100644
+index 0000000..fa9ae6e
+Binary files /dev/null and b/__pycache__/export_flows.cpython-311.pyc differ
+diff --git a/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc
+new file mode 100644
+index 0000000..9ae45ff
+Binary files /dev/null and b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc differ
+diff --git a/ef_models.py b/ef_models.py
+new file mode 100644
+index 0000000..1563258
+--- /dev/null
++++ b/ef_models.py
+@@ -0,0 +1,30 @@
++MODEL_PRICING = {
++    "claude-opus-4-6":   {"input": 5e-6,    "cache_write": 6.25e-6,  "cache_read": 0.50e-6,  "output": 25e-6},
++    "claude-opus-4-5":   {"input": 5e-6,    "cache_write": 6.25e-6,  "cache_read": 0.50e-6,  "output": 25e-6},
++    "claude-opus-4-1":   {"input": 15e-6,   "cache_write": 18.75e-6, "cache_read": 1.50e-6,  "output": 75e-6},
++    "claude-opus-4":     {"input": 15e-6,   "cache_write": 18.75e-6, "cache_read": 1.50e-6,  "output": 75e-6},
++    "claude-sonnet-4-6": {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
++    "claude-sonnet-4-5": {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
++    "claude-sonnet-4":   {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
++    "claude-haiku-4-5":  {"input": 1e-6,    "cache_write": 1.25e-6,  "cache_read": 0.10e-6,  "output": 5e-6},
++    "claude-haiku-3-5":  {"input": 0.80e-6, "cache_write": 1e-6,     "cache_read": 0.08e-6,  "output": 4e-6},
++}
++
++# Sort prefixes longest-first so "claude-opus-4-5" matches before "claude-opus-4"
++_SORTED_PREFIXES = sorted(MODEL_PRICING.keys(), key=len, reverse=True)
++
++
++def get_canonical_model(model_id: str):
++    """Return the canonical model name (without date suffix) or None if unknown."""
++    for prefix in _SORTED_PREFIXES:
++        if model_id.startswith(prefix):
++            return prefix
++    return None
++
++
++def get_pricing(model_id: str):
++    """Match a model ID (possibly with date suffix) to pricing. Returns pricing dict or None."""
++    canonical = get_canonical_model(model_id)
++    if canonical:
++        return MODEL_PRICING[canonical]
++    return None
+diff --git a/ef_utils.py b/ef_utils.py
+new file mode 100644
+index 0000000..94993b7
+--- /dev/null
++++ b/ef_utils.py
+@@ -0,0 +1,69 @@
++import json
++import re
++
++
++def count_whitespace_stats(text):
++    """Count line returns and unnecessary spaces in text.
++
++    Returns dict with:
++      - line_returns_count: number of \\n characters
++      - unnecessary_space_count: for each run of 2+ spaces, count len(run) - 1
++      - total_chars: total character count of the text
++    """
++    line_returns = text.count("\n")
++    unnecessary_spaces = sum(len(m) - 1 for m in re.findall(r" {2,}", text))
++    return {
++        "line_returns_count": line_returns,
++        "unnecessary_space_count": unnecessary_spaces,
++        "total_chars": len(text),
++    }
++
++
++def parse_request_body(request_path: str):
++    """Parse the JSON body from a request.json file. Returns the parsed dict or None."""
++    try:
++        with open(request_path, "r") as f:
++            return json.load(f)
++    except (json.JSONDecodeError, ValueError):
++        return None
++
++
++def sanitize_path(path: str) -> str:
++    """Turn a URL path into a safe directory name component."""
++    path = path.split("?")[0]
++    path = path.replace("/", "_")
++    path = path.strip("_")
++    path = re.sub(r"[^a-zA-Z0-9_\-]", "", path)
++    return path[:80]
++
++
++_REDACTED_HEADERS = {b"x-api-key", b"authorization"}
++
++
++def format_headers(headers) -> str:
++    lines = []
++    for k, v in headers.fields:
++        if k.lower() in _REDACTED_HEADERS:
++            lines.append(f"{k}: [REDACTED]")
++        else:
++            lines.append(f"{k}: {v}")
++    return "\n".join(lines)
++
++
++def _resolve_read_file_name(name, tool_input):
++    """Resolve read_file tool name to compressed/uncompressed variant."""
++    if name == "read_file":
++        mode = tool_input.get("mode", "original") if isinstance(tool_input, dict) else "original"
++        return "read_file_compressed" if mode == "compress" else "read_file_uncompressed"
++    return name
++
++
++def _format_tool_params(input_data):
++    """Format tool input as compact param=value pairs."""
++    parts = []
++    for key, value in input_data.items():
++        if isinstance(value, str):
++            parts.append(f'{key}="{value}"')
++        else:
++            parts.append(f"{key}={json.dumps(value)}")
++    return ", ".join(parts)
+diff --git a/export_flows.py b/export_flows.py
+index dd49230..2c81cd6 100644
+--- a/export_flows.py
++++ b/export_flows.py
+@@ -17,85 +17,11 @@ SYSTEM_PROMPT_INDEX = {
+     "vix": 0,
+ }
+ 
+-MODEL_PRICING = {
+-    "claude-opus-4-6":   {"input": 5e-6,    "cache_write": 6.25e-6,  "cache_read": 0.50e-6,  "output": 25e-6},
+-    "claude-opus-4-5":   {"input": 5e-6,    "cache_write": 6.25e-6,  "cache_read": 0.50e-6,  "output": 25e-6},
+-    "claude-opus-4-1":   {"input": 15e-6,   "cache_write": 18.75e-6, "cache_read": 1.50e-6,  "output": 75e-6},
+-    "claude-opus-4":     {"input": 15e-6,   "cache_write": 18.75e-6, "cache_read": 1.50e-6,  "output": 75e-6},
+-    "claude-sonnet-4-6": {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
+-    "claude-sonnet-4-5": {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
+-    "claude-sonnet-4":   {"input": 3e-6,    "cache_write": 3.75e-6,  "cache_read": 0.30e-6,  "output": 15e-6},
+-    "claude-haiku-4-5":  {"input": 1e-6,    "cache_write": 1.25e-6,  "cache_read": 0.10e-6,  "output": 5e-6},
+-    "claude-haiku-3-5":  {"input": 0.80e-6, "cache_write": 1e-6,     "cache_read": 0.08e-6,  "output": 4e-6},
+-}
+-
+-# Sort prefixes longest-first so "claude-opus-4-5" matches before "claude-opus-4"
+-_SORTED_PREFIXES = sorted(MODEL_PRICING.keys(), key=len, reverse=True)
+-
+-
+-def count_whitespace_stats(text):
+-    """Count line returns and unnecessary spaces in text.
+-
+-    Returns dict with:
+-      - line_returns_count: number of \\n characters
+-      - unnecessary_space_count: for each run of 2+ spaces, count len(run) - 1
+-      - total_chars: total character count of the text
+-    """
+-    line_returns = text.count("\n")
+-    unnecessary_spaces = sum(len(m) - 1 for m in re.findall(r" {2,}", text))
+-    return {
+-        "line_returns_count": line_returns,
+-        "unnecessary_space_count": unnecessary_spaces,
+-        "total_chars": len(text),
+-    }
+-
+-
+-def parse_request_body(request_path: str):
+-    """Parse the JSON body from a request.json file. Returns the parsed dict or None."""
+-    try:
+-        with open(request_path, "r") as f:
+-            return json.load(f)
+-    except (json.JSONDecodeError, ValueError):
+-        return None
+-
+-
+-def get_canonical_model(model_id: str):
+-    """Return the canonical model name (without date suffix) or None if unknown."""
+-    for prefix in _SORTED_PREFIXES:
+-        if model_id.startswith(prefix):
+-            return prefix
+-    return None
+-
+-
+-def get_pricing(model_id: str):
+-    """Match a model ID (possibly with date suffix) to pricing. Returns pricing dict or None."""
+-    canonical = get_canonical_model(model_id)
+-    if canonical:
+-        return MODEL_PRICING[canonical]
+-    return None
+-
+-
+-def sanitize_path(path: str) -> str:
+-    """Turn a URL path into a safe directory name component."""
+-    path = path.split("?")[0]
+-    path = path.replace("/", "_")
+-    path = path.strip("_")
+-    path = re.sub(r"[^a-zA-Z0-9_\-]", "", path)
+-    return path[:80]
+-
+-
+-_REDACTED_HEADERS = {b"x-api-key", b"authorization"}
+-
+-
+-def format_headers(headers) -> str:
+-    lines = []
+-    for k, v in headers.fields:
+-        if k.lower() in _REDACTED_HEADERS:
+-            lines.append(f"{k}: [REDACTED]")
+-        else:
+-            lines.append(f"{k}: {v}")
+-    return "\n".join(lines)
+-
++from ef_models import MODEL_PRICING, _SORTED_PREFIXES, get_canonical_model, get_pricing
++from ef_utils import (
++    count_whitespace_stats, parse_request_body, sanitize_path,
++    _REDACTED_HEADERS, format_headers, _resolve_read_file_name, _format_tool_params,
++)
+ 
+ def write_request(flow: HTTPFlow, directory: str):
+     req = flow.request
+@@ -443,12 +369,6 @@ def extract_prompts(directory: str):
+ 
+ 
+ 
+-def _resolve_read_file_name(name, tool_input):
+-    """Resolve read_file tool name to compressed/uncompressed variant."""
+-    if name == "read_file":
+-        mode = tool_input.get("mode", "original") if isinstance(tool_input, dict) else "original"
+-        return "read_file_compressed" if mode == "compress" else "read_file_uncompressed"
+-    return name
+ 
+ 
+ def extract_read_file_whitespace(body):
+@@ -678,15 +598,6 @@ def categorize_output_sources(response_path):
+     return {"llm_text": llm_text_chars, "tool_calls": tool_calls}
+ 
+ 
+-def _format_tool_params(input_data):
+-    """Format tool input as compact param=value pairs."""
+-    parts = []
+-    for key, value in input_data.items():
+-        if isinstance(value, str):
+-            parts.append(f'{key}="{value}"')
+-        else:
+-            parts.append(f"{key}={json.dumps(value)}")
+-    return ", ".join(parts)
+ 
+ 
+ def parse_response_content(response_path):

@@ -1,0 +1,1 @@
+Add logging to the `set` function. Log the key and byte size when an entry is successfully written to disk.

@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Token Usage Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --border: #2a2d3a;
+    --text: #e1e4ed;
+    --text-muted: #8b8fa3;
+    --accent: #6c8cff;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  header {
+    padding: 24px 32px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  header h1 { font-size: 20px; font-weight: 600; white-space: nowrap; }
+  .controls { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .file-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+  }
+  .file-btn:hover { opacity: 0.85; }
+  .file-name {
+    font-size: 13px;
+    color: var(--text-muted);
+    max-width: 300px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  #file-input { display: none; }
+  .stats-bar {
+    display: flex;
+    gap: 24px;
+    padding: 20px 32px;
+    border-bottom: 1px solid var(--border);
+    flex-wrap: wrap;
+  }
+  .stat {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+  .stat-label { font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-value { font-size: 22px; font-weight: 600; }
+  .stat-value.cost { color: #4ade80; }
+
+  .dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(420px, 1fr));
+    gap: 20px;
+    padding: 24px 32px;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 20px;
+  }
+  .card h2 {
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .card canvas { max-height: 320px; }
+
+  .card.wide { grid-column: 1 / -1; }
+  .card.wide canvas { max-height: 400px; }
+
+  .section-title {
+    grid-column: 1 / -1;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    padding-top: 12px;
+    border-top: 1px solid var(--border);
+  }
+  .section-title:first-child { border-top: none; padding-top: 0; }
+  .step-filter {
+    background: var(--bg);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 4px 8px;
+    font-size: 12px;
+    margin-left: 12px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+    max-width: 300px;
+    vertical-align: middle;
+  }
+  .toggle-label {
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 400;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+  .settings-panel {
+    grid-column: 1 / -1;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px 20px;
+  }
+  .settings-panel summary {
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    list-style: none;
+  }
+  .settings-panel summary::-webkit-details-marker { display: none; }
+  .settings-panel summary::before { content: '▸ '; }
+  .settings-panel[open] summary::before { content: '▾ '; }
+  .settings-options {
+    display: flex;
+    gap: 24px;
+    flex-wrap: wrap;
+    padding-top: 12px;
+  }
+
+  .table-card { overflow-x: auto; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  th {
+    text-align: left;
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+  td {
+    padding: 8px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  tr:last-child td { border-bottom: none; }
+  tr.total-row { font-weight: 600; }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 60vh;
+    gap: 16px;
+    color: var(--text-muted);
+  }
+  .empty-state p { font-size: 15px; }
+  .empty-state .hint { font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Token Usage Dashboard</h1>
+  <div class="controls">
+    <button class="file-btn" onclick="document.getElementById('file-input').click()">Load usage.json</button>
+    <input type="file" id="file-input" accept=".json" multiple>
+    <span class="file-name" id="file-name"></span>
+  </div>
+</header>
+
+<div id="empty" class="empty-state">
+  <p>No data loaded</p>
+  <p class="hint">Click "Load usage.json" to open an agent summary file (e.g. data/vix/usage.json)</p>
+</div>
+
+<div id="dashboard" class="dashboard" style="display:none"></div>
+
+<script>
+const COLORS = [
+  '#6c8cff', '#f472b6', '#4ade80', '#facc15', '#fb923c',
+  '#a78bfa', '#22d3ee', '#f87171', '#34d399', '#e879f9',
+  '#fbbf24', '#60a5fa', '#c084fc', '#2dd4bf', '#fb7185',
+];
+
+function fmt$(v) {
+  if (v >= 1) return '$' + v.toFixed(2);
+  if (v >= 0.01) return '$' + v.toFixed(3);
+  return '$' + v.toFixed(4);
+}
+
+function fmtTokens(v) {
+  if (v >= 1e6) return (v / 1e6).toFixed(1) + 'M';
+  if (v >= 1e3) return (v / 1e3).toFixed(1) + 'K';
+  return v.toString();
+}
+
+function fmtDuration(ms) {
+  if (ms == null || ms === 0) return '—';
+  if (ms < 1000) return ms + 'ms';
+  const s = ms / 1000;
+  if (s < 60) return s.toFixed(1) + 's';
+  const m = Math.floor(s / 60);
+  return m + 'm ' + (s % 60).toFixed(0) + 's';
+}
+
+// Extract dollars from a cost entry (new {tokens, dollars} format)
+function $$(entry) { return (entry && typeof entry === 'object') ? (entry.dollars || 0) : (entry || 0); }
+// Extract tokens from a cost entry
+function tok(entry) { return (entry && typeof entry === 'object') ? (entry.tokens || 0) : 0; }
+
+let charts = [];
+
+function destroyCharts() {
+  charts.forEach(c => c.destroy());
+  charts = [];
+}
+
+function makeChart(canvasId, config) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const chart = new Chart(canvas.getContext('2d'), config);
+  charts.push(chart);
+  return chart;
+}
+
+function doughnutConfig(labels, values, title) {
+  return {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{
+        data: values,
+        backgroundColor: COLORS.slice(0, labels.length),
+        borderWidth: 0,
+        hoverOffset: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          position: 'right',
+          labels: { color: '#e1e4ed', font: { size: 12 }, padding: 10, usePointStyle: true, pointStyleWidth: 10 }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => {
+              const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+              const pct = total > 0 ? ((ctx.raw / total) * 100).toFixed(1) : 0;
+              return ` ${ctx.label}: ${fmt$(ctx.raw)} (${pct}%)`;
+            }
+          }
+        }
+      }
+    }
+  };
+}
+
+function barConfig(labels, datasets, horizontal = false) {
+  return {
+    type: 'bar',
+    data: { labels, datasets },
+    options: {
+      indexAxis: horizontal ? 'y' : 'x',
+      responsive: true,
+      maintainAspectRatio: true,
+      plugins: {
+        legend: {
+          labels: { color: '#e1e4ed', font: { size: 12 }, usePointStyle: true, pointStyleWidth: 10 }
+        },
+        tooltip: {
+          callbacks: {
+            label: (ctx) => ` ${ctx.dataset.label}: ${fmt$(ctx.raw)}`
+          }
+        }
+      },
+      scales: {
+        x: {
+          stacked: true,
+          ticks: { color: '#8b8fa3', font: { size: 11 } },
+          grid: { color: '#2a2d3a' },
+        },
+        y: {
+          stacked: true,
+          ticks: { color: '#8b8fa3', font: { size: 11 } },
+          grid: { color: '#2a2d3a' },
+        }
+      }
+    }
+  };
+}
+
+function renderDashboard(data, fileName) {
+  destroyCharts();
+  const dashboard = document.getElementById('dashboard');
+  document.getElementById('empty').style.display = 'none';
+  dashboard.style.display = '';
+  document.getElementById('file-name').textContent = fileName;
+
+  const byStep = data.by_step || {};
+  const stepKeys = Object.keys(byStep);
+
+  // Build step dropdown options
+  let stepOptionsHtml = '<option value="">Overall workflow</option>';
+  for (const k of stepKeys) {
+    stepOptionsHtml += `<option value="${k}">Step ${k}</option>`;
+  }
+  const stepDropdown = `<select class="step-filter">${stepOptionsHtml}</select>`;
+
+  // Build dashboard HTML
+  let html = '';
+
+  // Settings panel
+  html += `<details class="settings-panel"><summary>Settings</summary><div class="settings-options">
+    <label class="toggle-label"><input type="checkbox" id="chk-model"> Show Cost by Model</label>
+    <label class="toggle-label"><input type="checkbox" id="chk-detail"> Show Tools Detailed Breakdown</label>
+  </div></details>`;
+
+  // Input+Output section
+  html += `<div class="section-title">Input+Output ${stepDropdown}</div>`;
+  html += `<div id="overall-stats" class="stats-bar" style="border:none;padding:0 0 8px 0;grid-column:1/-1"></div>`;
+  html += `<div class="card"><h2>Cost Breakdown</h2><canvas id="ch-cost-breakdown"></canvas></div>`;
+  html += `<div id="toggle-model" style="display:none" class="card"><h2>Cost by Model</h2><canvas id="ch-model"></canvas></div>`;
+  html += `<div class="card"><h2>Cost by Step</h2><canvas id="ch-step"></canvas></div>`;
+  html += `<div class="card"><h2>Duration by Step</h2><canvas id="ch-duration-step"></canvas></div>`;
+  html += `<div class="card table-card"><h2>Top Files Read</h2><div id="top-files-read"></div></div>`;
+  html += `<div class="card table-card"><h2>Top Files Written</h2><div id="top-files-written"></div></div>`;
+
+  // Input section
+  html += `<div class="section-title">Input ${stepDropdown}</div>`;
+  html += `<div id="input-stats" class="stats-bar" style="border:none;padding:0 0 8px 0;grid-column:1/-1"></div>`;
+  html += `<div class="card"><h2>Input Cost Breakdown</h2><canvas id="ch-cache"></canvas></div>`;
+  html += `<div class="card"><h2>Input Cost by Step</h2><canvas id="ch-step-input"></canvas></div>`;
+  html += `<div class="card"><h2>Input: Tool Results Breakdown</h2><canvas id="ch-tool-results"></canvas></div>`;
+  html += `<div class="card"><h2>Input: Tool Use Breakdown</h2><canvas id="ch-input-tool-calls"></canvas></div>`;
+  html += `<div id="toggle-detail-input" class="card table-card" style="display:none"><h2>Input Tools Detailed Breakdown</h2><div id="detail-table-input"></div></div>`;
+  html += `<div class="card"><h2>read_file Whitespace Stats</h2><div id="ws-stats" style="margin-bottom:12px"></div><canvas id="ch-ws"></canvas></div>`;
+
+  // Output section
+  html += `<div class="section-title">Output ${stepDropdown}</div>`;
+  html += `<div id="output-stats" class="stats-bar" style="border:none;padding:0 0 8px 0;grid-column:1/-1"></div>`;
+  html += `<div class="card"><h2>Output Cost Breakdown</h2><canvas id="ch-output-src"></canvas></div>`;
+  html += `<div class="card"><h2>Output Cost by Step</h2><canvas id="ch-step-output"></canvas></div>`;
+  html += `<div class="card"><h2>Output: Tool Calls Breakdown</h2><canvas id="ch-tool-calls"></canvas></div>`;
+  html += `<div id="toggle-detail-output" class="card table-card" style="display:none"><h2>Output Tools Detailed Breakdown</h2><div id="detail-table-output"></div></div>`;
+
+  dashboard.innerHTML = html;
+
+  // Sync all step filter dropdowns
+  const stepFilters = document.querySelectorAll('.step-filter');
+  stepFilters.forEach(sel => {
+    sel.addEventListener('change', function() {
+      const val = this.value;
+      stepFilters.forEach(s => s.value = val);
+      updateCharts(data);
+    });
+  });
+
+  // Wire settings toggles
+  document.getElementById('chk-model').addEventListener('change', function() {
+    document.getElementById('toggle-model').style.display = this.checked ? '' : 'none';
+    if (this.checked) updateCharts(data);
+  });
+  document.getElementById('chk-detail').addEventListener('change', function() {
+    const d = this.checked ? '' : 'none';
+    document.getElementById('toggle-detail-input').style.display = d;
+    document.getElementById('toggle-detail-output').style.display = d;
+  });
+
+  // Initial render
+  updateCharts(data);
+}
+
+function updateCharts(data) {
+  destroyCharts();
+
+  const byStep = data.by_step || {};
+  const byModel = data.by_model || {};
+
+  // Get selected step from any dropdown
+  const stepSel = document.querySelector('.step-filter');
+  const stepId = stepSel ? stepSel.value : '';
+
+  // Determine effective data based on step filter
+  let total, bySource, ws;
+  if (stepId && byStep[stepId]) {
+    const step = byStep[stepId];
+    total = step;
+    bySource = step.by_source || {};
+    ws = step.read_file_whitespace || {};
+  } else {
+    total = data.total || {};
+    bySource = data.by_source || {};
+    ws = data.read_file_whitespace || {};
+  }
+
+  const cost = total.cost || {};
+  const inputSrc = bySource.input || {};
+  const outputSrc = bySource.output || {};
+  const toolResults = inputSrc.tool_results || {};
+  const inputToolCalls = inputSrc.tool_calls || {};
+  const toolCalls = outputSrc.tool_calls || {};
+
+  // --- Input+Output section ---
+
+  const inputCost = $$(cost.input) + $$(cost.cache_write) + $$(cost.cache_read);
+  const outputCost = $$(cost.output);
+  const totalInputTokens = tok(cost.input) + tok(cost.cache_write) + tok(cost.cache_read);
+  const totalOutputTokens_ = tok(cost.output);
+  const timing = total.timing || {};
+
+  document.getElementById('overall-stats').innerHTML = `
+    <div class="stat"><span class="stat-label">Total Cost</span><span class="stat-value cost">${fmt$($$(cost.total))}</span></div>
+    <div class="stat"><span class="stat-label">Requests</span><span class="stat-value">${total.request_count || 0}</span></div>
+    <div class="stat"><span class="stat-label">Tokens</span><span class="stat-value">${fmtTokens(totalInputTokens + totalOutputTokens_)}</span></div>
+    <div class="stat"><span class="stat-label">Input Cost</span><span class="stat-value cost">${fmt$(inputCost)}</span></div>
+    <div class="stat"><span class="stat-label">Output Cost</span><span class="stat-value cost">${fmt$(outputCost)}</span></div>
+    <div class="stat"><span class="stat-label">Avg Cost/Req</span><span class="stat-value cost">${fmt$($$(cost.total) / (total.request_count || 1))}</span></div>
+    <div class="stat"><span class="stat-label">Wall Clock</span><span class="stat-value">${fmtDuration(timing.wall_clock_ms)}</span></div>
+    <div class="stat"><span class="stat-label">Total API Time</span><span class="stat-value">${fmtDuration(timing.total_duration_ms)}</span></div>
+    <div class="stat"><span class="stat-label">Avg Req Duration</span><span class="stat-value">${fmtDuration(timing.avg_duration_ms)}</span></div>
+  `;
+
+  makeChart('ch-cost-breakdown', doughnutConfig(
+    ['Input', 'Output'],
+    [inputCost, outputCost]
+  ));
+
+  // Model chart (only if visible)
+  if (document.getElementById('toggle-model').style.display !== 'none') {
+    const modelLabels = Object.keys(byModel);
+    const modelInputCosts = modelLabels.map(m => $$(byModel[m].cost?.input) + $$(byModel[m].cost?.cache_write) + $$(byModel[m].cost?.cache_read));
+    const modelOutputCosts = modelLabels.map(m => $$(byModel[m].cost?.output));
+    makeChart('ch-model', barConfig(modelLabels, [
+      { label: 'Input', data: modelInputCosts, backgroundColor: '#6c8cff' },
+      { label: 'Output', data: modelOutputCosts, backgroundColor: '#f472b6' },
+    ], true));
+  }
+
+  // Cost by Step (always show all steps regardless of filter)
+  const stepKeys = Object.keys(byStep);
+  const stepLabels = stepKeys.map(k => `Step ${k}`);
+  const stepTotalCosts = stepKeys.map(k => $$(byStep[k].cost?.total));
+  makeChart('ch-step', doughnutConfig(stepLabels, stepTotalCosts));
+
+  // Duration by Step
+  const stepDuration = stepKeys.map(k => (byStep[k].timing?.total_duration_ms || 0) / 1000);
+  makeChart('ch-duration-step', doughnutConfig(stepLabels, stepDuration));
+
+  // --- Input section ---
+
+  const fileOps = total.file_ops || {};
+  const fileOpsIn = fileOps.input || {};
+  const fileOpsOut = fileOps.output || {};
+
+  document.getElementById('input-stats').innerHTML = `
+    <div class="stat"><span class="stat-label">Input Cost</span><span class="stat-value cost">${fmt$(inputCost)}</span></div>
+    <div class="stat"><span class="stat-label">Input Tokens</span><span class="stat-value">${fmtTokens(tok(cost.input))} (${fmt$($$(cost.input))})</span></div>
+    <div class="stat"><span class="stat-label">Cache Writes</span><span class="stat-value">${fmtTokens(tok(cost.cache_write))} (${fmt$($$(cost.cache_write))})</span></div>
+    <div class="stat"><span class="stat-label">Cache Reads</span><span class="stat-value">${fmtTokens(tok(cost.cache_read))} (${fmt$($$(cost.cache_read))})</span></div>
+    <div class="stat"><span class="stat-label">Files Read</span><span class="stat-value">${fileOpsIn.unique_files_read || 0} (${fmtTokens(fileOpsIn.total_read_chars || 0)} chars)</span></div>
+  `;
+
+  // Input Cost by Step
+  const stepInputCosts = stepKeys.map(k => $$(byStep[k].cost?.input) + $$(byStep[k].cost?.cache_write) + $$(byStep[k].cost?.cache_read));
+  makeChart('ch-step-input', doughnutConfig(stepLabels, stepInputCosts));
+
+  makeChart('ch-cache', doughnutConfig(
+    ['Uncached', 'Cache Write', 'Cache Read'],
+    [$$(cost.input), $$(cost.cache_write), $$(cost.cache_read)]
+  ));
+
+  // Tool results breakdown
+  const trLabels = [], trValues = [];
+  for (const [k, v] of Object.entries(toolResults)) {
+    trLabels.push(k);
+    trValues.push(v.dollars || 0);
+  }
+  sortDesc(trLabels, trValues);
+  makeChart('ch-tool-results', doughnutConfig(trLabels, trValues));
+
+  // Input tool calls (tool_use blocks) breakdown
+  const itcLabels = [], itcValues = [];
+  for (const [k, v] of Object.entries(inputToolCalls)) {
+    itcLabels.push(k);
+    itcValues.push(v.dollars || 0);
+  }
+  sortDesc(itcLabels, itcValues);
+  makeChart('ch-input-tool-calls', doughnutConfig(itcLabels, itcValues));
+
+  // read_file whitespace
+  const wsLineReturns = ws.line_returns_count || 0;
+  const wsUnnecessary = ws.unnecessary_space_count || 0;
+  const wsTotalChars = ws.total_chars || 0;
+  const wsOther = Math.max(0, wsTotalChars - wsLineReturns - wsUnnecessary);
+  const wsStatsEl = document.getElementById('ws-stats');
+  if (wsStatsEl) {
+    wsStatsEl.innerHTML = `
+      <div style="display:flex;gap:20px;flex-wrap:wrap">
+        <div class="stat"><span class="stat-label">Line Returns</span><span class="stat-value">${fmtTokens(wsLineReturns)}</span></div>
+        <div class="stat"><span class="stat-label">Unnecessary Spaces</span><span class="stat-value">${fmtTokens(wsUnnecessary)}</span></div>
+        <div class="stat"><span class="stat-label">Total Chars</span><span class="stat-value">${fmtTokens(wsTotalChars)}</span></div>
+      </div>`;
+  }
+  if (wsTotalChars > 0) {
+    makeChart('ch-ws', {
+      type: 'doughnut',
+      data: {
+        labels: ['Line Returns', 'Unnecessary Spaces', 'Other Chars'],
+        datasets: [{
+          data: [wsLineReturns, wsUnnecessary, wsOther],
+          backgroundColor: ['#f472b6', '#facc15', '#4ade80'],
+          borderWidth: 0,
+          hoverOffset: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: true,
+        plugins: {
+          legend: {
+            position: 'right',
+            labels: { color: '#e1e4ed', font: { size: 12 }, padding: 10, usePointStyle: true, pointStyleWidth: 10 }
+          },
+          tooltip: {
+            callbacks: {
+              label: (ctx) => {
+                const pct = wsTotalChars > 0 ? ((ctx.raw / wsTotalChars) * 100).toFixed(1) : 0;
+                return ` ${ctx.label}: ${fmtTokens(ctx.raw)} chars (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // --- Output section ---
+
+  document.getElementById('output-stats').innerHTML = `
+    <div class="stat"><span class="stat-label">Output Cost</span><span class="stat-value cost">${fmt$(outputCost)}</span></div>
+    <div class="stat"><span class="stat-label">Output Tokens</span><span class="stat-value">${fmtTokens(tok(cost.output))} (${fmt$($$(cost.output))})</span></div>
+    <div class="stat"><span class="stat-label">Files Written</span><span class="stat-value">${fileOpsOut.unique_files_written || 0} / ${fileOpsOut.files_written || 0} ops (${fmtTokens(fileOpsOut.total_write_chars || 0)} chars)</span></div>
+  `;
+
+  // Output Cost by Step
+  const stepOutputCosts = stepKeys.map(k => $$(byStep[k].cost?.output));
+  makeChart('ch-step-output', doughnutConfig(stepLabels, stepOutputCosts));
+
+  const outputLabels = [];
+  const outputValues = [];
+  for (const [k, v] of Object.entries(outputSrc)) {
+    if (k === '__total' || k === 'tool_calls') continue;
+    outputLabels.push(k.replace(/_/g, ' '));
+    outputValues.push(v.dollars || 0);
+  }
+  if (toolCalls.__total) {
+    outputLabels.push('tool calls');
+    outputValues.push(toolCalls.__total.dollars || 0);
+  }
+  makeChart('ch-output-src', doughnutConfig(outputLabels, outputValues));
+
+  const tcLabels = [], tcValues = [];
+  for (const [k, v] of Object.entries(toolCalls)) {
+    if (k === '__total') continue;
+    tcLabels.push(k);
+    tcValues.push(v.dollars || 0);
+  }
+  sortDesc(tcLabels, tcValues);
+  makeChart('ch-tool-calls', doughnutConfig(tcLabels, tcValues));
+
+  // Detail tables
+  const inputRows = [];
+  for (const [k, v] of Object.entries(toolResults)) {
+    inputRows.push({ category: 'Tool Result', source: k, tokens: v.tokens || 0, dollars: v.dollars || 0 });
+  }
+  for (const [k, v] of Object.entries(inputToolCalls)) {
+    inputRows.push({ category: 'Tool Use', source: k, tokens: v.tokens || 0, dollars: v.dollars || 0 });
+  }
+  inputRows.sort((a, b) => b.dollars - a.dollars);
+  let inputTableHtml = `<table>
+    <thead><tr><th>Category</th><th>Source</th><th style="text-align:right">Tokens</th><th style="text-align:right">Cost</th></tr></thead>
+    <tbody>`;
+  for (const r of inputRows) {
+    inputTableHtml += `<tr><td>${r.category}</td><td>${r.source}</td><td class="num">${fmtTokens(r.tokens)}</td><td class="num">${fmt$(r.dollars)}</td></tr>`;
+  }
+  inputTableHtml += '</tbody></table>';
+  document.getElementById('detail-table-input').innerHTML = inputTableHtml;
+
+  const outputRows = [];
+  for (const [k, v] of Object.entries(outputSrc)) {
+    if (k === '__total' || k === 'tool_calls') continue;
+    outputRows.push({ category: 'Output', source: k.replace(/_/g, ' '), tokens: v.tokens || 0, dollars: v.dollars || 0 });
+  }
+  for (const [k, v] of Object.entries(toolCalls)) {
+    if (k === '__total') continue;
+    outputRows.push({ category: 'Tool Call', source: k, tokens: v.tokens || 0, dollars: v.dollars || 0 });
+  }
+  outputRows.sort((a, b) => b.dollars - a.dollars);
+  const totalOutputTokens = (outputSrc.llm_text?.tokens || 0) + (toolCalls.__total?.tokens || 0);
+  const totalOutputCost = (outputSrc.llm_text?.dollars || 0) + (toolCalls.__total?.dollars || 0);
+  let outputTableHtml = `<table>
+    <thead><tr><th>Category</th><th>Source</th><th style="text-align:right">Tokens</th><th style="text-align:right">Cost</th></tr></thead>
+    <tbody>`;
+  for (const r of outputRows) {
+    outputTableHtml += `<tr><td>${r.category}</td><td>${r.source}</td><td class="num">${fmtTokens(r.tokens)}</td><td class="num">${fmt$(r.dollars)}</td></tr>`;
+  }
+  outputTableHtml += `<tr class="total-row"><td colspan="2">Total</td><td class="num">${fmtTokens(totalOutputTokens)}</td><td class="num">${fmt$(totalOutputCost)}</td></tr>`;
+  outputTableHtml += '</tbody></table>';
+  document.getElementById('detail-table-output').innerHTML = outputTableHtml;
+
+  // Top files
+  renderTopFiles('top-files-read', fileOps.input?.per_file);
+  renderTopFiles('top-files-written', fileOps.output?.per_file);
+}
+
+function fmtBytes(b) {
+  if (b == null) return '—';
+  if (b < 1024) return b + ' B';
+  if (b < 1024 * 1024) return (b / 1024).toFixed(1) + ' KB';
+  return (b / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+function renderTopFiles(elementId, perFile) {
+  const el = document.getElementById(elementId);
+  if (!el) return;
+  const entries = Object.entries(perFile || {});
+  if (entries.length === 0) {
+    el.innerHTML = '<p style="color:var(--text-muted);font-size:13px">No file data available</p>';
+    return;
+  }
+  entries.sort((a, b) => b[1].chars - a[1].chars);
+  const top = entries.slice(0, 10);
+  let html = `<table><thead><tr><th>File</th><th style="text-align:right">Chars</th><th style="text-align:right">File Size</th><th style="text-align:right">Calls</th></tr></thead><tbody>`;
+  for (const [fp, stats] of top) {
+    const short = fp.split('/').slice(-2).join('/');
+    html += `<tr><td title="${fp}">${short}</td><td class="num">${fmtTokens(stats.chars)}</td><td class="num">${fmtBytes(stats.file_size)}</td><td class="num">${stats.calls}</td></tr>`;
+  }
+  html += '</tbody></table>';
+  el.innerHTML = html;
+}
+
+function sortDesc(labels, values) {
+  const pairs = labels.map((l, i) => [l, values[i]]);
+  pairs.sort((a, b) => b[1] - a[1]);
+  pairs.forEach(([l, v], i) => { labels[i] = l; values[i] = v; });
+}
+
+document.getElementById('file-input').addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      renderDashboard(data, file.name);
+    } catch (err) {
+      alert('Failed to parse JSON: ' + err.message);
+    }
+  };
+  reader.readAsText(file);
+});
+</script>
+</body>
+</html>

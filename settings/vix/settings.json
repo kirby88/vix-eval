@@ -1,0 +1,121 @@
+{
+  "version": 1,
+  "agent": "general_cc",
+  "tools": {
+    "grep": {
+      "backend": "rg"
+    },
+    "glob": {
+      "backend": "fd"
+    }
+  },
+  "workflows": [
+    {
+      "name": "Plan",
+      "summary": "$(step.execute.display)",
+      "entry_point": {
+        "id": "explore",
+        "params": {
+          "prompt": "$(workflow.prompt)"
+        }
+      },
+      "steps": {
+        "explore": {
+          "type": "agent",
+          "agent": "general_cc",
+          "input_params": {
+            "prompt": {
+              "description": "The user's plan description"
+            }
+          },
+          "prompt": "$(file:prompts/plan_workflow_cc/explore.md)",
+          "next_steps": [
+            {
+              "id": "plan",
+              "params": {
+                "prompt": "$(step.explore.prompt)"
+              }
+            }
+          ],
+          "stream": true,
+          "explanation": "Exploring the codebase to understand relevant files and patterns"
+        },
+        "plan": {
+          "type": "agent",
+          "fork_from": "explore",
+          "input_params": {
+            "prompt": {
+              "description": "The user's plan description"
+            }
+          },
+          "prompt": "$(file:prompts/plan_workflow_cc/plan.md)",
+          "next_steps": [
+            {
+              "id": "review"
+            }
+          ],
+          "stream": true,
+          "explanation": "Generating a draft implementation plan"
+        },
+        "review": {
+          "type": "tool",
+          "tool": "ask_question_to_user",
+          "question": "Review the plan above. What would you like to do?",
+          "options": [
+            {
+              "title": "Accept",
+              "description": "Approve the plan and proceed to execution",
+              "steps": [
+                {
+                  "id": "execute",
+                  "params": {
+                    "plan": "$(step.plan)"
+                  }
+                },
+                {
+                  "id": "save plan",
+                  "params": {
+                    "content": "$(step.plan)"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "Reject",
+              "description": "Reject the plan and stop the workflow",
+              "steps": [
+                {
+                  "id": "stop"
+                }
+              ]
+            }
+          ],
+          "category": "Plan Review",
+          "explanation": "Reviewing the plan"
+        },
+        "execute": {
+          "input_params": {
+            "plan": {
+              "description": "The LLM's plan for updating the code"
+            }
+          },
+          "type": "agent",
+          "agent": "general_cc",
+          "prompt": "$(file:prompts/plan_workflow_cc/execute.md)",
+          "explanation": "Executing the approved plan"
+        },
+        "save plan": {
+          "type": "bash",
+          "input_params": {
+            "content": {
+              "description": "Plan content to save"
+            }
+          },
+          "command": "mkdir -p /workspace/.vix/plans && cat > /workspace/.vix/plans/plan_$(date +%Y%m%d_%H%M%S).md",
+          "input": "$(content)",
+          "explanation": "Saving plan to disk"
+        }
+      }
+    }
+  ]
+}

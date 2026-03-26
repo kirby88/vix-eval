@@ -1,0 +1,13 @@
+diff --git a/codex-rs/network-proxy/src/policy.rs b/codex-rs/network-proxy/src/policy.rs
+index f16b106e7..fb0305c82 100644
+--- a/codex-rs/network-proxy/src/policy.rs
++++ b/codex-rs/network-proxy/src/policy.rs
+@@ -97,7 +97,7 @@ fn is_non_public_ipv6(ip: Ipv6Addr) -> bool {
+ }
+ 
+ /// Normalize host fragments for policy matching (trim whitespace, strip ports/brackets, lowercase).
+-pub fn normalize_host(host: &str) -> &str {
++pub fn normalize_host(host: &str) -> String {
+     let host = host.trim();
+     if host.starts_with('[')
+         && let Some(end) = host.find(']')

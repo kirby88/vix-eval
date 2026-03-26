@@ -1,0 +1,37 @@
+FROM node:20-bookworm
+
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    git \
+    curl \
+    python3 \
+    python3-pip \
+    pipx \
+    tmux \
+    less \
+    jq \
+    socat \
+    && rm -rf /var/lib/apt/lists/*
+
+# Install optional languages (passed via --build-arg LANGUAGES=rust,swift)
+ARG LANGUAGES=""
+COPY docker/install-languages.sh /tmp/install-languages.sh
+RUN chmod +x /tmp/install-languages.sh && /tmp/install-languages.sh "$LANGUAGES" && rm /tmp/install-languages.sh
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Install mitmproxy via pipx (isolated from system Python)
+RUN pipx install mitmproxy && pipx ensurepath
+
+# Install Claude Code (native installer, npm is deprecated)
+RUN curl -fsSL https://claude.ai/install.sh | bash
+
+EXPOSE 58000 8099
+
+COPY docker/entrypoint-common.sh /usr/local/bin/entrypoint-common.sh
+COPY docker/entrypoint-cleanup.sh /usr/local/bin/entrypoint-cleanup.sh
+COPY docker/entrypoint-claude.sh /usr/local/bin/entrypoint.sh
+COPY scripts/wait_for_proxy.sh /usr/local/bin/wait_for_proxy.sh
+COPY scripts/redact_flow.py /opt/vix-eval/redact_flow.py
+RUN chmod +x /usr/local/bin/entrypoint.sh /usr/local/bin/entrypoint-common.sh \
+    /usr/local/bin/entrypoint-cleanup.sh /usr/local/bin/wait_for_proxy.sh
+
+ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
