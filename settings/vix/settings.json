@@ -12,7 +12,7 @@
   "workflows": [
     {
       "name": "Plan",
-      "summary": "$(step.execute.display)",
+      "summary": "$(step.execute)",
       "entry_point": {
         "id": "explore",
         "params": {
