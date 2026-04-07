@@ -1,0 +1,165 @@
+09:33:54 [vix-daemon] API key loaded (source: env)
+09:33:54 [vix-daemon] [telemetry] failed to get device ID: failed to store device ID: exec: "dbus-launch": executable file not found in $PATH
+09:33:54 [vix-daemon] [34mRegistered handler: ping[0m
+09:33:54 [vix-daemon] [34mRegistered handler: init[0m
+09:33:54 [vix-daemon] [34mRegistered handler: force_init[0m
+09:33:54 [vix-daemon] [34mRegistered handler: brain.init[0m
+09:33:54 [vix-daemon] [34mRegistered handler: brain.update_files[0m
+09:33:54 [vix-daemon] [31m[tools] ✗ rg (ripgrep) not found in PATH[0m
+09:33:54 [vix-daemon] [33mfalling back to system grep[0m
+09:33:54 [vix-daemon] [31m[tools] ✗ fd not found in PATH[0m
+09:33:54 [vix-daemon] [33mfalling back to builtin glob[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.read_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.read_minified_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.write_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.write_minified_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.edit_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.edit_minified_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.delete_file[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.bash[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.grep[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.glob_files[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.tool_orchestrator[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.web_fetch[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.web_search[0m
+09:33:54 [vix-daemon] [34mRegistered handler: tool.lsp_query[0m
+09:33:54 [vix-daemon] [34mDaemon listening on /tmp/vix_daemon.sock[0m
+09:34:02 [vix-daemon] [34mReceived action=ping[0m
+09:34:02 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:34:02 [vix-daemon] [34mReceived action=ping[0m
+09:34:02 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:34:02 [vix-daemon] [34mSession 3a786c3be46146ff started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+09:34:02 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+09:34:02 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+09:34:02 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+09:34:02 [vix-daemon] [34mBrain init complete for /workspace[0m
+09:34:02 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+09:34:02 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+09:34:02 [vix-daemon] [session] loaded 1 workflow(s) from config
+09:34:02 [vix-daemon] [session] chat agent: general_cc
+09:34:07 [vix-daemon] [dispatch] tool call: glob_files **/*
+09:34:07 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/*] paths=[/workspace] type=any include_hidden=true[0m
+09:34:11 [vix-daemon] [dispatch] tool call: bash $ git -C /workspace log --oneline
+09:34:11 [vix-daemon] [33m[sandbox] no sandbox available — bash commands will run unsandboxed[0m
+09:34:11 [vix-daemon] [34m[tool.bash] cwd=/workspace command=git -C /workspace log --oneline sandbox=none[0m
+09:34:11 [vix-daemon] [34m[tool.bash] result=cb74fbf initial (empty workspace)
+[0m
+09:35:28 [vix-daemon] [dispatch] tool call: write_file /workspace/Package.swift (556 chars)
+09:35:30 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/CacheEntry.swift (144 chars)
+09:35:34 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/CacheConfiguration.swift (726 chars)
+09:35:50 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/CacheIndex.swift (2678 chars)
+09:35:55 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/IndexPersistence.swift (434 chars)
+09:35:59 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/Debouncer.swift (642 chars)
+09:36:05 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/EvictionManager.swift (1113 chars)
+09:36:17 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/LRUFileCache.swift (3964 chars)
+09:36:32 [vix-daemon] [dispatch] tool call: write_file /workspace/Tests/LRUFileCacheTests/CacheIndexTests.swift (3544 chars)
+09:36:48 [vix-daemon] [dispatch] tool call: write_file /workspace/Tests/LRUFileCacheTests/EvictionTests.swift (3481 chars)
+09:37:09 [vix-daemon] [dispatch] tool call: write_file /workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift (4851 chars)
+09:37:12 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && swift build 2>&1
+09:37:12 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && swift build 2>&1 sandbox=none[0m
+09:37:17 [vix-daemon] [34m[tool.bash] result=Building for debugging...
+[0/2] Write sources
+[1/2] Write swift-version-351DF704C01C92FF.txt
+[3/10] Compiling LRUFileCache IndexPersistence.swift
+/workspace/Sources/LRUFileCache/CacheIndex.swift:2:8: error: no such module 'CryptoKit'
+  1 | import Foundation
+  2 | import CryptoKit
+    |        `- error: no such module 'CryptoKit'
+  3 | 
+  4 | func stableFileName(for key: String) -> String {
+[4/10] Compiling LRUFileCache Debouncer.swift
+/workspace/Sources/LRUFileCache/CacheIndex.swift:2:8: error: ...[0m
+09:37:25 [vix-daemon] [dispatch] tool call: bash $ swift --version 2>&1; uname -a
+09:37:25 [vix-daemon] [34m[tool.bash] cwd=/workspace command=swift --version 2>&1; uname -a sandbox=none[0m
+09:37:26 [vix-daemon] [34m[tool.bash] result=Swift version 6.0.3 (swift-6.0.3-RELEASE)
+Target: aarch64-unknown-linux-gnu
+Linux ffab94a3f04f 6.10.14-linuxkit #1 SMP Tue Apr 15 16:00:54 UTC 2025 aarch64 GNU/Linux
+[0m
+09:37:30 [vix-daemon] [dispatch] tool call: edit_file /workspace/Sources/LRUFileCache/CacheIndex.swift (8 lines changed, +1)
+09:37:34 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && swift build 2>&1
+09:37:34 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && swift build 2>&1 sandbox=none[0m
+09:37:35 [vix-daemon] [34m[tool.bash] result=[0/1] Planning build
+Building for debugging...
+[0/2] Write sources
+[1/2] Write swift-version-351DF704C01C92FF.txt
+[3/10] Compiling LRUFileCache Debouncer.swift
+[4/10] Compiling LRUFileCache EvictionManager.swift
+[5/10] Compiling LRUFileCache CacheConfiguration.swift
+[6/10] Emitting module LRUFileCache
+/workspace/Sources/LRUFileCache/LRUFileCache.swift:41:13: warning: initialization of variable 'capturedDir' was never used; consider replacing with assignment to '_' or removing it
+ 39 |         se...[0m
+09:37:39 [vix-daemon] [dispatch] tool call: edit_file /workspace/Sources/LRUFileCache/LRUFileCache.swift (6 lines changed, -3)
+09:37:42 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && swift build 2>&1
+09:37:42 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && swift build 2>&1 sandbox=none[0m
+09:37:43 [vix-daemon] [34m[tool.bash] result=Building for debugging...
+[0/2] Write sources
+[1/2] Write swift-version-351DF704C01C92FF.txt
+[3/4] Compiling LRUFileCache LRUFileCache.swift
+[4/4] Emitting module LRUFileCache
+Build complete! (0.54s)
+[0m
+09:37:47 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && swift test 2>&1
+09:37:47 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && swift test 2>&1 sandbox=none[0m
+09:37:50 [vix-daemon] [34m[tool.bash] result=Building for debugging...
+[0/11] Write sources
+[1/12] Write swift-version-351DF704C01C92FF.txt
+[2/12] Wrapping AST for LRUFileCache for debugging
+[4/16] Emitting module LRUFileCacheTests
+[5/16] Compiling LRUFileCacheTests CacheIndexTests.swift
+[6/16] Compiling LRUFileCacheTests EvictionTests.swift
+[7/16] Compiling LRUFileCacheTests LRUFileCacheTests.swift
+/workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift:89:13: warning: initialization of immutable value 'base' was never used; consider r...[0m
+09:37:58 [vix-daemon] [dispatch] tool call: edit_file /workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift (6 lines changed, +1)
+09:38:01 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && swift test 2>&1 | tail -20
+09:38:01 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && swift test 2>&1 | tail -20 sandbox=none[0m
+09:38:03 [vix-daemon] [34m[tool.bash] result=Test Case 'LRUFileCacheTests.testMissingFileOnGetSelfHeals' passed (0.003 seconds)
+Test Case 'LRUFileCacheTests.testModifyFailsOnMissingKey' started at 2026-04-06 09:38:03.226
+Test Case 'LRUFileCacheTests.testModifyFailsOnMissingKey' passed (0.001 seconds)
+Test Case 'LRUFileCacheTests.testPromoteDoesNotThrowForExistingKey' started at 2026-04-06 09:38:03.227
+Test Case 'LRUFileCacheTests.testPromoteDoesNotThrowForExistingKey' passed (0.002 seconds)
+Test Case 'LRUFileCacheTests.testPromoteFailsOnMi...[0m
+09:38:18 [vix-daemon] [34mSession 3a786c3be46146ff ended[0m
+09:38:18 [vix-daemon] [34mReceived action=ping[0m
+09:38:18 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:38:18 [vix-daemon] [34mSession 97a7e5c7f797ecf2 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+09:38:18 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+09:38:18 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+09:38:18 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+09:38:18 [vix-daemon] [34mBrain init complete for /workspace[0m
+09:38:18 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+09:38:18 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+09:38:18 [vix-daemon] [session] loaded 1 workflow(s) from config
+09:38:18 [vix-daemon] [session] chat agent: general_cc
+09:38:18 [vix-daemon] [34mSession 97a7e5c7f797ecf2 ended[0m

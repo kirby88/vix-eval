@@ -1,0 +1,5440 @@
+{
+  "title": "claude-code",
+  "color": "#8ebfa1",
+  "by_run": {
+    "20260406-153320": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 45,
+          "cost": {
+            "input": {
+              "tokens": 2571,
+              "dollars": 0.002571
+            },
+            "cache_write": {
+              "tokens": 72706,
+              "dollars": 0.09089
+            },
+            "cache_read": {
+              "tokens": 1026351,
+              "dollars": 0.102631
+            },
+            "output": {
+              "tokens": 8719,
+              "dollars": 0.043595
+            },
+            "total": {
+              "tokens": 1110347,
+              "dollars": 0.239685
+            }
+          },
+          "timing": {
+            "total_duration_ms": 120015,
+            "wall_clock_ms": 1211320,
+            "avg_duration_ms": 2667
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 17,
+          "cost": {
+            "input": {
+              "tokens": 21,
+              "dollars": 6.3e-05
+            },
+            "cache_write": {
+              "tokens": 23420,
+              "dollars": 0.087826
+            },
+            "cache_read": {
+              "tokens": 558589,
+              "dollars": 0.167574
+            },
+            "output": {
+              "tokens": 5108,
+              "dollars": 0.07662
+            },
+            "total": {
+              "tokens": 587138,
+              "dollars": 0.332083
+            }
+          },
+          "timing": {
+            "total_duration_ms": 103399,
+            "wall_clock_ms": 1436002,
+            "avg_duration_ms": 6082
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 358,
+              "dollars": 0.000358
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 6.5e-05
+            },
+            "total": {
+              "tokens": 371,
+              "dollars": 0.000423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1403,
+            "wall_clock_ms": 1403,
+            "avg_duration_ms": 1403
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 6.5e-05,
+                "chars": 39
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 24,
+          "cost": {
+            "input": {
+              "tokens": 74,
+              "dollars": 8e-05
+            },
+            "cache_write": {
+              "tokens": 38778,
+              "dollars": 0.062218
+            },
+            "cache_read": {
+              "tokens": 625355,
+              "dollars": 0.066663
+            },
+            "output": {
+              "tokens": 3364,
+              "dollars": 0.01932
+            },
+            "total": {
+              "tokens": 667571,
+              "dollars": 0.14828
+            }
+          },
+          "timing": {
+            "total_duration_ms": 62655,
+            "wall_clock_ms": 999147,
+            "avg_duration_ms": 2611
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 171538,
+                  "dollars": 0.035492,
+                  "chars": 532603
+                },
+                "Read": {
+                  "tokens": 101297,
+                  "dollars": 0.017487,
+                  "chars": 318139
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 14425,
+                  "dollars": 0.002899,
+                  "chars": 44737
+                },
+                "Read": {
+                  "tokens": 1140,
+                  "dollars": 0.000272,
+                  "chars": 3548
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1313,
+                "dollars": 0.006557,
+                "chars": 3518
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2051,
+                  "dollars": 0.012763,
+                  "chars": 4138
+                },
+                "Agent": {
+                  "tokens": 250,
+                  "dollars": 0.00375,
+                  "chars": 589
+                },
+                "Bash": {
+                  "tokens": 1656,
+                  "dollars": 0.008287,
+                  "chars": 3241
+                },
+                "Read": {
+                  "tokens": 145,
+                  "dollars": 0.000726,
+                  "chars": 308
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 8732,
+            "unnecessary_space_count": 6783,
+            "total_chars": 282795
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 3,
+              "total_read_chars": 18069,
+              "per_file": {
+                "/workspace/codex-rs/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12761
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 10,
+          "cost": {
+            "input": {
+              "tokens": 1558,
+              "dollars": 0.00156
+            },
+            "cache_write": {
+              "tokens": 23225,
+              "dollars": 0.045147
+            },
+            "cache_read": {
+              "tokens": 225676,
+              "dollars": 0.026695
+            },
+            "output": {
+              "tokens": 4169,
+              "dollars": 0.026105
+            },
+            "total": {
+              "tokens": 254628,
+              "dollars": 0.099506
+            }
+          },
+          "timing": {
+            "total_duration_ms": 46972,
+            "wall_clock_ms": 62037,
+            "avg_duration_ms": 4697
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 604,
+                  "dollars": 0.002265,
+                  "chars": 2392
+                },
+                "Read": {
+                  "tokens": 66362,
+                  "dollars": 0.018017,
+                  "chars": 213700
+                },
+                "Bash": {
+                  "tokens": 13361,
+                  "dollars": 0.00395,
+                  "chars": 42998
+                },
+                "Glob": {
+                  "tokens": 5345,
+                  "dollars": 0.001408,
+                  "chars": 17178
+                },
+                "Grep": {
+                  "tokens": 951,
+                  "dollars": 0.000253,
+                  "chars": 3059
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 159,
+                  "dollars": 0.000596,
+                  "chars": 629
+                },
+                "Read": {
+                  "tokens": 1912,
+                  "dollars": 0.000566,
+                  "chars": 6153
+                },
+                "Bash": {
+                  "tokens": 2596,
+                  "dollars": 0.00085,
+                  "chars": 8345
+                },
+                "Glob": {
+                  "tokens": 314,
+                  "dollars": 8.5e-05,
+                  "chars": 1008
+                },
+                "Grep": {
+                  "tokens": 490,
+                  "dollars": 0.00013,
+                  "chars": 1575
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 2506,
+                "dollars": 0.012538,
+                "chars": 7429
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1663,
+                  "dollars": 0.013567,
+                  "chars": 3384
+                },
+                "Agent": {
+                  "tokens": 526,
+                  "dollars": 0.00789,
+                  "chars": 1022
+                },
+                "Read": {
+                  "tokens": 389,
+                  "dollars": 0.001942,
+                  "chars": 779
+                },
+                "Bash": {
+                  "tokens": 610,
+                  "dollars": 0.003045,
+                  "chars": 1294
+                },
+                "Glob": {
+                  "tokens": 50,
+                  "dollars": 0.000248,
+                  "chars": 104
+                },
+                "Grep": {
+                  "tokens": 88,
+                  "dollars": 0.000442,
+                  "chars": 185
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 5615,
+            "unnecessary_space_count": 8162,
+            "total_chars": 191914
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 7,
+              "total_read_chars": 29093,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12761
+                },
+                "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3138
+                },
+                "/workspace/codex-rs/linux-sandbox/src/bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3712
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                },
+                "/workspace/codex-rs/linux-sandbox/README.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3478
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 12,
+          "cost": {
+            "input": {
+              "tokens": 49,
+              "dollars": 5.1e-05
+            },
+            "cache_write": {
+              "tokens": 25377,
+              "dollars": 0.038553
+            },
+            "cache_read": {
+              "tokens": 243709,
+              "dollars": 0.029789
+            },
+            "output": {
+              "tokens": 3853,
+              "dollars": 0.038455
+            },
+            "total": {
+              "tokens": 272988,
+              "dollars": 0.106848
+            }
+          },
+          "timing": {
+            "total_duration_ms": 56935,
+            "wall_clock_ms": 128904,
+            "avg_duration_ms": 4745
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2418,
+                  "dollars": 0.006991,
+                  "chars": 9453
+                },
+                "Bash": {
+                  "tokens": 49307,
+                  "dollars": 0.015838,
+                  "chars": 168146
+                },
+                "Read": {
+                  "tokens": 34456,
+                  "dollars": 0.010319,
+                  "chars": 116408
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 433,
+                  "dollars": 0.001068,
+                  "chars": 1691
+                },
+                "Bash": {
+                  "tokens": 1957,
+                  "dollars": 0.000612,
+                  "chars": 6678
+                },
+                "Read": {
+                  "tokens": 427,
+                  "dollars": 0.000155,
+                  "chars": 1440
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1680,
+                "dollars": 0.011114,
+                "chars": 4212
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2173,
+                  "dollars": 0.027341,
+                  "chars": 2312
+                },
+                "Agent": {
+                  "tokens": 1648,
+                  "dollars": 0.024718,
+                  "chars": 1100
+                },
+                "Bash": {
+                  "tokens": 404,
+                  "dollars": 0.00202,
+                  "chars": 963
+                },
+                "Read": {
+                  "tokens": 121,
+                  "dollars": 0.000603,
+                  "chars": 249
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2787,
+            "unnecessary_space_count": 12117,
+            "total_chars": 108894
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 19048,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 19048
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "5": {
+          "request_count": 4,
+          "cost": {
+            "input": {
+              "tokens": 540,
+              "dollars": 0.000546
+            },
+            "cache_write": {
+              "tokens": 3820,
+              "dollars": 0.014325
+            },
+            "cache_read": {
+              "tokens": 95508,
+              "dollars": 0.028652
+            },
+            "output": {
+              "tokens": 741,
+              "dollars": 0.010965
+            },
+            "total": {
+              "tokens": 100609,
+              "dollars": 0.054488
+            }
+          },
+          "timing": {
+            "total_duration_ms": 19087,
+            "wall_clock_ms": 21150,
+            "avg_duration_ms": 4772
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 9144,
+                  "dollars": 0.005093,
+                  "chars": 36265
+                },
+                "Read": {
+                  "tokens": 655,
+                  "dollars": 0.001342,
+                  "chars": 2598
+                },
+                "Write": {
+                  "tokens": 51,
+                  "dollars": 0.000191,
+                  "chars": 204
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 2142,
+                  "dollars": 0.001632,
+                  "chars": 8493
+                },
+                "Read": {
+                  "tokens": 90,
+                  "dollars": 0.000182,
+                  "chars": 356
+                },
+                "Write": {
+                  "tokens": 337,
+                  "dollars": 0.001264,
+                  "chars": 1333
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 157,
+                "dollars": 0.002213,
+                "chars": 302
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 584,
+                  "dollars": 0.008752,
+                  "chars": 1488
+                },
+                "Read": {
+                  "tokens": 134,
+                  "dollars": 0.002006,
+                  "chars": 138
+                },
+                "Write": {
+                  "tokens": 412,
+                  "dollars": 0.006176,
+                  "chars": 1293
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 58,
+            "unnecessary_space_count": 162,
+            "total_chars": 2266
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 1133,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1133
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 1123,
+              "per_file": {
+                "/root/.claude/plans/gleaming-launching-river.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1123
+                }
+              }
+            }
+          }
+        },
+        "6": {
+          "request_count": 10,
+          "cost": {
+            "input": {
+              "tokens": 10,
+              "dollars": 3e-05
+            },
+            "cache_write": {
+              "tokens": 4496,
+              "dollars": 0.01686
+            },
+            "cache_read": {
+              "tokens": 356551,
+              "dollars": 0.106964
+            },
+            "output": {
+              "tokens": 1674,
+              "dollars": 0.02511
+            },
+            "total": {
+              "tokens": 362731,
+              "dollars": 0.148964
+            }
+          },
+          "timing": {
+            "total_duration_ms": 34577,
+            "wall_clock_ms": 224202,
+            "avg_duration_ms": 3458
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 30681,
+                  "dollars": 0.009204,
+                  "chars": 120750
+                },
+                "Read": {
+                  "tokens": 7952,
+                  "dollars": 0.006466,
+                  "chars": 31182
+                },
+                "Write": {
+                  "tokens": 417,
+                  "dollars": 0.000127,
+                  "chars": 1640
+                },
+                "ExitPlanMode": {
+                  "tokens": 4497,
+                  "dollars": 0.002921,
+                  "chars": 17700
+                },
+                "Edit": {
+                  "tokens": 1748,
+                  "dollars": 0.001352,
+                  "chars": 6869
+                },
+                "Bash": {
+                  "tokens": 3827,
+                  "dollars": 0.003522,
+                  "chars": 15030
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 7194,
+                  "dollars": 0.002157,
+                  "chars": 28310
+                },
+                "Read": {
+                  "tokens": 601,
+                  "dollars": 0.000305,
+                  "chars": 2364
+                },
+                "Write": {
+                  "tokens": 3387,
+                  "dollars": 0.001014,
+                  "chars": 13330
+                },
+                "ExitPlanMode": {
+                  "tokens": 250,
+                  "dollars": 0.000157,
+                  "chars": 970
+                },
+                "Edit": {
+                  "tokens": 1048,
+                  "dollars": 0.000996,
+                  "chars": 4116
+                },
+                "Bash": {
+                  "tokens": 1554,
+                  "dollars": 0.00162,
+                  "chars": 6092
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 291,
+                "dollars": 0.004358,
+                "chars": 717
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1383,
+                  "dollars": 0.020752,
+                  "chars": 1909
+                },
+                "Edit": {
+                  "tokens": 382,
+                  "dollars": 0.005737,
+                  "chars": 654
+                },
+                "Bash": {
+                  "tokens": 824,
+                  "dollars": 0.01236,
+                  "chars": 1149
+                },
+                "Read": {
+                  "tokens": 177,
+                  "dollars": 0.002655,
+                  "chars": 106
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 730,
+            "unnecessary_space_count": 2450,
+            "total_chars": 28122
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 5331,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1133
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                }
+              }
+            },
+            "output": {
+              "files_written": 2,
+              "unique_files_written": 2,
+              "total_write_chars": 177,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 45
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 132
+                }
+              }
+            }
+          }
+        },
+        "7": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 430,
+              "dollars": 0.001613
+            },
+            "cache_read": {
+              "tokens": 38141,
+              "dollars": 0.011442
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 0.000195
+            },
+            "total": {
+              "tokens": 38587,
+              "dollars": 0.013259
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1785,
+            "wall_clock_ms": 1785,
+            "avg_duration_ms": 1785
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 3092,
+                  "dollars": 0.000928,
+                  "chars": 12075
+                },
+                "Read": {
+                  "tokens": 1502,
+                  "dollars": 0.000451,
+                  "chars": 5867
+                },
+                "Write": {
+                  "tokens": 42,
+                  "dollars": 1.3e-05,
+                  "chars": 164
+                },
+                "ExitPlanMode": {
+                  "tokens": 452,
+                  "dollars": 0.000136,
+                  "chars": 1766
+                },
+                "Edit": {
+                  "tokens": 222,
+                  "dollars": 6.7e-05,
+                  "chars": 867
+                },
+                "Bash": {
+                  "tokens": 631,
+                  "dollars": 0.000189,
+                  "chars": 2466
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 725,
+                  "dollars": 0.000218,
+                  "chars": 2831
+                },
+                "Read": {
+                  "tokens": 83,
+                  "dollars": 2.5e-05,
+                  "chars": 324
+                },
+                "Write": {
+                  "tokens": 341,
+                  "dollars": 0.000102,
+                  "chars": 1333
+                },
+                "ExitPlanMode": {
+                  "tokens": 25,
+                  "dollars": 7e-06,
+                  "chars": 97
+                },
+                "Edit": {
+                  "tokens": 199,
+                  "dollars": 6e-05,
+                  "chars": 778
+                },
+                "Bash": {
+                  "tokens": 336,
+                  "dollars": 0.000101,
+                  "chars": 1311
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 0.000195,
+                "chars": 40
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 139,
+            "unnecessary_space_count": 491,
+            "total_chars": 5331
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 5331,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1133
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 238664,
+              "dollars": 0.058991,
+              "chars": 761243
+            },
+            "Read": {
+              "tokens": 212224,
+              "dollars": 0.054082,
+              "chars": 687894
+            },
+            "Agent": {
+              "tokens": 45939,
+              "dollars": 0.024481,
+              "chars": 180935
+            },
+            "Glob": {
+              "tokens": 5345,
+              "dollars": 0.001408,
+              "chars": 17178
+            },
+            "Grep": {
+              "tokens": 951,
+              "dollars": 0.000253,
+              "chars": 3059
+            },
+            "Write": {
+              "tokens": 510,
+              "dollars": 0.000331,
+              "chars": 2008
+            },
+            "ExitPlanMode": {
+              "tokens": 4949,
+              "dollars": 0.003057,
+              "chars": 19466
+            },
+            "Edit": {
+              "tokens": 1970,
+              "dollars": 0.001419,
+              "chars": 7736
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 20868,
+              "dollars": 0.006082,
+              "chars": 67163
+            },
+            "Read": {
+              "tokens": 4253,
+              "dollars": 0.001505,
+              "chars": 14185
+            },
+            "Agent": {
+              "tokens": 10653,
+              "dollars": 0.005671,
+              "chars": 41954
+            },
+            "Glob": {
+              "tokens": 314,
+              "dollars": 8.5e-05,
+              "chars": 1008
+            },
+            "Grep": {
+              "tokens": 490,
+              "dollars": 0.00013,
+              "chars": 1575
+            },
+            "Write": {
+              "tokens": 4065,
+              "dollars": 0.00238,
+              "chars": 15996
+            },
+            "ExitPlanMode": {
+              "tokens": 275,
+              "dollars": 0.000164,
+              "chars": 1067
+            },
+            "Edit": {
+              "tokens": 1247,
+              "dollars": 0.001056,
+              "chars": 4894
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 5973,
+            "dollars": 0.03704,
+            "chars": 16257
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 7854,
+              "dollars": 0.083175,
+              "chars": 13231
+            },
+            "Agent": {
+              "tokens": 2424,
+              "dollars": 0.036358,
+              "chars": 2711
+            },
+            "Bash": {
+              "tokens": 3494,
+              "dollars": 0.025712,
+              "chars": 6647
+            },
+            "Read": {
+              "tokens": 966,
+              "dollars": 0.007932,
+              "chars": 1580
+            },
+            "Glob": {
+              "tokens": 50,
+              "dollars": 0.000248,
+              "chars": 104
+            },
+            "Grep": {
+              "tokens": 88,
+              "dollars": 0.000442,
+              "chars": 185
+            },
+            "Write": {
+              "tokens": 412,
+              "dollars": 0.006176,
+              "chars": 1293
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "Edit": {
+              "tokens": 382,
+              "dollars": 0.005737,
+              "chars": 654
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 18061,
+        "unnecessary_space_count": 30165,
+        "total_chars": 619322
+      },
+      "total": {
+        "request_count": 62,
+        "cost": {
+          "input": {
+            "tokens": 2592,
+            "dollars": 0.002634
+          },
+          "cache_write": {
+            "tokens": 96126,
+            "dollars": 0.178716
+          },
+          "cache_read": {
+            "tokens": 1584940,
+            "dollars": 0.270205
+          },
+          "output": {
+            "tokens": 13827,
+            "dollars": 0.120215
+          },
+          "total": {
+            "tokens": 1697485,
+            "dollars": 0.571768
+          }
+        },
+        "timing": {
+          "total_duration_ms": 223414,
+          "wall_clock_ms": 1436008,
+          "avg_duration_ms": 3603
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 8,
+            "total_read_chars": 71541,
+            "per_file": {
+              "/workspace/codex-rs/Cargo.toml": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 25522
+              },
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 12594
+              },
+              "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 2220
+              },
+              "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3138
+              },
+              "/workspace/codex-rs/linux-sandbox/src/bwrap.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3712
+              },
+              "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 696
+              },
+              "/workspace/codex-rs/linux-sandbox/README.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3478
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 20181
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 1300,
+            "per_file": {
+              "/root/.claude/plans/gleaming-launching-river.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1123
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 45
+              },
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 132
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-153600": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 23,
+          "cost": {
+            "input": {
+              "tokens": 985,
+              "dollars": 0.000985
+            },
+            "cache_write": {
+              "tokens": 35951,
+              "dollars": 0.044942
+            },
+            "cache_read": {
+              "tokens": 391032,
+              "dollars": 0.0391
+            },
+            "output": {
+              "tokens": 3789,
+              "dollars": 0.018945
+            },
+            "total": {
+              "tokens": 431757,
+              "dollars": 0.103971
+            }
+          },
+          "timing": {
+            "total_duration_ms": 56706,
+            "wall_clock_ms": 688891,
+            "avg_duration_ms": 2465
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 22,
+          "cost": {
+            "input": {
+              "tokens": 26,
+              "dollars": 7.8e-05
+            },
+            "cache_write": {
+              "tokens": 40410,
+              "dollars": 0.151539
+            },
+            "cache_read": {
+              "tokens": 817092,
+              "dollars": 0.245125
+            },
+            "output": {
+              "tokens": 8747,
+              "dollars": 0.131205
+            },
+            "total": {
+              "tokens": 866275,
+              "dollars": 0.527948
+            }
+          },
+          "timing": {
+            "total_duration_ms": 149142,
+            "wall_clock_ms": 1046574,
+            "avg_duration_ms": 6779
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 358,
+              "dollars": 0.000358
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 6.5e-05
+            },
+            "total": {
+              "tokens": 371,
+              "dollars": 0.000423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1063,
+            "wall_clock_ms": 1063,
+            "avg_duration_ms": 1063
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 6.5e-05,
+                "chars": 39
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 12,
+          "cost": {
+            "input": {
+              "tokens": 57,
+              "dollars": 6.3e-05
+            },
+            "cache_write": {
+              "tokens": 28849,
+              "dollars": 0.049809
+            },
+            "cache_read": {
+              "tokens": 227324,
+              "dollars": 0.02686
+            },
+            "output": {
+              "tokens": 1936,
+              "dollars": 0.0114
+            },
+            "total": {
+              "tokens": 258166,
+              "dollars": 0.088134
+            }
+          },
+          "timing": {
+            "total_duration_ms": 31672,
+            "wall_clock_ms": 510954,
+            "avg_duration_ms": 2639
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 58810,
+                  "dollars": 0.019304,
+                  "chars": 180206
+                },
+                "Read": {
+                  "tokens": 10682,
+                  "dollars": 0.007768,
+                  "chars": 31093
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 2984,
+                  "dollars": 0.000824,
+                  "chars": 9352
+                },
+                "Read": {
+                  "tokens": 145,
+                  "dollars": 0.00013,
+                  "chars": 421
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1035,
+                "dollars": 0.005172,
+                "chars": 2896
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 901,
+                  "dollars": 0.006228,
+                  "chars": 1786
+                },
+                "Agent": {
+                  "tokens": 172,
+                  "dollars": 0.00258,
+                  "chars": 349
+                },
+                "Bash": {
+                  "tokens": 622,
+                  "dollars": 0.003116,
+                  "chars": 1227
+                },
+                "Read": {
+                  "tokens": 107,
+                  "dollars": 0.000532,
+                  "chars": 210
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 680,
+            "unnecessary_space_count": 1603,
+            "total_chars": 29350
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 15915,
+              "per_file": {
+                "/tmp/cargo_check_output.txt": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 13435
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 2480
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 30,
+              "dollars": 3.2e-05
+            },
+            "cache_write": {
+              "tokens": 18910,
+              "dollars": 0.039413
+            },
+            "cache_read": {
+              "tokens": 205004,
+              "dollars": 0.024628
+            },
+            "output": {
+              "tokens": 2466,
+              "dollars": 0.01704
+            },
+            "total": {
+              "tokens": 226410,
+              "dollars": 0.081111
+            }
+          },
+          "timing": {
+            "total_duration_ms": 35856,
+            "wall_clock_ms": 97061,
+            "avg_duration_ms": 3260
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 574,
+                  "dollars": 0.002152,
+                  "chars": 2274
+                },
+                "Bash": {
+                  "tokens": 37028,
+                  "dollars": 0.012022,
+                  "chars": 123463
+                },
+                "Read": {
+                  "tokens": 16546,
+                  "dollars": 0.004009,
+                  "chars": 55541
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 98,
+                  "dollars": 0.000367,
+                  "chars": 389
+                },
+                "Bash": {
+                  "tokens": 2120,
+                  "dollars": 0.000697,
+                  "chars": 7080
+                },
+                "Read": {
+                  "tokens": 1322,
+                  "dollars": 0.00033,
+                  "chars": 4431
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1292,
+                "dollars": 0.006462,
+                "chars": 3855
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1174,
+                  "dollars": 0.010578,
+                  "chars": 2318
+                },
+                "Agent": {
+                  "tokens": 471,
+                  "dollars": 0.007065,
+                  "chars": 817
+                },
+                "Bash": {
+                  "tokens": 490,
+                  "dollars": 0.002447,
+                  "chars": 1070
+                },
+                "Read": {
+                  "tokens": 213,
+                  "dollars": 0.001066,
+                  "chars": 431
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1441,
+            "unnecessary_space_count": 3463,
+            "total_chars": 48995
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 6241,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/src/main.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 237
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 9,
+          "cost": {
+            "input": {
+              "tokens": 552,
+              "dollars": 0.000568
+            },
+            "cache_write": {
+              "tokens": 10328,
+              "dollars": 0.03873
+            },
+            "cache_read": {
+              "tokens": 249479,
+              "dollars": 0.074843
+            },
+            "output": {
+              "tokens": 3637,
+              "dollars": 0.054385
+            },
+            "total": {
+              "tokens": 263996,
+              "dollars": 0.168526
+            }
+          },
+          "timing": {
+            "total_duration_ms": 61668,
+            "wall_clock_ms": 80805,
+            "avg_duration_ms": 6852
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 11266,
+                  "dollars": 0.006282,
+                  "chars": 44208
+                },
+                "Read": {
+                  "tokens": 14001,
+                  "dollars": 0.013261,
+                  "chars": 54852
+                },
+                "Glob": {
+                  "tokens": 549,
+                  "dollars": 0.000571,
+                  "chars": 2150
+                },
+                "Bash": {
+                  "tokens": 262,
+                  "dollars": 0.000488,
+                  "chars": 1028
+                },
+                "Write": {
+                  "tokens": 184,
+                  "dollars": 0.00069,
+                  "chars": 724
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 2540,
+                  "dollars": 0.00151,
+                  "chars": 9968
+                },
+                "Read": {
+                  "tokens": 763,
+                  "dollars": 0.000759,
+                  "chars": 2990
+                },
+                "Glob": {
+                  "tokens": 185,
+                  "dollars": 0.000183,
+                  "chars": 720
+                },
+                "Bash": {
+                  "tokens": 246,
+                  "dollars": 0.000415,
+                  "chars": 966
+                },
+                "Write": {
+                  "tokens": 401,
+                  "dollars": 0.001504,
+                  "chars": 1576
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 47,
+                "dollars": 0.00054,
+                "chars": 88
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3590,
+                  "dollars": 0.053845,
+                  "chars": 2447
+                },
+                "Read": {
+                  "tokens": 1700,
+                  "dollars": 0.025495,
+                  "chars": 441
+                },
+                "Glob": {
+                  "tokens": 66,
+                  "dollars": 0.00099,
+                  "chars": 104
+                },
+                "Bash": {
+                  "tokens": 835,
+                  "dollars": 0.01253,
+                  "chars": 309
+                },
+                "Write": {
+                  "tokens": 951,
+                  "dollars": 0.01426,
+                  "chars": 1536
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1365,
+            "unnecessary_space_count": 4091,
+            "total_chars": 49444
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 9142,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                },
+                "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3138
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 1363,
+              "per_file": {
+                "/root/.claude/plans/foamy-waddling-music.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1363
+                }
+              }
+            }
+          }
+        },
+        "5": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 11,
+              "dollars": 3.3e-05
+            },
+            "cache_write": {
+              "tokens": 17918,
+              "dollars": 0.067194
+            },
+            "cache_read": {
+              "tokens": 473117,
+              "dollars": 0.141934
+            },
+            "output": {
+              "tokens": 4468,
+              "dollars": 0.06702
+            },
+            "total": {
+              "tokens": 495514,
+              "dollars": 0.276181
+            }
+          },
+          "timing": {
+            "total_duration_ms": 74024,
+            "wall_clock_ms": 357546,
+            "avg_duration_ms": 6729
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 15936,
+                  "dollars": 0.004781,
+                  "chars": 60731
+                },
+                "Read": {
+                  "tokens": 53232,
+                  "dollars": 0.03258,
+                  "chars": 200936
+                },
+                "Glob": {
+                  "tokens": 1219,
+                  "dollars": 0.000364,
+                  "chars": 4642
+                },
+                "Bash": {
+                  "tokens": 32915,
+                  "dollars": 0.027054,
+                  "chars": 123517
+                },
+                "Write": {
+                  "tokens": 1974,
+                  "dollars": 0.00059,
+                  "chars": 7524
+                },
+                "ExitPlanMode": {
+                  "tokens": 5797,
+                  "dollars": 0.003537,
+                  "chars": 22095
+                },
+                "Edit": {
+                  "tokens": 651,
+                  "dollars": 0.000576,
+                  "chars": 2466
+                },
+                "TaskOutput": {
+                  "tokens": 280,
+                  "dollars": 0.00105,
+                  "chars": 1044
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 3595,
+                  "dollars": 0.001078,
+                  "chars": 13706
+                },
+                "Read": {
+                  "tokens": 1937,
+                  "dollars": 0.000722,
+                  "chars": 7366
+                },
+                "Glob": {
+                  "tokens": 419,
+                  "dollars": 0.000126,
+                  "chars": 1584
+                },
+                "Bash": {
+                  "tokens": 3637,
+                  "dollars": 0.002594,
+                  "chars": 13723
+                },
+                "Write": {
+                  "tokens": 4550,
+                  "dollars": 0.001365,
+                  "chars": 17336
+                },
+                "ExitPlanMode": {
+                  "tokens": 281,
+                  "dollars": 0.00017,
+                  "chars": 1067
+                },
+                "Edit": {
+                  "tokens": 1857,
+                  "dollars": 0.001461,
+                  "chars": 7024
+                },
+                "TaskOutput": {
+                  "tokens": 41,
+                  "dollars": 0.000154,
+                  "chars": 151
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1431,
+                "dollars": 0.021471,
+                "chars": 1106
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3037,
+                  "dollars": 0.045549,
+                  "chars": 2500
+                },
+                "Edit": {
+                  "tokens": 1796,
+                  "dollars": 0.026934,
+                  "chars": 879
+                },
+                "Bash": {
+                  "tokens": 1015,
+                  "dollars": 0.015233,
+                  "chars": 1399
+                },
+                "Read": {
+                  "tokens": 131,
+                  "dollars": 0.001972,
+                  "chars": 111
+                },
+                "TaskOutput": {
+                  "tokens": 94,
+                  "dollars": 0.00141,
+                  "chars": 111
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 5002,
+            "unnecessary_space_count": 17611,
+            "total_chars": 184222
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 5,
+              "total_read_chars": 25874,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                },
+                "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3138
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                }
+              }
+            },
+            "output": {
+              "files_written": 2,
+              "unique_files_written": 2,
+              "total_write_chars": 299,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 153
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 146
+                }
+              }
+            }
+          }
+        },
+        "6": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 356,
+              "dollars": 0.001335
+            },
+            "cache_read": {
+              "tokens": 53200,
+              "dollars": 0.01596
+            },
+            "output": {
+              "tokens": 16,
+              "dollars": 0.00024
+            },
+            "total": {
+              "tokens": 53575,
+              "dollars": 0.017544
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1565,
+            "wall_clock_ms": 1565,
+            "avg_duration_ms": 1565
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 1483,
+                  "dollars": 0.000445,
+                  "chars": 5521
+                },
+                "Read": {
+                  "tokens": 7526,
+                  "dollars": 0.002258,
+                  "chars": 28012
+                },
+                "Glob": {
+                  "tokens": 113,
+                  "dollars": 3.4e-05,
+                  "chars": 422
+                },
+                "Bash": {
+                  "tokens": 5129,
+                  "dollars": 0.001539,
+                  "chars": 19091
+                },
+                "Write": {
+                  "tokens": 184,
+                  "dollars": 5.5e-05,
+                  "chars": 684
+                },
+                "ExitPlanMode": {
+                  "tokens": 539,
+                  "dollars": 0.000162,
+                  "chars": 2005
+                },
+                "Edit": {
+                  "tokens": 92,
+                  "dollars": 2.8e-05,
+                  "chars": 343
+                },
+                "TaskOutput": {
+                  "tokens": 270,
+                  "dollars": 8.1e-05,
+                  "chars": 1004
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 335,
+                  "dollars": 0.0001,
+                  "chars": 1246
+                },
+                "Read": {
+                  "tokens": 202,
+                  "dollars": 6.1e-05,
+                  "chars": 752
+                },
+                "Glob": {
+                  "tokens": 39,
+                  "dollars": 1.2e-05,
+                  "chars": 144
+                },
+                "Bash": {
+                  "tokens": 549,
+                  "dollars": 0.000165,
+                  "chars": 2042
+                },
+                "Write": {
+                  "tokens": 423,
+                  "dollars": 0.000127,
+                  "chars": 1576
+                },
+                "ExitPlanMode": {
+                  "tokens": 26,
+                  "dollars": 8e-06,
+                  "chars": 97
+                },
+                "Edit": {
+                  "tokens": 269,
+                  "dollars": 8.1e-05,
+                  "chars": 1003
+                },
+                "TaskOutput": {
+                  "tokens": 41,
+                  "dollars": 1.2e-05,
+                  "chars": 151
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 16,
+                "dollars": 0.00024,
+                "chars": 65
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 692,
+            "unnecessary_space_count": 2663,
+            "total_chars": 25874
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 5,
+              "total_read_chars": 25874,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                },
+                "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3138
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 134144,
+              "dollars": 0.060407,
+              "chars": 447305
+            },
+            "Read": {
+              "tokens": 101987,
+              "dollars": 0.059876,
+              "chars": 370434
+            },
+            "Agent": {
+              "tokens": 29259,
+              "dollars": 0.01366,
+              "chars": 112734
+            },
+            "Glob": {
+              "tokens": 1881,
+              "dollars": 0.000969,
+              "chars": 7214
+            },
+            "Write": {
+              "tokens": 2342,
+              "dollars": 0.001335,
+              "chars": 8932
+            },
+            "ExitPlanMode": {
+              "tokens": 6336,
+              "dollars": 0.003699,
+              "chars": 24100
+            },
+            "Edit": {
+              "tokens": 743,
+              "dollars": 0.000604,
+              "chars": 2809
+            },
+            "TaskOutput": {
+              "tokens": 550,
+              "dollars": 0.001131,
+              "chars": 2048
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 9536,
+              "dollars": 0.004695,
+              "chars": 33163
+            },
+            "Read": {
+              "tokens": 4369,
+              "dollars": 0.002002,
+              "chars": 15960
+            },
+            "Agent": {
+              "tokens": 6568,
+              "dollars": 0.003055,
+              "chars": 25309
+            },
+            "Glob": {
+              "tokens": 643,
+              "dollars": 0.000321,
+              "chars": 2448
+            },
+            "Write": {
+              "tokens": 5374,
+              "dollars": 0.002996,
+              "chars": 20488
+            },
+            "ExitPlanMode": {
+              "tokens": 307,
+              "dollars": 0.000178,
+              "chars": 1164
+            },
+            "Edit": {
+              "tokens": 2126,
+              "dollars": 0.001542,
+              "chars": 8027
+            },
+            "TaskOutput": {
+              "tokens": 82,
+              "dollars": 0.000166,
+              "chars": 302
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 3834,
+            "dollars": 0.03395,
+            "chars": 8049
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 8702,
+              "dollars": 0.1162,
+              "chars": 9051
+            },
+            "Agent": {
+              "tokens": 643,
+              "dollars": 0.009645,
+              "chars": 1166
+            },
+            "Bash": {
+              "tokens": 2962,
+              "dollars": 0.033326,
+              "chars": 4005
+            },
+            "Read": {
+              "tokens": 2151,
+              "dollars": 0.029065,
+              "chars": 1193
+            },
+            "Glob": {
+              "tokens": 66,
+              "dollars": 0.00099,
+              "chars": 104
+            },
+            "Write": {
+              "tokens": 951,
+              "dollars": 0.01426,
+              "chars": 1536
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "Edit": {
+              "tokens": 1796,
+              "dollars": 0.026934,
+              "chars": 879
+            },
+            "TaskOutput": {
+              "tokens": 94,
+              "dollars": 0.00141,
+              "chars": 111
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 9180,
+        "unnecessary_space_count": 29431,
+        "total_chars": 337885
+      },
+      "total": {
+        "request_count": 45,
+        "cost": {
+          "input": {
+            "tokens": 1011,
+            "dollars": 0.001063
+          },
+          "cache_write": {
+            "tokens": 76361,
+            "dollars": 0.196481
+          },
+          "cache_read": {
+            "tokens": 1208124,
+            "dollars": 0.284225
+          },
+          "output": {
+            "tokens": 12536,
+            "dollars": 0.15015
+          },
+          "total": {
+            "tokens": 1298032,
+            "dollars": 0.631919
+          }
+        },
+        "timing": {
+          "total_duration_ms": 205848,
+          "wall_clock_ms": 1046580,
+          "avg_duration_ms": 4574
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 7,
+            "total_read_chars": 48030,
+            "per_file": {
+              "/tmp/cargo_check_output.txt": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 13435
+              },
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 10876
+              },
+              "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 2220
+              },
+              "/workspace/codex-rs/linux-sandbox/src/main.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 237
+              },
+              "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 1392
+              },
+              "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3138
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 16732
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 1662,
+            "per_file": {
+              "/root/.claude/plans/foamy-waddling-music.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1363
+              },
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 153
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 146
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-153606": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 24,
+          "cost": {
+            "input": {
+              "tokens": 944,
+              "dollars": 0.000944
+            },
+            "cache_write": {
+              "tokens": 35124,
+              "dollars": 0.043908
+            },
+            "cache_read": {
+              "tokens": 589223,
+              "dollars": 0.058919
+            },
+            "output": {
+              "tokens": 3268,
+              "dollars": 0.01634
+            },
+            "total": {
+              "tokens": 628559,
+              "dollars": 0.120111
+            }
+          },
+          "timing": {
+            "total_duration_ms": 50311,
+            "wall_clock_ms": 681531,
+            "avg_duration_ms": 2096
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 9,
+          "cost": {
+            "input": {
+              "tokens": 5515,
+              "dollars": 0.016545
+            },
+            "cache_write": {
+              "tokens": 53130,
+              "dollars": 0.199238
+            },
+            "cache_read": {
+              "tokens": 443237,
+              "dollars": 0.132969
+            },
+            "output": {
+              "tokens": 3857,
+              "dollars": 0.057855
+            },
+            "total": {
+              "tokens": 505739,
+              "dollars": 0.406608
+            }
+          },
+          "timing": {
+            "total_duration_ms": 67222,
+            "wall_clock_ms": 715786,
+            "avg_duration_ms": 7469
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 358,
+              "dollars": 0.000358
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 6.5e-05
+            },
+            "total": {
+              "tokens": 371,
+              "dollars": 0.000423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1122,
+            "wall_clock_ms": 1122,
+            "avg_duration_ms": 1122
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 6.5e-05,
+                "chars": 39
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 23,
+          "cost": {
+            "input": {
+              "tokens": 44,
+              "dollars": 5e-05
+            },
+            "cache_write": {
+              "tokens": 40620,
+              "dollars": 0.064518
+            },
+            "cache_read": {
+              "tokens": 609871,
+              "dollars": 0.065113
+            },
+            "output": {
+              "tokens": 3510,
+              "dollars": 0.02024
+            },
+            "total": {
+              "tokens": 654045,
+              "dollars": 0.149921
+            }
+          },
+          "timing": {
+            "total_duration_ms": 54201,
+            "wall_clock_ms": 624862,
+            "avg_duration_ms": 2357
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 106024,
+                  "dollars": 0.025426,
+                  "chars": 339057
+                },
+                "Read": {
+                  "tokens": 173869,
+                  "dollars": 0.029724,
+                  "chars": 555652
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 10380,
+                  "dollars": 0.002202,
+                  "chars": 33136
+                },
+                "Read": {
+                  "tokens": 2646,
+                  "dollars": 0.000508,
+                  "chars": 8442
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1759,
+                "dollars": 0.008791,
+                "chars": 4603
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1752,
+                  "dollars": 0.011448,
+                  "chars": 3845
+                },
+                "Agent": {
+                  "tokens": 269,
+                  "dollars": 0.004035,
+                  "chars": 726
+                },
+                "Bash": {
+                  "tokens": 1218,
+                  "dollars": 0.006087,
+                  "chars": 2601
+                },
+                "Read": {
+                  "tokens": 265,
+                  "dollars": 0.001326,
+                  "chars": 518
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 14244,
+            "unnecessary_space_count": 32998,
+            "total_chars": 505356
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 3,
+              "total_read_chars": 31418,
+              "per_file": {
+                "/workspace/codex-rs/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12761
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 17934
+                },
+                "/root/.claude/projects/-workspace/d94b6a3f-f4c2-498b-994a-99699e2219e2/tool-results/bw61imgoo.txt": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 723
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 5,
+          "cost": {
+            "input": {
+              "tokens": 6053,
+              "dollars": 0.017069
+            },
+            "cache_write": {
+              "tokens": 45400,
+              "dollars": 0.17025
+            },
+            "cache_read": {
+              "tokens": 156140,
+              "dollars": 0.046841
+            },
+            "output": {
+              "tokens": 3224,
+              "dollars": 0.04822
+            },
+            "total": {
+              "tokens": 210817,
+              "dollars": 0.282382
+            }
+          },
+          "timing": {
+            "total_duration_ms": 52023,
+            "wall_clock_ms": 56610,
+            "avg_duration_ms": 10405
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2878,
+                  "dollars": 0.003209,
+                  "chars": 10612
+                },
+                "Read": {
+                  "tokens": 84719,
+                  "dollars": 0.136323,
+                  "chars": 305224
+                },
+                "Write": {
+                  "tokens": 55,
+                  "dollars": 0.000206,
+                  "chars": 199
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 831,
+                  "dollars": 0.000919,
+                  "chars": 3064
+                },
+                "Read": {
+                  "tokens": 421,
+                  "dollars": 0.000705,
+                  "chars": 1518
+                },
+                "Write": {
+                  "tokens": 598,
+                  "dollars": 0.002243,
+                  "chars": 2153
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 273,
+                "dollars": 0.003961,
+                "chars": 221
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2951,
+                  "dollars": 0.044259,
+                  "chars": 2616
+                },
+                "Read": {
+                  "tokens": 944,
+                  "dollars": 0.014158,
+                  "chars": 446
+                },
+                "Write": {
+                  "tokens": 1969,
+                  "dollars": 0.029531,
+                  "chars": 2113
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 7363,
+            "unnecessary_space_count": 48068,
+            "total_chars": 287530
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 109562,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                },
+                "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 51674
+                },
+                "/workspace/codex-rs/network-proxy/src/mitm.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16224
+                },
+                "/workspace/codex-rs/network-proxy/src/socks5.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 24932
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 1910,
+              "per_file": {
+                "/root/.claude/plans/typed-floating-gray.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1910
+                }
+              }
+            }
+          }
+        },
+        "4": {
+          "request_count": 4,
+          "cost": {
+            "input": {
+              "tokens": 4,
+              "dollars": 1.2e-05
+            },
+            "cache_write": {
+              "tokens": 2234,
+              "dollars": 0.008378
+            },
+            "cache_read": {
+              "tokens": 266449,
+              "dollars": 0.079934
+            },
+            "output": {
+              "tokens": 378,
+              "dollars": 0.00567
+            },
+            "total": {
+              "tokens": 269065,
+              "dollars": 0.093993
+            }
+          },
+          "timing": {
+            "total_duration_ms": 10187,
+            "wall_clock_ms": 35188,
+            "avg_duration_ms": 2547
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2939,
+                  "dollars": 0.00088,
+                  "chars": 10572
+                },
+                "Read": {
+                  "tokens": 129271,
+                  "dollars": 0.038781,
+                  "chars": 465152
+                },
+                "Write": {
+                  "tokens": 176,
+                  "dollars": 5.2e-05,
+                  "chars": 636
+                },
+                "ExitPlanMode": {
+                  "tokens": 3463,
+                  "dollars": 0.004055,
+                  "chars": 12460
+                },
+                "Edit": {
+                  "tokens": 155,
+                  "dollars": 0.000249,
+                  "chars": 562
+                },
+                "Bash": {
+                  "tokens": 201,
+                  "dollars": 0.000567,
+                  "chars": 722
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 852,
+                  "dollars": 0.000256,
+                  "chars": 3064
+                },
+                "Read": {
+                  "tokens": 672,
+                  "dollars": 0.0002,
+                  "chars": 2424
+                },
+                "Write": {
+                  "tokens": 2393,
+                  "dollars": 0.000717,
+                  "chars": 8612
+                },
+                "ExitPlanMode": {
+                  "tokens": 108,
+                  "dollars": 0.000125,
+                  "chars": 388
+                },
+                "Edit": {
+                  "tokens": 249,
+                  "dollars": 0.000361,
+                  "chars": 891
+                },
+                "Bash": {
+                  "tokens": 157,
+                  "dollars": 0.000417,
+                  "chars": 564
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 58,
+                "dollars": 0.00087,
+                "chars": 222
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 320,
+                  "dollars": 0.0048,
+                  "chars": 539
+                },
+                "Edit": {
+                  "tokens": 134,
+                  "dollars": 0.00201,
+                  "chars": 235
+                },
+                "Bash": {
+                  "tokens": 186,
+                  "dollars": 0.00279,
+                  "chars": 304
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 11272,
+            "unnecessary_space_count": 73708,
+            "total_chars": 438248
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 109562,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                },
+                "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 51674
+                },
+                "/workspace/codex-rs/network-proxy/src/mitm.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16224
+                },
+                "/workspace/codex-rs/network-proxy/src/socks5.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 24932
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 45,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 45
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 106225,
+              "dollars": 0.025993,
+              "chars": 339779
+            },
+            "Read": {
+              "tokens": 387859,
+              "dollars": 0.204828,
+              "chars": 1326028
+            },
+            "Agent": {
+              "tokens": 5817,
+              "dollars": 0.004089,
+              "chars": 21184
+            },
+            "Write": {
+              "tokens": 231,
+              "dollars": 0.000258,
+              "chars": 835
+            },
+            "ExitPlanMode": {
+              "tokens": 3463,
+              "dollars": 0.004055,
+              "chars": 12460
+            },
+            "Edit": {
+              "tokens": 155,
+              "dollars": 0.000249,
+              "chars": 562
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 10537,
+              "dollars": 0.002619,
+              "chars": 33700
+            },
+            "Read": {
+              "tokens": 3739,
+              "dollars": 0.001413,
+              "chars": 12384
+            },
+            "Agent": {
+              "tokens": 1683,
+              "dollars": 0.001175,
+              "chars": 6128
+            },
+            "Write": {
+              "tokens": 2991,
+              "dollars": 0.00296,
+              "chars": 10765
+            },
+            "ExitPlanMode": {
+              "tokens": 108,
+              "dollars": 0.000125,
+              "chars": 388
+            },
+            "Edit": {
+              "tokens": 249,
+              "dollars": 0.000361,
+              "chars": 891
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 2103,
+            "dollars": 0.013687,
+            "chars": 5085
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 5023,
+              "dollars": 0.060507,
+              "chars": 7000
+            },
+            "Agent": {
+              "tokens": 269,
+              "dollars": 0.004035,
+              "chars": 726
+            },
+            "Bash": {
+              "tokens": 1404,
+              "dollars": 0.008877,
+              "chars": 2905
+            },
+            "Read": {
+              "tokens": 1209,
+              "dollars": 0.015484,
+              "chars": 964
+            },
+            "Write": {
+              "tokens": 1969,
+              "dollars": 0.029531,
+              "chars": 2113
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "Edit": {
+              "tokens": 134,
+              "dollars": 0.00201,
+              "chars": 235
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 32879,
+        "unnecessary_space_count": 154774,
+        "total_chars": 1231134
+      },
+      "total": {
+        "request_count": 33,
+        "cost": {
+          "input": {
+            "tokens": 6459,
+            "dollars": 0.017489
+          },
+          "cache_write": {
+            "tokens": 88254,
+            "dollars": 0.243146
+          },
+          "cache_read": {
+            "tokens": 1032460,
+            "dollars": 0.191888
+          },
+          "output": {
+            "tokens": 7125,
+            "dollars": 0.074195
+          },
+          "total": {
+            "tokens": 1134298,
+            "dollars": 0.526719
+          }
+        },
+        "timing": {
+          "total_duration_ms": 117533,
+          "wall_clock_ms": 715791,
+          "avg_duration_ms": 3562
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 6,
+            "total_read_chars": 140980,
+            "per_file": {
+              "/workspace/codex-rs/Cargo.toml": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 12761
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 34666
+              },
+              "/root/.claude/projects/-workspace/d94b6a3f-f4c2-498b-994a-99699e2219e2/tool-results/bw61imgoo.txt": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 723
+              },
+              "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 51674
+              },
+              "/workspace/codex-rs/network-proxy/src/mitm.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 16224
+              },
+              "/workspace/codex-rs/network-proxy/src/socks5.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 24932
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 1955,
+            "per_file": {
+              "/root/.claude/plans/typed-floating-gray.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1910
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 45
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-153612": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 28,
+          "cost": {
+            "input": {
+              "tokens": 35604,
+              "dollars": 0.035604
+            },
+            "cache_write": {
+              "tokens": 137655,
+              "dollars": 0.172072
+            },
+            "cache_read": {
+              "tokens": 558708,
+              "dollars": 0.05587
+            },
+            "output": {
+              "tokens": 7783,
+              "dollars": 0.038915
+            },
+            "total": {
+              "tokens": 739750,
+              "dollars": 0.302462
+            }
+          },
+          "timing": {
+            "total_duration_ms": 93093,
+            "wall_clock_ms": 794803,
+            "avg_duration_ms": 3325
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 13,
+              "dollars": 3.9e-05
+            },
+            "cache_write": {
+              "tokens": 30381,
+              "dollars": 0.11393
+            },
+            "cache_read": {
+              "tokens": 369708,
+              "dollars": 0.110912
+            },
+            "output": {
+              "tokens": 5150,
+              "dollars": 0.07725
+            },
+            "total": {
+              "tokens": 405252,
+              "dollars": 0.30213
+            }
+          },
+          "timing": {
+            "total_duration_ms": 95155,
+            "wall_clock_ms": 829733,
+            "avg_duration_ms": 8650
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 358,
+              "dollars": 0.000358
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 6.5e-05
+            },
+            "total": {
+              "tokens": 371,
+              "dollars": 0.000423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 969,
+            "wall_clock_ms": 969,
+            "avg_duration_ms": 969
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 6.5e-05,
+                "chars": 39
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 15,
+          "cost": {
+            "input": {
+              "tokens": 69,
+              "dollars": 7.5e-05
+            },
+            "cache_write": {
+              "tokens": 28586,
+              "dollars": 0.049478
+            },
+            "cache_read": {
+              "tokens": 296693,
+              "dollars": 0.033799
+            },
+            "output": {
+              "tokens": 2425,
+              "dollars": 0.014015
+            },
+            "total": {
+              "tokens": 327773,
+              "dollars": 0.097368
+            }
+          },
+          "timing": {
+            "total_duration_ms": 39926,
+            "wall_clock_ms": 561219,
+            "avg_duration_ms": 2662
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 89746,
+                  "dollars": 0.026299,
+                  "chars": 279822
+                },
+                "Read": {
+                  "tokens": 3551,
+                  "dollars": 0.002667,
+                  "chars": 10572
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 4909,
+                  "dollars": 0.001209,
+                  "chars": 15539
+                },
+                "Read": {
+                  "tokens": 148,
+                  "dollars": 0.000129,
+                  "chars": 440
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1306,
+                "dollars": 0.006538,
+                "chars": 3621
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1119,
+                  "dollars": 0.007477,
+                  "chars": 2261
+                },
+                "Agent": {
+                  "tokens": 189,
+                  "dollars": 0.002835,
+                  "chars": 394
+                },
+                "Bash": {
+                  "tokens": 832,
+                  "dollars": 0.004152,
+                  "chars": 1653
+                },
+                "Read": {
+                  "tokens": 98,
+                  "dollars": 0.00049,
+                  "chars": 214
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 263,
+            "unnecessary_space_count": 835,
+            "total_chars": 9506
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 5308,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 5,
+          "cost": {
+            "input": {
+              "tokens": 29067,
+              "dollars": 0.029069
+            },
+            "cache_write": {
+              "tokens": 71783,
+              "dollars": 0.106002
+            },
+            "cache_read": {
+              "tokens": 110335,
+              "dollars": 0.015162
+            },
+            "output": {
+              "tokens": 3125,
+              "dollars": 0.020085
+            },
+            "total": {
+              "tokens": 214310,
+              "dollars": 0.170319
+            }
+          },
+          "timing": {
+            "total_duration_ms": 32906,
+            "wall_clock_ms": 33667,
+            "avg_duration_ms": 6581
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 710,
+                  "dollars": 0.002662,
+                  "chars": 2806
+                },
+                "Read": {
+                  "tokens": 123183,
+                  "dollars": 0.086823,
+                  "chars": 395527
+                },
+                "Glob": {
+                  "tokens": 2628,
+                  "dollars": 0.001266,
+                  "chars": 8488
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 110,
+                  "dollars": 0.000412,
+                  "chars": 434
+                },
+                "Read": {
+                  "tokens": 1370,
+                  "dollars": 0.000959,
+                  "chars": 4399
+                },
+                "Glob": {
+                  "tokens": 268,
+                  "dollars": 0.000128,
+                  "chars": 864
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1789,
+                "dollars": 0.008944,
+                "chars": 6118
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1336,
+                  "dollars": 0.011141,
+                  "chars": 2480
+                },
+                "Agent": {
+                  "tokens": 446,
+                  "dollars": 0.00669,
+                  "chars": 570
+                },
+                "Read": {
+                  "tokens": 793,
+                  "dollars": 0.003967,
+                  "chars": 1702
+                },
+                "Glob": {
+                  "tokens": 97,
+                  "dollars": 0.000484,
+                  "chars": 208
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 9677,
+            "unnecessary_space_count": 46301,
+            "total_chars": 368486
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 15,
+              "total_read_chars": 194542,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12761
+                },
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/src/landlock.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12649
+                },
+                "/workspace/codex-rs/linux-sandbox/src/linux_run_main_tests.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 17134
+                },
+                "/workspace/codex-rs/linux-sandbox/src/main.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 237
+                },
+                "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3138
+                },
+                "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 696
+                },
+                "/workspace/codex-rs/linux-sandbox/src/proxy_routing.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 28103
+                },
+                "/workspace/codex-rs/linux-sandbox/src/linux_run_main.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 27701
+                },
+                "/workspace/codex-rs/linux-sandbox/src/bwrap.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 48148
+                },
+                "/workspace/codex-rs/linux-sandbox/tests/all.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 129
+                },
+                "/workspace/codex-rs/linux-sandbox/tests/suite/mod.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 107
+                },
+                "/workspace/codex-rs/linux-sandbox/tests/suite/managed_proxy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 10935
+                },
+                "/workspace/codex-rs/linux-sandbox/tests/suite/landlock.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 27496
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 4,
+          "cost": {
+            "input": {
+              "tokens": 12,
+              "dollars": 1.6e-05
+            },
+            "cache_write": {
+              "tokens": 7208,
+              "dollars": 0.019869
+            },
+            "cache_read": {
+              "tokens": 81704,
+              "dollars": 0.019458
+            },
+            "output": {
+              "tokens": 2530,
+              "dollars": 0.02813
+            },
+            "total": {
+              "tokens": 91454,
+              "dollars": 0.067472
+            }
+          },
+          "timing": {
+            "total_duration_ms": 40307,
+            "wall_clock_ms": 58041,
+            "avg_duration_ms": 10077
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 4516,
+                  "dollars": 0.006723,
+                  "chars": 17788
+                },
+                "Read": {
+                  "tokens": 1179,
+                  "dollars": 0.004421,
+                  "chars": 4628
+                },
+                "Bash": {
+                  "tokens": 1787,
+                  "dollars": 0.002234,
+                  "chars": 6318
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 530,
+                  "dollars": 0.00069,
+                  "chars": 2088
+                },
+                "Read": {
+                  "tokens": 37,
+                  "dollars": 0.000139,
+                  "chars": 146
+                },
+                "Bash": {
+                  "tokens": 154,
+                  "dollars": 0.000193,
+                  "chars": 545
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 790,
+                "dollars": 0.003952,
+                "chars": 2436
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1740,
+                  "dollars": 0.024178,
+                  "chars": 1256
+                },
+                "Read": {
+                  "tokens": 623,
+                  "dollars": 0.009345,
+                  "chars": 106
+                },
+                "Agent": {
+                  "tokens": 925,
+                  "dollars": 0.013875,
+                  "chars": 725
+                },
+                "Bash": {
+                  "tokens": 192,
+                  "dollars": 0.000958,
+                  "chars": 425
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 110,
+            "unnecessary_space_count": 410,
+            "total_chars": 4198
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 4198,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "5": {
+          "request_count": 7,
+          "cost": {
+            "input": {
+              "tokens": 5595,
+              "dollars": 0.005597
+            },
+            "cache_write": {
+              "tokens": 48111,
+              "dollars": 0.064348
+            },
+            "cache_read": {
+              "tokens": 199211,
+              "dollars": 0.026221
+            },
+            "output": {
+              "tokens": 3286,
+              "dollars": 0.03071
+            },
+            "total": {
+              "tokens": 256203,
+              "dollars": 0.126875
+            }
+          },
+          "timing": {
+            "total_duration_ms": 44191,
+            "wall_clock_ms": 112216,
+            "avg_duration_ms": 6313
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2892,
+                  "dollars": 0.003093,
+                  "chars": 11423
+                },
+                "Read": {
+                  "tokens": 42912,
+                  "dollars": 0.016862,
+                  "chars": 130041
+                },
+                "Bash": {
+                  "tokens": 83511,
+                  "dollars": 0.029548,
+                  "chars": 250914
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 458,
+                  "dollars": 0.000807,
+                  "chars": 1809
+                },
+                "Read": {
+                  "tokens": 411,
+                  "dollars": 0.000157,
+                  "chars": 1269
+                },
+                "Bash": {
+                  "tokens": 1795,
+                  "dollars": 0.000704,
+                  "chars": 5391
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1308,
+                "dollars": 0.006534,
+                "chars": 4103
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1978,
+                  "dollars": 0.024176,
+                  "chars": 2195
+                },
+                "Agent": {
+                  "tokens": 1428,
+                  "dollars": 0.02142,
+                  "chars": 965
+                },
+                "Bash": {
+                  "tokens": 463,
+                  "dollars": 0.002315,
+                  "chars": 1025
+                },
+                "Read": {
+                  "tokens": 88,
+                  "dollars": 0.000441,
+                  "chars": 205
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 3395,
+            "unnecessary_space_count": 7566,
+            "total_chars": 118199
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 3,
+              "total_read_chars": 33691,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 12761
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "6": {
+          "request_count": 4,
+          "cost": {
+            "input": {
+              "tokens": 513,
+              "dollars": 0.000519
+            },
+            "cache_write": {
+              "tokens": 9640,
+              "dollars": 0.03615
+            },
+            "cache_read": {
+              "tokens": 110680,
+              "dollars": 0.033204
+            },
+            "output": {
+              "tokens": 1214,
+              "dollars": 0.01806
+            },
+            "total": {
+              "tokens": 122047,
+              "dollars": 0.087933
+            }
+          },
+          "timing": {
+            "total_duration_ms": 21680,
+            "wall_clock_ms": 29558,
+            "avg_duration_ms": 5420
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 11600,
+                  "dollars": 0.006717,
+                  "chars": 45292
+                },
+                "Read": {
+                  "tokens": 12784,
+                  "dollars": 0.019857,
+                  "chars": 49536
+                },
+                "Write": {
+                  "tokens": 52,
+                  "dollars": 0.000195,
+                  "chars": 200
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 2163,
+                  "dollars": 0.001518,
+                  "chars": 8442
+                },
+                "Read": {
+                  "tokens": 191,
+                  "dollars": 0.000191,
+                  "chars": 740
+                },
+                "Write": {
+                  "tokens": 307,
+                  "dollars": 0.001151,
+                  "chars": 1188
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 320,
+                "dollars": 0.004643,
+                "chars": 463
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 894,
+                  "dollars": 0.013417,
+                  "chars": 1316
+                },
+                "Read": {
+                  "tokens": 121,
+                  "dollars": 0.001818,
+                  "chars": 111
+                },
+                "Write": {
+                  "tokens": 735,
+                  "dollars": 0.011029,
+                  "chars": 1148
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1200,
+            "unnecessary_space_count": 5124,
+            "total_chars": 46058
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 20930,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 983,
+              "per_file": {
+                "/root/.claude/plans/parsed-chasing-moler.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 983
+                }
+              }
+            }
+          }
+        },
+        "7": {
+          "request_count": 3,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 2708,
+              "dollars": 0.010155
+            },
+            "cache_read": {
+              "tokens": 129793,
+              "dollars": 0.038938
+            },
+            "output": {
+              "tokens": 340,
+              "dollars": 0.0051
+            },
+            "total": {
+              "tokens": 132844,
+              "dollars": 0.054202
+            }
+          },
+          "timing": {
+            "total_duration_ms": 8269,
+            "wall_clock_ms": 35741,
+            "avg_duration_ms": 2756
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 11753,
+                  "dollars": 0.003525,
+                  "chars": 45252
+                },
+                "Read": {
+                  "tokens": 17495,
+                  "dollars": 0.005249,
+                  "chars": 67362
+                },
+                "Write": {
+                  "tokens": 124,
+                  "dollars": 3.7e-05,
+                  "chars": 480
+                },
+                "ExitPlanMode": {
+                  "tokens": 1678,
+                  "dollars": 0.002446,
+                  "chars": 6463
+                },
+                "Edit": {
+                  "tokens": 101,
+                  "dollars": 0.00022,
+                  "chars": 388
+                },
+                "Bash": {
+                  "tokens": 1183,
+                  "dollars": 0.004436,
+                  "chars": 4506
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 2192,
+                  "dollars": 0.000658,
+                  "chars": 8442
+                },
+                "Read": {
+                  "tokens": 232,
+                  "dollars": 6.9e-05,
+                  "chars": 891
+                },
+                "Write": {
+                  "tokens": 926,
+                  "dollars": 0.000278,
+                  "chars": 3564
+                },
+                "ExitPlanMode": {
+                  "tokens": 75,
+                  "dollars": 0.000108,
+                  "chars": 291
+                },
+                "Edit": {
+                  "tokens": 155,
+                  "dollars": 0.000312,
+                  "chars": 594
+                },
+                "Bash": {
+                  "tokens": 58,
+                  "dollars": 0.000218,
+                  "chars": 222
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 108,
+                "dollars": 0.00162,
+                "chars": 392
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 232,
+                  "dollars": 0.00348,
+                  "chars": 417
+                },
+                "Edit": {
+                  "tokens": 134,
+                  "dollars": 0.00201,
+                  "chars": 235
+                },
+                "Bash": {
+                  "tokens": 98,
+                  "dollars": 0.00147,
+                  "chars": 182
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1635,
+            "unnecessary_space_count": 7071,
+            "total_chars": 62790
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 20930,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 45,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 45
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 176227,
+              "dollars": 0.062517,
+              "chars": 541560
+            },
+            "Read": {
+              "tokens": 201104,
+              "dollars": 0.135879,
+              "chars": 657666
+            },
+            "Agent": {
+              "tokens": 31471,
+              "dollars": 0.02272,
+              "chars": 122561
+            },
+            "Glob": {
+              "tokens": 2628,
+              "dollars": 0.001266,
+              "chars": 8488
+            },
+            "Write": {
+              "tokens": 176,
+              "dollars": 0.000232,
+              "chars": 680
+            },
+            "ExitPlanMode": {
+              "tokens": 1678,
+              "dollars": 0.002446,
+              "chars": 6463
+            },
+            "Edit": {
+              "tokens": 101,
+              "dollars": 0.00022,
+              "chars": 388
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 6916,
+              "dollars": 0.002324,
+              "chars": 21697
+            },
+            "Read": {
+              "tokens": 2389,
+              "dollars": 0.001644,
+              "chars": 7885
+            },
+            "Agent": {
+              "tokens": 5453,
+              "dollars": 0.004085,
+              "chars": 21215
+            },
+            "Glob": {
+              "tokens": 268,
+              "dollars": 0.000128,
+              "chars": 864
+            },
+            "Write": {
+              "tokens": 1233,
+              "dollars": 0.001429,
+              "chars": 4752
+            },
+            "ExitPlanMode": {
+              "tokens": 75,
+              "dollars": 0.000108,
+              "chars": 291
+            },
+            "Edit": {
+              "tokens": 155,
+              "dollars": 0.000312,
+              "chars": 594
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 5634,
+            "dollars": 0.032296,
+            "chars": 17172
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 7299,
+              "dollars": 0.083869,
+              "chars": 9925
+            },
+            "Agent": {
+              "tokens": 2988,
+              "dollars": 0.04482,
+              "chars": 2654
+            },
+            "Bash": {
+              "tokens": 1585,
+              "dollars": 0.008895,
+              "chars": 3285
+            },
+            "Read": {
+              "tokens": 1723,
+              "dollars": 0.016061,
+              "chars": 2338
+            },
+            "Glob": {
+              "tokens": 97,
+              "dollars": 0.000484,
+              "chars": 208
+            },
+            "Write": {
+              "tokens": 735,
+              "dollars": 0.011029,
+              "chars": 1148
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "Edit": {
+              "tokens": 134,
+              "dollars": 0.00201,
+              "chars": 235
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 16280,
+        "unnecessary_space_count": 67307,
+        "total_chars": 609237
+      },
+      "total": {
+        "request_count": 39,
+        "cost": {
+          "input": {
+            "tokens": 35617,
+            "dollars": 0.035643
+          },
+          "cache_write": {
+            "tokens": 168036,
+            "dollars": 0.286002
+          },
+          "cache_read": {
+            "tokens": 928416,
+            "dollars": 0.166782
+          },
+          "output": {
+            "tokens": 12933,
+            "dollars": 0.116165
+          },
+          "total": {
+            "tokens": 1145002,
+            "dollars": 0.604592
+          }
+        },
+        "timing": {
+          "total_duration_ms": 188248,
+          "wall_clock_ms": 829739,
+          "avg_duration_ms": 4827
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 16,
+            "total_read_chars": 250273,
+            "per_file": {
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 12594
+              },
+              "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 2220
+              },
+              "/workspace/codex-rs/Cargo.toml": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 25522
+              },
+              "/workspace/codex-rs/linux-sandbox/src/landlock.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 12649
+              },
+              "/workspace/codex-rs/linux-sandbox/src/linux_run_main_tests.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 17134
+              },
+              "/workspace/codex-rs/linux-sandbox/src/main.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 237
+              },
+              "/workspace/codex-rs/linux-sandbox/src/vendored_bwrap.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3138
+              },
+              "/workspace/codex-rs/linux-sandbox/src/lib.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 696
+              },
+              "/workspace/codex-rs/linux-sandbox/src/proxy_routing.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 28103
+              },
+              "/workspace/codex-rs/linux-sandbox/src/linux_run_main.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 27701
+              },
+              "/workspace/codex-rs/linux-sandbox/src/bwrap.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 48148
+              },
+              "/workspace/codex-rs/linux-sandbox/tests/all.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 129
+              },
+              "/workspace/codex-rs/linux-sandbox/tests/suite/mod.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 107
+              },
+              "/workspace/codex-rs/linux-sandbox/tests/suite/managed_proxy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 10935
+              },
+              "/workspace/codex-rs/linux-sandbox/tests/suite/landlock.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 27496
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 33464
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 1028,
+            "per_file": {
+              "/root/.claude/plans/parsed-chasing-moler.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 983
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 45
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-153619": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 20,
+          "cost": {
+            "input": {
+              "tokens": 917,
+              "dollars": 0.000917
+            },
+            "cache_write": {
+              "tokens": 25109,
+              "dollars": 0.031391
+            },
+            "cache_read": {
+              "tokens": 397532,
+              "dollars": 0.039751
+            },
+            "output": {
+              "tokens": 2567,
+              "dollars": 0.012835
+            },
+            "total": {
+              "tokens": 426125,
+              "dollars": 0.084893
+            }
+          },
+          "timing": {
+            "total_duration_ms": 37278,
+            "wall_clock_ms": 688341,
+            "avg_duration_ms": 1864
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 13,
+              "dollars": 3.9e-05
+            },
+            "cache_write": {
+              "tokens": 25937,
+              "dollars": 0.097265
+            },
+            "cache_read": {
+              "tokens": 370096,
+              "dollars": 0.111028
+            },
+            "output": {
+              "tokens": 3036,
+              "dollars": 0.04554
+            },
+            "total": {
+              "tokens": 399082,
+              "dollars": 0.253873
+            }
+          },
+          "timing": {
+            "total_duration_ms": 55674,
+            "wall_clock_ms": 708633,
+            "avg_duration_ms": 5061
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 358,
+              "dollars": 0.000358
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 13,
+              "dollars": 6.5e-05
+            },
+            "total": {
+              "tokens": 371,
+              "dollars": 0.000423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1178,
+            "wall_clock_ms": 1178,
+            "avg_duration_ms": 1178
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 13,
+                "dollars": 6.5e-05,
+                "chars": 39
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 19,
+          "cost": {
+            "input": {
+              "tokens": 41,
+              "dollars": 4.7e-05
+            },
+            "cache_write": {
+              "tokens": 30607,
+              "dollars": 0.052009
+            },
+            "cache_read": {
+              "tokens": 418180,
+              "dollars": 0.045945
+            },
+            "output": {
+              "tokens": 2826,
+              "dollars": 0.01702
+            },
+            "total": {
+              "tokens": 451654,
+              "dollars": 0.11502
+            }
+          },
+          "timing": {
+            "total_duration_ms": 40565,
+            "wall_clock_ms": 591282,
+            "avg_duration_ms": 2135
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 127541,
+                  "dollars": 0.028561,
+                  "chars": 404792
+                },
+                "Read": {
+                  "tokens": 19211,
+                  "dollars": 0.004609,
+                  "chars": 60402
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 6862,
+                  "dollars": 0.001516,
+                  "chars": 21823
+                },
+                "Read": {
+                  "tokens": 1000,
+                  "dollars": 0.000271,
+                  "chars": 3148
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1539,
+                "dollars": 0.007692,
+                "chars": 4372
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1287,
+                  "dollars": 0.009328,
+                  "chars": 2963
+                },
+                "Agent": {
+                  "tokens": 289,
+                  "dollars": 0.004335,
+                  "chars": 788
+                },
+                "Bash": {
+                  "tokens": 843,
+                  "dollars": 0.004214,
+                  "chars": 1823
+                },
+                "Read": {
+                  "tokens": 155,
+                  "dollars": 0.000779,
+                  "chars": 352
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1545,
+            "unnecessary_space_count": 4397,
+            "total_chars": 54236
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 3,
+              "total_read_chars": 6441,
+              "per_file": {
+                "/workspace/codex-rs/linux-sandbox/build.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4198
+                },
+                "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1110
+                },
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1133
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 8,
+          "cost": {
+            "input": {
+              "tokens": 528,
+              "dollars": 0.000542
+            },
+            "cache_write": {
+              "tokens": 19465,
+              "dollars": 0.072994
+            },
+            "cache_read": {
+              "tokens": 227615,
+              "dollars": 0.068284
+            },
+            "output": {
+              "tokens": 2481,
+              "dollars": 0.037045
+            },
+            "total": {
+              "tokens": 250089,
+              "dollars": 0.178866
+            }
+          },
+          "timing": {
+            "total_duration_ms": 44169,
+            "wall_clock_ms": 96967,
+            "avg_duration_ms": 5521
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 5246,
+                  "dollars": 0.004075,
+                  "chars": 19850
+                },
+                "Read": {
+                  "tokens": 29673,
+                  "dollars": 0.027107,
+                  "chars": 111424
+                },
+                "Bash": {
+                  "tokens": 11534,
+                  "dollars": 0.014101,
+                  "chars": 43206
+                },
+                "Write": {
+                  "tokens": 194,
+                  "dollars": 0.000728,
+                  "chars": 726
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 1533,
+                  "dollars": 0.00118,
+                  "chars": 5796
+                },
+                "Read": {
+                  "tokens": 338,
+                  "dollars": 0.000409,
+                  "chars": 1272
+                },
+                "Bash": {
+                  "tokens": 985,
+                  "dollars": 0.001179,
+                  "chars": 3690
+                },
+                "Write": {
+                  "tokens": 477,
+                  "dollars": 0.001789,
+                  "chars": 1787
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 55,
+                "dollars": 0.000652,
+                "chars": 91
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2426,
+                  "dollars": 0.036393,
+                  "chars": 2850
+                },
+                "Read": {
+                  "tokens": 374,
+                  "dollars": 0.005615,
+                  "chars": 254
+                },
+                "Bash": {
+                  "tokens": 769,
+                  "dollars": 0.01153,
+                  "chars": 792
+                },
+                "Write": {
+                  "tokens": 1245,
+                  "dollars": 0.018678,
+                  "chars": 1747
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2708,
+            "unnecessary_space_count": 12610,
+            "total_chars": 104188
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 18630,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                },
+                "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1898
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 1560,
+              "per_file": {
+                "/root/.claude/plans/hashed-bouncing-planet.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1560
+                }
+              }
+            }
+          }
+        },
+        "4": {
+          "request_count": 3,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 974,
+              "dollars": 0.003653
+            },
+            "cache_read": {
+              "tokens": 121833,
+              "dollars": 0.03655
+            },
+            "output": {
+              "tokens": 283,
+              "dollars": 0.004245
+            },
+            "total": {
+              "tokens": 123093,
+              "dollars": 0.044457
+            }
+          },
+          "timing": {
+            "total_duration_ms": 7040,
+            "wall_clock_ms": 21635,
+            "avg_duration_ms": 2347
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2267,
+                  "dollars": 0.000681,
+                  "chars": 8490
+                },
+                "Read": {
+                  "tokens": 15991,
+                  "dollars": 0.004798,
+                  "chars": 59880
+                },
+                "Bash": {
+                  "tokens": 9215,
+                  "dollars": 0.003037,
+                  "chars": 34503
+                },
+                "Write": {
+                  "tokens": 549,
+                  "dollars": 0.000165,
+                  "chars": 2058
+                },
+                "ExitPlanMode": {
+                  "tokens": 1788,
+                  "dollars": 0.002617,
+                  "chars": 6694
+                },
+                "Edit": {
+                  "tokens": 103,
+                  "dollars": 0.000228,
+                  "chars": 388
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 663,
+                  "dollars": 0.000198,
+                  "chars": 2484
+                },
+                "Read": {
+                  "tokens": 267,
+                  "dollars": 8.1e-05,
+                  "chars": 1002
+                },
+                "Bash": {
+                  "tokens": 809,
+                  "dollars": 0.000373,
+                  "chars": 3030
+                },
+                "Write": {
+                  "tokens": 1431,
+                  "dollars": 0.000429,
+                  "chars": 5361
+                },
+                "ExitPlanMode": {
+                  "tokens": 78,
+                  "dollars": 0.000113,
+                  "chars": 291
+                },
+                "Edit": {
+                  "tokens": 158,
+                  "dollars": 0.00032,
+                  "chars": 594
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 75,
+                "dollars": 0.001125,
+                "chars": 284
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 208,
+                  "dollars": 0.00312,
+                  "chars": 362
+                },
+                "Edit": {
+                  "tokens": 134,
+                  "dollars": 0.00201,
+                  "chars": 235
+                },
+                "Bash": {
+                  "tokens": 74,
+                  "dollars": 0.00111,
+                  "chars": 127
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1452,
+            "unnecessary_space_count": 7233,
+            "total_chars": 55890
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 18630,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 16732
+                },
+                "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1898
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 45,
+              "per_file": {
+                "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 45
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 148290,
+              "dollars": 0.045699,
+              "chars": 482501
+            },
+            "Read": {
+              "tokens": 64875,
+              "dollars": 0.036514,
+              "chars": 231706
+            },
+            "Agent": {
+              "tokens": 7513,
+              "dollars": 0.004756,
+              "chars": 28340
+            },
+            "Write": {
+              "tokens": 743,
+              "dollars": 0.000893,
+              "chars": 2784
+            },
+            "ExitPlanMode": {
+              "tokens": 1788,
+              "dollars": 0.002617,
+              "chars": 6694
+            },
+            "Edit": {
+              "tokens": 103,
+              "dollars": 0.000228,
+              "chars": 388
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 8656,
+              "dollars": 0.003068,
+              "chars": 28543
+            },
+            "Read": {
+              "tokens": 1605,
+              "dollars": 0.000761,
+              "chars": 5422
+            },
+            "Agent": {
+              "tokens": 2196,
+              "dollars": 0.001378,
+              "chars": 8280
+            },
+            "Write": {
+              "tokens": 1908,
+              "dollars": 0.002218,
+              "chars": 7148
+            },
+            "ExitPlanMode": {
+              "tokens": 78,
+              "dollars": 0.000113,
+              "chars": 291
+            },
+            "Edit": {
+              "tokens": 158,
+              "dollars": 0.00032,
+              "chars": 594
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 1682,
+            "dollars": 0.009534,
+            "chars": 4786
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 3921,
+              "dollars": 0.048841,
+              "chars": 6175
+            },
+            "Agent": {
+              "tokens": 289,
+              "dollars": 0.004335,
+              "chars": 788
+            },
+            "Bash": {
+              "tokens": 1686,
+              "dollars": 0.016854,
+              "chars": 2742
+            },
+            "Read": {
+              "tokens": 529,
+              "dollars": 0.006394,
+              "chars": 606
+            },
+            "Write": {
+              "tokens": 1245,
+              "dollars": 0.018678,
+              "chars": 1747
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "Edit": {
+              "tokens": 134,
+              "dollars": 0.00201,
+              "chars": 235
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 5705,
+        "unnecessary_space_count": 24240,
+        "total_chars": 214314
+      },
+      "total": {
+        "request_count": 31,
+        "cost": {
+          "input": {
+            "tokens": 930,
+            "dollars": 0.000956
+          },
+          "cache_write": {
+            "tokens": 51046,
+            "dollars": 0.128656
+          },
+          "cache_read": {
+            "tokens": 767628,
+            "dollars": 0.150779
+          },
+          "output": {
+            "tokens": 5603,
+            "dollars": 0.058375
+          },
+          "total": {
+            "tokens": 825207,
+            "dollars": 0.338766
+          }
+        },
+        "timing": {
+          "total_duration_ms": 92952,
+          "wall_clock_ms": 708638,
+          "avg_duration_ms": 2998
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 4,
+            "total_read_chars": 25071,
+            "per_file": {
+              "/workspace/codex-rs/linux-sandbox/build.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 4198
+              },
+              "/workspace/codex-rs/linux-sandbox/Cargo.toml": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1110
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 17865
+              },
+              "/workspace/codex-rs/network-proxy/src/http_proxy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1898
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 1605,
+            "per_file": {
+              "/root/.claude/plans/hashed-bouncing-planet.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1560
+              },
+              "/workspace/codex-rs/network-proxy/src/policy.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 45
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "by_model": {
+    "claude-haiku-4-5": {
+      "request_count": 140,
+      "cost": {
+        "input": {
+          "tokens": 41021,
+          "dollars": 0.041021
+        },
+        "cache_write": {
+          "tokens": 306545,
+          "dollars": 0.383203
+        },
+        "cache_read": {
+          "tokens": 2962846,
+          "dollars": 0.296271
+        },
+        "output": {
+          "tokens": 26126,
+          "dollars": 0.13063
+        },
+        "total": {
+          "tokens": 3336538,
+          "dollars": 0.851122
+        }
+      },
+      "timing": {
+        "total_duration_ms": 357403,
+        "avg_duration_ms": 2553
+      }
+    },
+    "claude-sonnet-4-6": {
+      "request_count": 70,
+      "cost": {
+        "input": {
+          "tokens": 5588,
+          "dollars": 0.016764
+        },
+        "cache_write": {
+          "tokens": 173278,
+          "dollars": 0.649798
+        },
+        "cache_read": {
+          "tokens": 2558722,
+          "dollars": 0.767608
+        },
+        "output": {
+          "tokens": 25898,
+          "dollars": 0.38847
+        },
+        "total": {
+          "tokens": 2763486,
+          "dollars": 1.822642
+        }
+      },
+      "timing": {
+        "total_duration_ms": 470592,
+        "avg_duration_ms": 6723
+      }
+    }
+  },
+  "by_source": {
+    "input": {
+      "tool_results": {
+        "Bash": {
+          "tokens": 803550,
+          "dollars": 0.253607,
+          "chars": 2572388
+        },
+        "Read": {
+          "tokens": 968049,
+          "dollars": 0.491179,
+          "chars": 3273728
+        },
+        "Agent": {
+          "tokens": 119999,
+          "dollars": 0.069706,
+          "chars": 465754
+        },
+        "Glob": {
+          "tokens": 9854,
+          "dollars": 0.003643,
+          "chars": 32880
+        },
+        "Grep": {
+          "tokens": 951,
+          "dollars": 0.000253,
+          "chars": 3059
+        },
+        "Write": {
+          "tokens": 4002,
+          "dollars": 0.003049,
+          "chars": 15239
+        },
+        "ExitPlanMode": {
+          "tokens": 18214,
+          "dollars": 0.015874,
+          "chars": 69183
+        },
+        "Edit": {
+          "tokens": 3072,
+          "dollars": 0.00272,
+          "chars": 11883
+        },
+        "TaskOutput": {
+          "tokens": 550,
+          "dollars": 0.001131,
+          "chars": 2048
+        }
+      },
+      "tool_calls": {
+        "Bash": {
+          "tokens": 56513,
+          "dollars": 0.018788,
+          "chars": 184266
+        },
+        "Read": {
+          "tokens": 16355,
+          "dollars": 0.007325,
+          "chars": 55836
+        },
+        "Agent": {
+          "tokens": 26553,
+          "dollars": 0.015364,
+          "chars": 102886
+        },
+        "Glob": {
+          "tokens": 1225,
+          "dollars": 0.000534,
+          "chars": 4320
+        },
+        "Grep": {
+          "tokens": 490,
+          "dollars": 0.00013,
+          "chars": 1575
+        },
+        "Write": {
+          "tokens": 15571,
+          "dollars": 0.011983,
+          "chars": 59149
+        },
+        "ExitPlanMode": {
+          "tokens": 843,
+          "dollars": 0.000688,
+          "chars": 3201
+        },
+        "Edit": {
+          "tokens": 3935,
+          "dollars": 0.003591,
+          "chars": 15000
+        },
+        "TaskOutput": {
+          "tokens": 82,
+          "dollars": 0.000166,
+          "chars": 302
+        }
+      }
+    },
+    "output": {
+      "llm_text": {
+        "tokens": 19226,
+        "dollars": 0.126507,
+        "chars": 51349
+      },
+      "tool_calls": {
+        "__total": {
+          "tokens": 32799,
+          "dollars": 0.392592,
+          "chars": 45382
+        },
+        "Agent": {
+          "tokens": 6613,
+          "dollars": 0.099193,
+          "chars": 8045
+        },
+        "Bash": {
+          "tokens": 11131,
+          "dollars": 0.093664,
+          "chars": 19584
+        },
+        "Read": {
+          "tokens": 6578,
+          "dollars": 0.074936,
+          "chars": 6681
+        },
+        "Glob": {
+          "tokens": 213,
+          "dollars": 0.001722,
+          "chars": 416
+        },
+        "Grep": {
+          "tokens": 88,
+          "dollars": 0.000442,
+          "chars": 185
+        },
+        "Write": {
+          "tokens": 5312,
+          "dollars": 0.079674,
+          "chars": 7837
+        },
+        "ExitPlanMode": {
+          "tokens": 190,
+          "dollars": 0.00285,
+          "chars": 285
+        },
+        "Edit": {
+          "tokens": 2580,
+          "dollars": 0.038701,
+          "chars": 2238
+        },
+        "TaskOutput": {
+          "tokens": 94,
+          "dollars": 0.00141,
+          "chars": 111
+        }
+      }
+    }
+  },
+  "read_file_whitespace": {
+    "line_returns_count": 82105,
+    "unnecessary_space_count": 305917,
+    "total_chars": 3011892
+  },
+  "total": {
+    "request_count": 210,
+    "cost": {
+      "input": {
+        "tokens": 46609,
+        "dollars": 0.057785
+      },
+      "cache_write": {
+        "tokens": 479823,
+        "dollars": 1.033001
+      },
+      "cache_read": {
+        "tokens": 5521568,
+        "dollars": 1.063879
+      },
+      "output": {
+        "tokens": 52024,
+        "dollars": 0.5191
+      },
+      "total": {
+        "tokens": 6100024,
+        "dollars": 2.673764
+      }
+    },
+    "timing": {
+      "total_duration_ms": 827995,
+      "avg_duration_ms": 3943
+    }
+  }
+}

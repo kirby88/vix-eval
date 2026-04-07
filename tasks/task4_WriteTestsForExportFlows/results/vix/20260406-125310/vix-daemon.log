@@ -1,0 +1,775 @@
+11:53:12 [vix-daemon] API key loaded (source: env)
+11:53:12 [vix-daemon] [telemetry] failed to get device ID: failed to store device ID: exec: "dbus-launch": executable file not found in $PATH
+11:53:12 [vix-daemon] [34mRegistered handler: ping[0m
+11:53:12 [vix-daemon] [34mRegistered handler: init[0m
+11:53:12 [vix-daemon] [34mRegistered handler: force_init[0m
+11:53:12 [vix-daemon] [34mRegistered handler: brain.init[0m
+11:53:12 [vix-daemon] [34mRegistered handler: brain.update_files[0m
+11:53:12 [vix-daemon] [31m[tools] ✗ rg (ripgrep) not found in PATH[0m
+11:53:12 [vix-daemon] [33mfalling back to system grep[0m
+11:53:12 [vix-daemon] [31m[tools] ✗ fd not found in PATH[0m
+11:53:12 [vix-daemon] [33mfalling back to builtin glob[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.read_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.read_minified_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.write_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.write_minified_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.edit_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.edit_minified_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.delete_file[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.bash[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.grep[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.glob_files[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.tool_orchestrator[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.web_fetch[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.web_search[0m
+11:53:12 [vix-daemon] [34mRegistered handler: tool.lsp_query[0m
+11:53:12 [vix-daemon] [34mDaemon listening on /tmp/vix_daemon.sock[0m
+11:53:15 [vix-daemon] [34mReceived action=ping[0m
+11:53:15 [vix-daemon] [34mCompleted action=ping status=ok[0m
+11:53:15 [vix-daemon] [34mReceived action=ping[0m
+11:53:15 [vix-daemon] [34mCompleted action=ping status=ok[0m
+11:53:16 [vix-daemon] [34mSession 5653dda1b125a48d started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+11:53:16 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+11:53:16 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+11:53:16 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+11:53:16 [vix-daemon] [34mBrain init complete for /workspace[0m
+11:53:16 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+11:53:16 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+11:53:16 [vix-daemon] [session] loaded 1 workflow(s) from config
+11:53:16 [vix-daemon] [session] chat agent: general_cc
+11:53:27 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/evaluation/usage/export_flows.py
+11:53:27 [vix-daemon] [dispatch] tool call: glob_files evaluation/usage/**/*.py, evaluation/usage/**/*.cfg, evaluation/usage/**/*.toml, evaluation/usage/**/*.ini
+11:53:27 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[evaluation/usage/**/*.py evaluation/usage/**/*.cfg evaluation/usage/**/*.toml evaluation/usage/**/*.ini] paths=[/workspace] type= include_hidden=true[0m
+11:53:32 [vix-daemon] [dispatch] tool call: glob_files **/export_flows.py
+11:53:32 [vix-daemon] [dispatch] tool call: bash $ find /workspace -type d -name "usage" 2>/dev/null; find /workspace -type d -name...
+11:53:32 [vix-daemon] [33m[sandbox] no sandbox available — bash commands will run unsandboxed[0m
+11:53:32 [vix-daemon] [34m[tool.bash] cwd=/workspace command=find /workspace -type d -name "usage" 2>/dev/null; find /workspace -type d -name... sandbox=none[0m
+11:53:32 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/export_flows.py] paths=[/workspace] type= include_hidden=true[0m
+11:53:32 [vix-daemon] [34m[tool.bash] result=(no output)[0m
+11:53:35 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/export_flows.py
+11:53:35 [vix-daemon] [dispatch] tool call: glob_files **/*.py, **/*.toml, **/*.cfg, **/*.ini, **/*.txt
+11:53:35 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/*.py **/*.toml **/*.cfg **/*.ini **/*.txt] paths=[/workspace] type= include_hidden=true[0m
+11:53:41 [vix-daemon] [dispatch] tool call: bash $ ls /workspace/ && cat /workspace/.vix/history.txt 2>/dev/null | head -20
+11:53:41 [vix-daemon] [dispatch] tool call: bash $ python3 -c "import mitmproxy; print(mitmproxy.__version__)" 2>/dev/null && pytho...
+11:53:41 [vix-daemon] [34m[tool.bash] cwd=/workspace command=python3 -c "import mitmproxy; print(mitmproxy.__version__)" 2>/dev/null && pytho... sandbox=none[0m
+11:53:41 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /workspace/ && cat /workspace/.vix/history.txt 2>/dev/null | head -20 sandbox=none[0m
+11:53:41 [vix-daemon] [34m[tool.bash] result=export_flows.py
+
+# 2026-04-06 11:53:23.24058859 +0000 UTC
++Write tests for evaluation/usage/export_flows.py to achieve at least 80% code coverage. Read the file to understand all the functions, then write a comprehensive test suite in evaluation/usage/test_export_flows.py. Use pytest with mocks for filesystem and mitmproxy dependencies. Focus on testing the pure logic functions with various inputs, edge cases, and error paths.
+[0m
+11:53:41 [vix-daemon] [34m[tool.bash] result=
+[exit code: 1][0m
+11:53:44 [vix-daemon] [dispatch] tool call: bash $ python3 -m pip list 2>/dev/null | grep -iE "mitmproxy|pytest|mock" && python3 --...
+11:53:44 [vix-daemon] [34m[tool.bash] cwd=/workspace command=python3 -m pip list 2>/dev/null | grep -iE "mitmproxy|pytest|mock" && python3 --... sandbox=none[0m
+11:53:44 [vix-daemon] [34m[tool.bash] result=
+[exit code: 1][0m
+11:53:47 [vix-daemon] [dispatch] tool call: bash $ which python3 || which python; pip3 list 2>/dev/null | head -30 || pip list 2>/d...
+11:53:47 [vix-daemon] [34m[tool.bash] cwd=/workspace command=which python3 || which python; pip3 list 2>/dev/null | head -30 || pip list 2>/d... sandbox=none[0m
+11:53:47 [vix-daemon] [34m[tool.bash] result=/usr/bin/python3
+Package     Version
+----------- -------
+argcomplete 2.0.0
+click       8.1.3
+colorama    0.4.6
+mercurial   6.3.2
+packaging   26.0
+pip         26.0.1
+pipx        1.1.0
+setuptools  82.0.1
+userpath    1.8.0
+wheel       0.46.3
+[0m
+11:53:50 [vix-daemon] [dispatch] tool call: bash $ pipx list 2>/dev/null; ls ~/.local/lib/ 2>/dev/null; find /usr/local/lib -name "...
+11:53:50 [vix-daemon] [34m[tool.bash] cwd=/workspace command=pipx list 2>/dev/null; ls ~/.local/lib/ 2>/dev/null; find /usr/local/lib -name "... sandbox=none[0m
+11:53:50 [vix-daemon] [34m[tool.bash] result=venvs are in /root/.local/pipx/venvs
+apps are exposed on your $PATH at /root/.local/bin
+   package mitmproxy 11.0.2, installed using Python 3.11.2
+    - mitmdump
+    - mitmproxy
+    - mitmweb
+[0m
+11:53:54 [vix-daemon] [dispatch] tool call: bash $ ls /root/.local/pipx/venvs/mitmproxy/lib/ && /root/.local/pipx/venvs/mitmproxy/b...
+11:53:54 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /root/.local/pipx/venvs/mitmproxy/lib/ && /root/.local/pipx/venvs/mitmproxy/b... sandbox=none[0m
+11:53:54 [vix-daemon] [34m[tool.bash] result=python3.11
+Python 3.11.2
+[0m
+11:53:57 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "import mitmproxy; print(mitmpro...
+11:53:57 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "import mitmproxy; print(mitmpro... sandbox=none[0m
+11:53:57 [vix-daemon] [34m[tool.bash] result=Traceback (most recent call last):
+  File "<string>", line 1, in <module>
+AttributeError: module 'mitmproxy' has no attribute '__version__'
+
+[exit code: 1][0m
+11:54:01 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy.http import HTTP...
+11:54:01 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy.http import HTTP... sandbox=none[0m
+11:54:01 [vix-daemon] [34m[tool.bash] result=ok
+ok
+ok
+[0m
+11:54:11 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/pip list 2>/dev/null | grep -iE "pytest|mo...
+11:54:11 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/pip list 2>/dev/null | grep -iE "pytest|mo... sandbox=none[0m
+11:54:11 [vix-daemon] [34m[tool.bash] result=
+[exit code: 1][0m
+11:54:14 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/pip install pytest pytest-mock 2>&1 | tail...
+11:54:14 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/pip install pytest pytest-mock 2>&1 | tail... sandbox=none[0m
+11:54:14 [vix-daemon] [34m[tool.bash] result=bash: line 1: /root/.local/pipx/venvs/mitmproxy/bin/pip: No such file or directory
+[0m
+11:54:17 [vix-daemon] [dispatch] tool call: bash $ ls /root/.local/pipx/venvs/mitmproxy/bin/ && /root/.local/pipx/venvs/mitmproxy/b...
+11:54:17 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /root/.local/pipx/venvs/mitmproxy/bin/ && /root/.local/pipx/venvs/mitmproxy/b... sandbox=none[0m
+11:54:18 [vix-daemon] [34m[tool.bash] result=Activate.ps1
+activate
+activate.csh
+activate.fish
+flask
+mitmdump
+mitmproxy
+mitmweb
+python
+python3
+python3.11
+
+[exit code: 1][0m
+11:54:20 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -m pip install pytest pytest-mock 2...
+11:54:20 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -m pip install pytest pytest-mock 2... sandbox=none[0m
+11:54:23 [vix-daemon] [34m[tool.bash] result=Downloading pygments-2.20.0-py3-none-any.whl (1.2 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 8.5 MB/s  0:00:00
+Installing collected packages: pygments, pluggy, iniconfig, pytest, pytest-mock
+
+Successfully installed iniconfig-2.3.0 pluggy-1.6.0 pygments-2.20.0 pytest-9.0.2 pytest-mock-3.15.1
+[0m
+11:54:26 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest --version && /root/.local...
+11:54:26 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -m pytest --version && /root/.local... sandbox=none[0m
+11:54:28 [vix-daemon] [34m[tool.bash] result=pytest 9.0.2
+Installing collected packages: coverage, pytest-cov
+
+Successfully installed coverage-7.13.5 pytest-cov-7.1.0
+[0m
+11:54:32 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.http import HTT...
+11:54:32 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.http import HTT... sandbox=none[0m
+11:54:32 [vix-daemon] [34m[tool.bash] result=Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+ImportError: cannot import name 'Request' from 'mitmproxy.net.http' (/root/.local/pipx/venvs/mitmproxy/lib/python3.11/site-packages/mitmproxy/net/http/__init__.py)
+[0m
+11:54:35 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+imp...
+11:54:35 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+imp... sandbox=none[0m
+11:54:35 [vix-daemon] [34m[tool.bash] result=<class 'mitmproxy.http.HTTPFlow'>
+['_Flow__types', '__abstractmethods__', '__annotations__', '__class__', '__delattr__', '__dict__', '__dir__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getstate__', '__gt__', '__hash__', '__init__', '__init_subclass__', '__le__', '__lt__', '__module__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__setattr__', '__sizeof__', '__str__', '__subclasshook__', '__weakref__', '_abc_impl', 'backup', 'copy', 'error', 'from_s...[0m
+11:54:40 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro...
+11:54:40 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro... sandbox=none[0m
+11:54:40 [vix-daemon] [34m[tool.bash] result=Traceback (most recent call last):
+  File "<string>", line 6, in <module>
+  File "/usr/lib/python3.11/unittest/mock.py", line 647, in __getattr__
+    raise AttributeError("Mock object has no attribute %r" % name)
+AttributeError: Mock object has no attribute 'request'
+
+[exit code: 1][0m
+11:54:50 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro...
+11:54:50 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro... sandbox=none[0m
+11:54:50 [vix-daemon] [34m[tool.bash] result=Mock flow created ok
+False
+[0m
+11:54:53 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro...
+11:54:53 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy import http
+fro... sandbox=none[0m
+11:54:53 [vix-daemon] [34m[tool.bash] result=Traceback (most recent call last):
+  File "<string>", line 4, in <module>
+AttributeError: module 'mitmproxy.test.tflow' has no attribute 'tclientconn'. Did you mean: 'tclient_conn'?
+[0m
+11:54:57 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl...
+11:54:57 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl... sandbox=none[0m
+11:54:57 [vix-daemon] [34m[tool.bash] result=<class 'mitmproxy.http.HTTPFlow'>
+<class 'mitmproxy.http.Request'>
+GET
+http://address:22/path
+Response(200, unknown content type, 7b)
+True
+[0m
+11:55:02 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl...
+11:55:02 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl... sandbox=none[0m
+11:55:02 [vix-daemon] [34m[tool.bash] result=Traceback (most recent call last):
+  File "<string>", line 3, in <module>
+ImportError: cannot import name 'Headers' from 'mitmproxy.net.http' (/root/.local/pipx/venvs/mitmproxy/lib/python3.11/site-packages/mitmproxy/net/http/__init__.py)
+
+[exit code: 1][0m
+11:55:06 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl...
+11:55:06 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl... sandbox=none[0m
+11:55:06 [vix-daemon] [34m[tool.bash] result=Headers fields: ((b'header', b'qvalue'), (b'content-length', b'7'))
+Method: POST
+URL: https://api.anthropic.com/v1/messages
+Text: {"model": "claude-sonnet-4-5", "messages": []}
+[0m
+11:55:12 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl...
+11:55:12 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl... sandbox=none[0m
+11:55:12 [vix-daemon] [34m[tool.bash] result=Headers fields: ((b'header', b'qvalue'), (b'content-length', b'7'), (b'x-api-key', b'test-key-123'), (b'authorization', b'Bearer test'))
+Response status: 200
+Response reason: OK
+Response text: hello world response
+Response timestamp_end: 946681203
+Request timestamp_start: 946681200
+[0m
+11:55:16 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl...
+11:55:16 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmproxy.test import tfl... sandbox=none[0m
+11:55:16 [vix-daemon] [34m[tool.bash] result=Response with resp=False: None
+FlowReadException: test error
+[0m
+11:55:19 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+# Test the import of export_fl...
+11:55:19 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+# Test the import of export_fl... sandbox=none[0m
+11:55:19 [vix-daemon] [34m[tool.bash] result=Module imported successfully
+Functions: ['AGENT_COLORS', 'FlowReadException', 'FlowReader', 'FlowWriter', 'HTTPFlow', 'MODEL_PRICING', 'READ_TOOLS', 'SYSTEM_PROMPT_INDEX', 'WRITE_TOOLS', 'argparse', 'attribute_tokens', 'calculate_costs', 'categorize_input_sources', 'categorize_output_sources', 'count_whitespace_stats', 'export_flows', 'export_parsed_response', 'export_parsed_responses', 'extract_file_ops', 'extract_prompts', 'extract_read_file_whitespace', 'extract_source_attribution', 'extract_...[0m
+11:55:24 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ...
+11:55:24 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ... sandbox=none[0m
+11:55:24 [vix-daemon] [34m[tool.bash] result=count_whitespace_stats: {'line_returns_count': 2, 'unnecessary_space_count': 1, 'total_chars': 18}
+get_canonical_model: claude-sonnet-4-5
+get_canonical_model none: None
+sanitize_path: api_v1_messages
+get_pricing: {'input': 8e-07, 'cache_write': 1e-06, 'cache_read': 8e-08, 'output': 4e-06}
+[0m
+11:55:31 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ...
+11:55:31 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ... sandbox=none[0m
+11:55:31 [vix-daemon] [34m[tool.bash] result=SSE stop reason: end_turn
+Unknown stop reason: unknown
+Non-streaming stop reason: tool_use
+[0m
+11:55:36 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ...
+11:55:36 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys
+sys.path.insert(0, ... sandbox=none[0m
+11:55:36 [vix-daemon] [34m[tool.bash] result=format_headers result:
+b'header': b'qvalue'
+b'content-length': b'7'
+b'x-api-key': [REDACTED]
+b'authorization': [REDACTED]
+b'content-type': b'application/json'
+[0m
+11:55:42 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:55:42 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:55:42 [vix-daemon] [34m[tool.bash] result=File: request.json
+{
+  "model": "claude-sonnet-4-5",
+  "messages": []
+}
+
+File: request_headers.txt
+POST https://api.anthropic.com/v1/messages
+
+b'header': b'qvalue'
+b'content-length': b'46'
+b'x-api-key': [REDACTED]
+[0m
+11:55:47 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:55:47 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:55:47 [vix-daemon] [34m[tool.bash] result=File: response_raw.txt
+200 OK
+
+b'header-response': b'svalue'
+b'content-length': b'11'
+
+hello world
+Files when no response: []
+[0m
+11:55:57 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse...
+11:55:57 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse... sandbox=none[0m
+11:55:57 [vix-daemon] [34m[tool.bash] result=cc hash (index 2): 2e049797965b
+vix hash (index 0): 3efdb0d90c30
+no system hash: None
+index out of range hash: None
+[0m
+11:56:05 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse...
+11:56:05 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse... sandbox=none[0m
+11:56:05 [vix-daemon] [34m[tool.bash] result=read_file_compressed
+read_file_uncompressed
+read_file_uncompressed
+read_file_uncompressed
+Write
+list_directory
+[0m
+11:56:20 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse...
+11:56:20 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse... sandbox=none[0m
+11:56:20 [vix-daemon] [34m[tool.bash] result=extract_read_file_whitespace result: {'line_returns_count': 3, 'unnecessary_space_count': 3, 'total_chars': 43}
+[0m
+11:56:26 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse...
+11:56:26 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse... sandbox=none[0m
+11:56:26 [vix-daemon] [34m[tool.bash] result=categorize_input_sources:
+{
+  "total_chars": 500,
+  "tool_results": {
+    "read_file_uncompressed": {
+      "cache_write_chars": 0,
+      "cache_read_chars": 79
+    },
+    "Write": {
+      "cache_write_chars": 64,
+      "cache_read_chars": 0
+    }
+  },
+  "tool_calls": {
+    "read_file_uncompressed": {
+      "cache_write_chars": 0,
+      "cache_read_chars": 91
+    },
+    "Write": {
+      "cache_write_chars": 110,
+      "cache_read_chars": 0
+    }
+  }
+}
+[0m
+11:56:34 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:56:34 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:56:35 [vix-daemon] [34m[tool.bash] result=categorize_output_sources:
+{
+  "llm_text": 11,
+  "tool_calls": {
+    "read_file_uncompressed": 76
+  }
+}
+[0m
+11:56:40 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:56:40 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:56:40 [vix-daemon] [34m[tool.bash] result=Non-streaming categorize_output_sources:
+{
+  "llm_text": 5,
+  "tool_calls": {
+    "Write": 103
+  }
+}
+[0m
+11:56:48 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse...
+11:56:48 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json
+sys.path.inse... sandbox=none[0m
+11:56:49 [vix-daemon] [34m[tool.bash] result=attribute_tokens:
+{
+  "input": {
+    "tool_results": {
+      "read_file_uncompressed": {
+        "tokens": 115,
+        "dollars": 0.000193,
+        "chars": 500
+      }
+    },
+    "tool_calls": {
+      "read_file_uncompressed": {
+        "tokens": 35,
+        "dollars": 5.2000000000000004e-05,
+        "chars": 150
+      }
+    }
+  },
+  "output": {
+    "llm_text": {
+      "tokens": 143,
+      "dollars": 0.004286,
+      "chars": 500
+    },
+    "tool_calls": {
+      "__total": {
+        "tokens": 5...[0m
+11:56:55 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:56:55 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:56:55 [vix-daemon] [34m[tool.bash] result=/absolute/path.py
+/another/path.py
+/relative/path.py
+None
+None
+[0m
+11:56:59 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:56:59 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:56:59 [vix-daemon] [34m[tool.bash] result=file_path="/foo.py", mode="compress"
+count=5, flag=true
+
+[0m
+11:57:07 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:07 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:07 [vix-daemon] [34m[tool.bash] result=parse_response_content SSE:
+[
+  {
+    "type": "text",
+    "text": "Hello world"
+  },
+  {
+    "type": "tool_use",
+    "name": "Write",
+    "input": {
+      "file_path": "/out.py",
+      "content": "code"
+    }
+  }
+]
+[0m
+11:57:15 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:15 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:15 [vix-daemon] [34m[tool.bash] result=export_parsed_response returned: True
+Parsed content: Hello world
+Empty response returned: False
+[0m
+11:57:22 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:22 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:23 [vix-daemon] [34m[tool.bash] result=extract_file_ops:
+{
+  "input": {
+    "unique_files_read": 1,
+    "total_read_chars": 17,
+    "per_file": {
+      "/foo.py": {
+        "calls": 1,
+        "chars": 17,
+        "tool_ids": {
+          "read1": 17
+        },
+        "file_size": null
+      }
+    }
+  },
+  "output": {
+    "files_written": 1,
+    "unique_files_written": 1,
+    "total_write_chars": 8,
+    "per_file": {
+      "/out.py": {
+        "calls": 1,
+        "chars": 8,
+        "tool_ids": {
+          "": 8
+        },
+        "f...[0m
+11:57:31 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:31 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:31 [vix-daemon] [34m[tool.bash] result=After first aggregate: {
+  "input": {
+    "tool_results": {
+      "read_file_uncompressed": {
+        "tokens": 100,
+        "dollars": 0.0003,
+        "chars": 500
+      }
+    },
+    "tool_calls": {
+      "read_file_uncompressed": {
+        "tokens": 20,
+        "dollars": 6e-05,
+        "chars": 100
+      }
+    }
+  },
+  "output": {
+    "llm_text": {
+      "tokens": 200,
+      "dollars": 0.003,
+      "chars": 800
+    },
+    "tool_calls": {
+      "__total": {
+        "tokens": 50,
+        "dolla...[0m
+11:57:36 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:36 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:37 [vix-daemon] [34m[tool.bash] result=#8fd452
+#b1a823
+{'vix': '#7B2FBE', 'cc': '#D77656'}
+[0m
+11:57:46 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:46 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:47 [vix-daemon] [34m[tool.bash] result=
+Extracted usage for 1 flows
+Usage file exists: True
+Usage: {
+  "output_tokens": 50,
+  "input_tokens": 100,
+  "cache_creation_input_tokens": 20,
+  "cache_read_input_tokens": 30,
+  "timing": {
+    "request_start": 1000.0,
+    "response_end": 1005.5,
+    "duration_ms": 5500
+  }
+}
+Timing file removed: True
+[0m
+11:57:52 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:57:52 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:57:53 [vix-daemon] [34m[tool.bash] result=
+Extracted usage for 1 flows
+Non-streaming usage: {
+  "input_tokens": 150,
+  "output_tokens": 75,
+  "cache_creation_input_tokens": 0,
+  "cache_read_input_tokens": 25
+}
+[0m
+11:58:00 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:58:00 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:58:00 [vix-daemon] [34m[tool.bash] result=
+Calculated costs for 1 flows
+After calculate_costs: {
+  "cost": {
+    "input": {
+      "tokens": 100,
+      "dollars": 0.0003
+    },
+    "cache_write": {
+      "tokens": 50,
+      "dollars": 0.000188
+    },
+    "cache_read": {
+      "tokens": 200,
+      "dollars": 6e-05
+    },
+    "output": {
+      "tokens": 75,
+      "dollars": 0.001125
+    },
+    "total": {
+      "tokens": 425,
+      "dollars": 0.001673
+    }
+  },
+  "model": "claude-sonnet-4-5"
+}
+[0m
+11:58:06 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:58:06 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:58:06 [vix-daemon] [34m[tool.bash] result=
+Extracted prompts for 1 requests
+File: system_prompt.md
+You are a helpful assistant.
+
+Additional system instructions.
+File: first_user_message.md
+Hello, help me with this task
+File: request.json
+{"model": "claude-sonnet-4-5", "system": [{"type": "text", "text": "You are a helpful assistant."}, {"type": "text", "text": "Additional system instructions."}], "messages": [{"role": "user", "content
+[0m
+11:58:13 [vix-daemon] [dispatch] tool call: bash $ /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os...
+11:58:13 [vix-daemon] [34m[tool.bash] cwd=/workspace command=/root/.local/pipx/venvs/mitmproxy/bin/python -c "
+import sys, json, tempfile, os... sandbox=none[0m
+11:58:14 [vix-daemon] [34m[tool.bash] result=Before redaction:
+  x-api-key: my-secret-key
+
+Redacted API keys in 1 flow files
+After redaction:
+  x-api-key: [REDACTED]
+[0m
+11:59:52 [vix-daemon] [dispatch] tool call: read_file /workspace/export_flows.py
+11:59:56 [vix-daemon] [dispatch] tool call: read_file /root/.local/pipx/venvs/mitmproxy/lib/python3.11/site-packages/mitmproxy/test/tflow.py
+12:00:01 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy...
+12:00:01 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy... sandbox=none[0m
+12:00:01 [vix-daemon] [34m[tool.bash] result=<class 'mitmproxy.http.HTTPFlow'>
+GET http://address:22/path
+<class 'mitmproxy.http.Headers'>
+((b'header', b'qvalue'), (b'content-length', b'7'))
+[0m
+12:00:09 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox...
+12:00:09 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox... sandbox=none[0m
+12:00:09 [vix-daemon] [34m[tool.bash] result=<class 'mitmproxy.http.HTTPFlow'>
+POST https://api.anthropic.com/v1/messages
+sk-test-123
+{"messages": [{"role": "user", "content": "hello"}
+[0m
+12:00:13 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox...
+12:00:13 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox... sandbox=none[0m
+12:00:13 [vix-daemon] [34m[tool.bash] result=200 OK
+((b'header-response', b'svalue'), (b'content-length', b'7'))
+946681203
+946681200
+[0m
+12:00:17 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox...
+12:00:17 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "
+from mitmprox... sandbox=none[0m
+12:00:17 [vix-daemon] [34m[tool.bash] result=(*, client_conn: mitmproxy.connection.Client | None = None, server_conn: mitmproxy.connection.Server | None = None, req: mitmproxy.http.Request | None = None, resp: bool | mitmproxy.http.Response = False, err: bool | mitmproxy.flow.Error = False, ws: bool | mitmproxy.websocket.WebSocketData = False, live: bool = True) -> mitmproxy.http.HTTPFlow
+(**kwargs) -> mitmproxy.http.Response
+[0m
+12:03:42 [vix-daemon] [dispatch] tool call: write_file /workspace/test_export_flows.py (57990 chars)
+12:03:42 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/test_export_flows.py][0m
+12:03:42 [vix-daemon] [34mBrain update complete (<nil>)[0m
+12:03:47 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp...
+12:03:47 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp... sandbox=none[0m
+12:03:47 [vix-daemon] [34m[tool.bash] result=.............................F
+=================================== FAILURES ===================================
+___________________ TestFormatHeaders.test_redacts_x_api_key ___________________
+
+self = <test_export_flows.TestFormatHeaders object at 0xffffb3ac9d50>
+
+    def test_redacts_x_api_key(self):
+>       h = self._make_headers([("x-api-key", "sk-secret")])
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test_export_flows.py:234: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _...[0m
+12:03:51 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy...
+12:03:51 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -c "from mitmproxy... sandbox=none[0m
+12:03:51 [vix-daemon] [34m[tool.bash] result=((b'x-api-key', b'test'),)
+[0m
+12:03:59 [vix-daemon] [dispatch] tool call: edit_file /workspace/test_export_flows.py (3 lines changed)
+12:03:59 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/test_export_flows.py][0m
+12:03:59 [vix-daemon] [34mBrain update complete (<nil>)[0m
+12:04:02 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp...
+12:04:02 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp... sandbox=none[0m
+12:04:02 [vix-daemon] [34m[tool.bash] result=........................................................................ [ 48%]
+.......................................................F
+=================================== FAILURES ===================================
+__________________ TestRedactFlowFiles.test_redacts_x_api_key __________________
+
+self = <test_export_flows.TestRedactFlowFiles object at 0xffff9eab56d0>
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_redacts_x_api_key0')
+capsys = <_pytest.capture.CaptureFixture object at ...[0m
+12:04:08 [vix-daemon] [dispatch] tool call: edit_file /workspace/test_export_flows.py (16 lines changed)
+12:04:08 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/test_export_flows.py][0m
+12:04:08 [vix-daemon] [34mBrain update complete (<nil>)[0m
+12:04:12 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp...
+12:04:12 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp... sandbox=none[0m
+12:04:12 [vix-daemon] [34m[tool.bash] result=........................................................................ [ 48%]
+........................................................................ [ 97%]
+....                                                                     [100%]
+148 passed in 0.25s
+[0m
+12:04:16 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp...
+12:04:16 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && /root/.local/pipx/venvs/mitmproxy/bin/python -m pytest test_exp... sandbox=none[0m
+12:04:17 [vix-daemon] [34m[tool.bash] result=........................................................................ [ 48%]
+........................................................................ [ 97%]
+....                                                                     [100%]
+================================ tests coverage ================================
+_______________ coverage: platform linux, python 3.11.2-final-0 ________________
+
+Name              Stmts   Miss  Cover   Missing
+-----------------------------------------------
+e...[0m
+12:05:00 [vix-daemon] [34mSession 5653dda1b125a48d ended[0m
+12:05:00 [vix-daemon] [34mReceived action=ping[0m
+12:05:00 [vix-daemon] [34mCompleted action=ping status=ok[0m
+12:05:00 [vix-daemon] [34mSession 4b529593b1d3f120 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+12:05:00 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+12:05:00 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+12:05:00 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+12:05:00 [vix-daemon] [34mBrain init complete for /workspace[0m
+12:05:00 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+12:05:00 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+12:05:00 [vix-daemon] [session] loaded 1 workflow(s) from config
+12:05:00 [vix-daemon] [session] chat agent: general_cc
+12:05:00 [vix-daemon] [34mSession 4b529593b1d3f120 ended[0m

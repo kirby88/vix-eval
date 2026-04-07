@@ -1,0 +1,707 @@
+diff --git a/__pycache__/export_flows.cpython-311.pyc b/__pycache__/export_flows.cpython-311.pyc
+new file mode 100644
+index 0000000..a7527bc
+Binary files /dev/null and b/__pycache__/export_flows.cpython-311.pyc differ
+diff --git a/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc
+new file mode 100644
+index 0000000..94c0bdd
+Binary files /dev/null and b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc differ
+diff --git a/export_flows.py b/export_flows.py
+index dd49230..14c90ad 100644
+--- a/export_flows.py
++++ b/export_flows.py
+@@ -1,5 +1,45 @@
+ #!/usr/bin/env python3
+-"""Export mitmproxy flow files into per-flow directories with request.json, request_headers.txt, and response_raw.txt."""
++"""Export mitmproxy flow files into per-flow directories and analyse Claude API usage.
++
++Sections
++--------
++Constants & Configuration
++    Model pricing tables, agent mappings, header redaction list, tool name sets,
++    and other module-level constants.
++
++String & Path Utilities
++    Pure functions for text analysis, path sanitisation, header formatting, and
++    tool-parameter formatting.
++
++Model & Pricing
++    Canonical model-name resolution and per-token pricing lookups.
++
++HTTP I/O
++    Low-level read/write helpers for request bodies, response files, and
++    mitmproxy .flow file redaction.
++
++Response Parsing
++    SSE and JSON response parsing, including human-readable export.
++
++Flow Export
++    Main orchestration: reads .flow files and writes the per-flow directory
++    tree (request.json, request_headers.txt, response_raw.txt, timing.json).
++    Also extracts token usage and system/user prompts from exported files.
++
++Token Attribution & Source Analysis
++    Categorises input/output tokens by source (tool_results, tool_calls,
++    llm_text) and tracks file-level read/write statistics.
++
++Cost Calculation
++    Computes dollar costs from token counts and model pricing.
++
++Usage Summarization
++    Aggregates per-request usage.json files into a per-agent summary with
++    breakdowns by model, step, and source category.
++
++Entry Point
++    main() CLI entry point and argument parsing.
++"""
+ 
+ import argparse
+ import glob
+@@ -12,6 +52,9 @@ from mitmproxy.io import FlowReader, FlowWriter
+ from mitmproxy.exceptions import FlowReadException
+ from mitmproxy.http import HTTPFlow
+ 
++
++# ── Constants & Configuration ─────────────────────────────────────────────────
++
+ SYSTEM_PROMPT_INDEX = {
+     "cc": 2,
+     "vix": 0,
+@@ -32,6 +75,20 @@ MODEL_PRICING = {
+ # Sort prefixes longest-first so "claude-opus-4-5" matches before "claude-opus-4"
+ _SORTED_PREFIXES = sorted(MODEL_PRICING.keys(), key=len, reverse=True)
+ 
++READ_TOOLS = {"read_file", "Read", "read_file_compressed", "read_file_uncompressed"}
++WRITE_TOOLS = {"write_file", "Write", "edit_file", "Edit"}
++
++_PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
++
++AGENT_COLORS = {
++    "vix": "#7B2FBE",
++    "cc": "#D77656",
++}
++
++_REDACTED_HEADERS = {b"x-api-key", b"authorization"}
++
++
++# ── String & Path Utilities ───────────────────────────────────────────────────
+ 
+ def count_whitespace_stats(text):
+     """Count line returns and unnecessary spaces in text.
+@@ -50,15 +107,53 @@ def count_whitespace_stats(text):
+     }
+ 
+ 
+-def parse_request_body(request_path: str):
+-    """Parse the JSON body from a request.json file. Returns the parsed dict or None."""
+-    try:
+-        with open(request_path, "r") as f:
+-            return json.load(f)
+-    except (json.JSONDecodeError, ValueError):
+-        return None
++def sanitize_path(path: str) -> str:
++    """Turn a URL path into a safe directory name component."""
++    path = path.split("?")[0]
++    path = path.replace("/", "_")
++    path = path.strip("_")
++    path = re.sub(r"[^a-zA-Z0-9_\-]", "", path)
++    return path[:80]
++
++
++def format_headers(headers) -> str:
++    lines = []
++    for k, v in headers.fields:
++        if k.lower() in _REDACTED_HEADERS:
++            lines.append(f"{k}: [REDACTED]")
++        else:
++            lines.append(f"{k}: {v}")
++    return "\n".join(lines)
++
++
++def _format_tool_params(input_data):
++    """Format tool input as compact param=value pairs."""
++    parts = []
++    for key, value in input_data.items():
++        if isinstance(value, str):
++            parts.append(f'{key}="{value}"')
++        else:
++            parts.append(f"{key}={json.dumps(value)}")
++    return ", ".join(parts)
++
++
++def _resolve_read_file_name(name, tool_input):
++    """Resolve read_file tool name to compressed/uncompressed variant."""
++    if name == "read_file":
++        mode = tool_input.get("mode", "original") if isinstance(tool_input, dict) else "original"
++        return "read_file_compressed" if mode == "compress" else "read_file_uncompressed"
++    return name
+ 
+ 
++def _agent_color(name):
++    """Return a deterministic hex color for an unknown agent name."""
++    import hashlib
++    h = int(hashlib.md5(name.encode()).hexdigest()[:6], 16)
++    return f"#{h:06x}"
++
++
++# ── Model & Pricing ───────────────────────────────────────────────────────────
++
+ def get_canonical_model(model_id: str):
+     """Return the canonical model name (without date suffix) or None if unknown."""
+     for prefix in _SORTED_PREFIXES:
+@@ -75,26 +170,15 @@ def get_pricing(model_id: str):
+     return None
+ 
+ 
+-def sanitize_path(path: str) -> str:
+-    """Turn a URL path into a safe directory name component."""
+-    path = path.split("?")[0]
+-    path = path.replace("/", "_")
+-    path = path.strip("_")
+-    path = re.sub(r"[^a-zA-Z0-9_\-]", "", path)
+-    return path[:80]
+-
+-
+-_REDACTED_HEADERS = {b"x-api-key", b"authorization"}
+-
++# ── HTTP I/O ──────────────────────────────────────────────────────────────────
+ 
+-def format_headers(headers) -> str:
+-    lines = []
+-    for k, v in headers.fields:
+-        if k.lower() in _REDACTED_HEADERS:
+-            lines.append(f"{k}: [REDACTED]")
+-        else:
+-            lines.append(f"{k}: {v}")
+-    return "\n".join(lines)
++def parse_request_body(request_path: str):
++    """Parse the JSON body from a request.json file. Returns the parsed dict or None."""
++    try:
++        with open(request_path, "r") as f:
++            return json.load(f)
++    except (json.JSONDecodeError, ValueError):
++        return None
+ 
+ 
+ def write_request(flow: HTTPFlow, directory: str):
+@@ -137,6 +221,42 @@ def write_response(flow: HTTPFlow, directory: str):
+         f.write("\n".join(lines))
+ 
+ 
++def redact_flow_files(directory: str):
++    """Redact sensitive headers (API keys) from .flow files in-place."""
++    flow_files = sorted(glob.glob(os.path.join(directory, "*.flow")))
++    if not flow_files:
++        return
++
++    count = 0
++    for filepath in flow_files:
++        flows = []
++        modified = False
++        try:
++            with open(filepath, "rb") as f:
++                reader = FlowReader(f)
++                for flow in reader.stream():
++                    if isinstance(flow, HTTPFlow):
++                        for header in _REDACTED_HEADERS:
++                            if flow.request.headers.get(header):
++                                flow.request.headers[header] = "[REDACTED]"
++                                modified = True
++                    flows.append(flow)
++        except (FlowReadException, Exception) as e:
++            print(f"  Skipping {os.path.basename(filepath)}: {e}")
++            continue
++
++        if modified:
++            with open(filepath, "wb") as f:
++                writer = FlowWriter(f)
++                for flow in flows:
++                    writer.add(flow)
++            count += 1
++
++    print(f"\nRedacted API keys in {count} flow files")
++
++
++# ── Response Parsing ──────────────────────────────────────────────────────────
++
+ def extract_stop_reason(response_raw: str) -> str:
+     """Extract stop_reason from SSE message_delta event or non-streaming JSON response."""
+     # Try SSE streaming format
+@@ -173,40 +293,129 @@ def extract_stop_reason(response_raw: str) -> str:
+     return "unknown"
+ 
+ 
+-def redact_flow_files(directory: str):
+-    """Redact sensitive headers (API keys) from .flow files in-place."""
+-    flow_files = sorted(glob.glob(os.path.join(directory, "*.flow")))
+-    if not flow_files:
+-        return
++def parse_response_content(response_path):
++    """Parse response_raw.txt into a list of content blocks.
+ 
+-    count = 0
+-    for filepath in flow_files:
+-        flows = []
+-        modified = False
++    Returns: list of {"type": "text", "text": str} or {"type": "tool_use", "name": str, "input": dict}
++    """
++    with open(response_path, "r") as f:
++        content = f.read()
++
++    # SSE streaming parse
++    blocks = {}
++    finished = []
++    found_sse = False
++
++    for line in content.splitlines():
++        line = line.strip()
++        if not line.startswith("data: "):
++            continue
++        payload = line[len("data: "):].strip()
+         try:
+-            with open(filepath, "rb") as f:
+-                reader = FlowReader(f)
+-                for flow in reader.stream():
+-                    if isinstance(flow, HTTPFlow):
+-                        for header in _REDACTED_HEADERS:
+-                            if flow.request.headers.get(header):
+-                                flow.request.headers[header] = "[REDACTED]"
+-                                modified = True
+-                    flows.append(flow)
+-        except (FlowReadException, Exception) as e:
+-            print(f"  Skipping {os.path.basename(filepath)}: {e}")
++            data = json.loads(payload)
++        except json.JSONDecodeError:
+             continue
+ 
+-        if modified:
+-            with open(filepath, "wb") as f:
+-                writer = FlowWriter(f)
+-                for flow in flows:
+-                    writer.add(flow)
++        event_type = data.get("type", "")
++
++        if event_type == "content_block_start":
++            found_sse = True
++            idx = data.get("index", 0)
++            cb = data.get("content_block", {})
++            blocks[idx] = {
++                "type": cb.get("type", ""),
++                "name": cb.get("name", "unknown"),
++                "text": "",
++                "json": "",
++            }
++
++        elif event_type == "content_block_delta":
++            idx = data.get("index", 0)
++            delta = data.get("delta", {})
++            delta_type = delta.get("type", "")
++            if idx in blocks:
++                if delta_type == "text_delta":
++                    blocks[idx]["text"] += delta.get("text", "")
++                elif delta_type == "input_json_delta":
++                    blocks[idx]["json"] += delta.get("partial_json", "")
++
++        elif event_type == "content_block_stop":
++            idx = data.get("index", 0)
++            if idx in blocks:
++                block = blocks[idx]
++                if block["type"] == "text":
++                    finished.append({"type": "text", "text": block["text"]})
++                elif block["type"] == "tool_use":
++                    try:
++                        input_data = json.loads(block["json"]) if block["json"] else {}
++                    except json.JSONDecodeError:
++                        input_data = {}
++                    finished.append({"type": "tool_use", "name": block["name"], "input": input_data})
++                del blocks[idx]
++
++    # Non-streaming fallback
++    if not found_sse:
++        for line in reversed(content.splitlines()):
++            line = line.strip()
++            if not line.startswith("{"):
++                continue
++            try:
++                msg = json.loads(line)
++                if msg.get("type") != "message":
++                    continue
++                for block in msg.get("content", []):
++                    btype = block.get("type", "")
++                    if btype == "text":
++                        finished.append({"type": "text", "text": block.get("text", "")})
++                    elif btype == "tool_use":
++                        finished.append({"type": "tool_use", "name": block.get("name", "unknown"), "input": block.get("input", {})})
++                break
++            except (json.JSONDecodeError, ValueError):
++                continue
++
++    return finished
++
++
++def export_parsed_response(response_path, output_path):
++    """Parse response_raw.txt and write a human-readable response_parsed.txt.
++
++    Text blocks are output as-is. Tool calls are displayed inline with params.
++    """
++    blocks = parse_response_content(response_path)
++    if not blocks:
++        return False
++
++    lines = []
++    for block in blocks:
++        if block["type"] == "text":
++            lines.append(block["text"])
++        elif block["type"] == "tool_use":
++            params = _format_tool_params(block["input"])
++            lines.append(f'\n[{block["name"]}({params})]\n')
++
++    with open(output_path, "w") as f:
++        f.write("".join(lines))
++    return True
++
++
++def export_parsed_responses(directory: str):
++    """Walk output directory, export response_parsed.txt for each response_raw.txt."""
++    count = 0
++    for dirpath, _dirnames, filenames in os.walk(directory):
++        if "response_raw.txt" not in filenames:
++            continue
++
++        response_path = os.path.join(dirpath, "response_raw.txt")
++        output_path = os.path.join(dirpath, "response_parsed.txt")
++
++        if export_parsed_response(response_path, output_path):
+             count += 1
+ 
+-    print(f"\nRedacted API keys in {count} flow files")
++    print(f"\nExported parsed responses for {count} flows")
+ 
+ 
++# ── Flow Export ───────────────────────────────────────────────────────────────
++
+ def _system_prompt_hash(body_json, agent_name):
+     """Return a short hash of the relevant system prompt, or None."""
+     system = body_json.get("system")
+@@ -442,58 +651,16 @@ def extract_prompts(directory: str):
+     print(f"\nExtracted prompts for {count} requests")
+ 
+ 
++# ── Token Attribution & Source Analysis ───────────────────────────────────────
+ 
+-def _resolve_read_file_name(name, tool_input):
+-    """Resolve read_file tool name to compressed/uncompressed variant."""
+-    if name == "read_file":
+-        mode = tool_input.get("mode", "original") if isinstance(tool_input, dict) else "original"
+-        return "read_file_compressed" if mode == "compress" else "read_file_uncompressed"
+-    return name
+-
+-
+-def extract_read_file_whitespace(body):
+-    """Extract whitespace stats from read_file/Read tool results in the request body."""
+-    ws = {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
+-
+-    # Build tool_use_id -> tool_name map from assistant messages
+-    tool_id_to_name = {}
+-    messages = body.get("messages", [])
+-    for msg in messages:
+-        if msg.get("role") != "assistant":
+-            continue
+-        content = msg.get("content", [])
+-        if not isinstance(content, list):
+-            continue
+-        for block in content:
+-            if block.get("type") == "tool_use":
+-                tool_id_to_name[block.get("id", "")] = _resolve_read_file_name(
+-                    block.get("name", "unknown"), block.get("input", {}))
+-
+-    for msg in messages:
+-        if msg.get("role") != "user":
+-            continue
+-        content = msg.get("content", [])
+-        if not isinstance(content, list):
+-            continue
+-        for block in content:
+-            if block.get("type") != "tool_result":
+-                continue
+-            tool_use_id = block.get("tool_use_id", "")
+-            tool_name = tool_id_to_name.get(tool_use_id, "unknown")
+-            if not (tool_name.startswith("read_file") or tool_name == "Read"):
+-                continue
+-            result_content = block.get("content", "")
+-            if isinstance(result_content, str):
+-                text_for_ws = result_content
+-            elif isinstance(result_content, list):
+-                text_for_ws = "".join(b.get("text", "") for b in result_content)
+-            else:
+-                text_for_ws = ""
+-            stats = count_whitespace_stats(text_for_ws)
+-            for k in ("line_returns_count", "unnecessary_space_count", "total_chars"):
+-                ws[k] += stats[k]
+-
+-    return ws
++def _get_file_path(input_data):
++    """Extract file path from tool input, checking common key names. Always returns an absolute path."""
++    if not isinstance(input_data, dict):
++        return None
++    fp = input_data.get("file_path") or input_data.get("path") or None
++    if fp and not os.path.isabs(fp):
++        fp = os.path.join(_PROJECT_ROOT, fp)
++    return fp
+ 
+ 
+ def categorize_input_sources(body):
+@@ -678,136 +845,49 @@ def categorize_output_sources(response_path):
+     return {"llm_text": llm_text_chars, "tool_calls": tool_calls}
+ 
+ 
+-def _format_tool_params(input_data):
+-    """Format tool input as compact param=value pairs."""
+-    parts = []
+-    for key, value in input_data.items():
+-        if isinstance(value, str):
+-            parts.append(f'{key}="{value}"')
+-        else:
+-            parts.append(f"{key}={json.dumps(value)}")
+-    return ", ".join(parts)
+-
+-
+-def parse_response_content(response_path):
+-    """Parse response_raw.txt into a list of content blocks.
+-
+-    Returns: list of {"type": "text", "text": str} or {"type": "tool_use", "name": str, "input": dict}
+-    """
+-    with open(response_path, "r") as f:
+-        content = f.read()
+-
+-    # SSE streaming parse
+-    blocks = {}
+-    finished = []
+-    found_sse = False
++def extract_read_file_whitespace(body):
++    """Extract whitespace stats from read_file/Read tool results in the request body."""
++    ws = {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
+ 
+-    for line in content.splitlines():
+-        line = line.strip()
+-        if not line.startswith("data: "):
++    # Build tool_use_id -> tool_name map from assistant messages
++    tool_id_to_name = {}
++    messages = body.get("messages", [])
++    for msg in messages:
++        if msg.get("role") != "assistant":
+             continue
+-        payload = line[len("data: "):].strip()
+-        try:
+-            data = json.loads(payload)
+-        except json.JSONDecodeError:
++        content = msg.get("content", [])
++        if not isinstance(content, list):
+             continue
++        for block in content:
++            if block.get("type") == "tool_use":
++                tool_id_to_name[block.get("id", "")] = _resolve_read_file_name(
++                    block.get("name", "unknown"), block.get("input", {}))
+ 
+-        event_type = data.get("type", "")
+-
+-        if event_type == "content_block_start":
+-            found_sse = True
+-            idx = data.get("index", 0)
+-            cb = data.get("content_block", {})
+-            blocks[idx] = {
+-                "type": cb.get("type", ""),
+-                "name": cb.get("name", "unknown"),
+-                "text": "",
+-                "json": "",
+-            }
+-
+-        elif event_type == "content_block_delta":
+-            idx = data.get("index", 0)
+-            delta = data.get("delta", {})
+-            delta_type = delta.get("type", "")
+-            if idx in blocks:
+-                if delta_type == "text_delta":
+-                    blocks[idx]["text"] += delta.get("text", "")
+-                elif delta_type == "input_json_delta":
+-                    blocks[idx]["json"] += delta.get("partial_json", "")
+-
+-        elif event_type == "content_block_stop":
+-            idx = data.get("index", 0)
+-            if idx in blocks:
+-                block = blocks[idx]
+-                if block["type"] == "text":
+-                    finished.append({"type": "text", "text": block["text"]})
+-                elif block["type"] == "tool_use":
+-                    try:
+-                        input_data = json.loads(block["json"]) if block["json"] else {}
+-                    except json.JSONDecodeError:
+-                        input_data = {}
+-                    finished.append({"type": "tool_use", "name": block["name"], "input": input_data})
+-                del blocks[idx]
+-
+-    # Non-streaming fallback
+-    if not found_sse:
+-        for line in reversed(content.splitlines()):
+-            line = line.strip()
+-            if not line.startswith("{"):
++    for msg in messages:
++        if msg.get("role") != "user":
++            continue
++        content = msg.get("content", [])
++        if not isinstance(content, list):
++            continue
++        for block in content:
++            if block.get("type") != "tool_result":
+                 continue
+-            try:
+-                msg = json.loads(line)
+-                if msg.get("type") != "message":
+-                    continue
+-                for block in msg.get("content", []):
+-                    btype = block.get("type", "")
+-                    if btype == "text":
+-                        finished.append({"type": "text", "text": block.get("text", "")})
+-                    elif btype == "tool_use":
+-                        finished.append({"type": "tool_use", "name": block.get("name", "unknown"), "input": block.get("input", {})})
+-                break
+-            except (json.JSONDecodeError, ValueError):
++            tool_use_id = block.get("tool_use_id", "")
++            tool_name = tool_id_to_name.get(tool_use_id, "unknown")
++            if not (tool_name.startswith("read_file") or tool_name == "Read"):
+                 continue
++            result_content = block.get("content", "")
++            if isinstance(result_content, str):
++                text_for_ws = result_content
++            elif isinstance(result_content, list):
++                text_for_ws = "".join(b.get("text", "") for b in result_content)
++            else:
++                text_for_ws = ""
++            stats = count_whitespace_stats(text_for_ws)
++            for k in ("line_returns_count", "unnecessary_space_count", "total_chars"):
++                ws[k] += stats[k]
+ 
+-    return finished
+-
+-
+-def export_parsed_response(response_path, output_path):
+-    """Parse response_raw.txt and write a human-readable response_parsed.txt.
+-
+-    Text blocks are output as-is. Tool calls are displayed inline with params.
+-    """
+-    blocks = parse_response_content(response_path)
+-    if not blocks:
+-        return False
+-
+-    lines = []
+-    for block in blocks:
+-        if block["type"] == "text":
+-            lines.append(block["text"])
+-        elif block["type"] == "tool_use":
+-            params = _format_tool_params(block["input"])
+-            lines.append(f'\n[{block["name"]}({params})]\n')
+-
+-    with open(output_path, "w") as f:
+-        f.write("".join(lines))
+-    return True
+-
+-
+-def export_parsed_responses(directory: str):
+-    """Walk output directory, export response_parsed.txt for each response_raw.txt."""
+-    count = 0
+-    for dirpath, _dirnames, filenames in os.walk(directory):
+-        if "response_raw.txt" not in filenames:
+-            continue
+-
+-        response_path = os.path.join(dirpath, "response_raw.txt")
+-        output_path = os.path.join(dirpath, "response_parsed.txt")
+-
+-        if export_parsed_response(response_path, output_path):
+-            count += 1
+-
+-    print(f"\nExported parsed responses for {count} flows")
++    return ws
+ 
+ 
+ def attribute_tokens(input_sources, output_sources, usage, pricing):
+@@ -896,23 +976,6 @@ def attribute_tokens(input_sources, output_sources, usage, pricing):
+     return by_source
+ 
+ 
+-READ_TOOLS = {"read_file", "Read", "read_file_compressed", "read_file_uncompressed"}
+-WRITE_TOOLS = {"write_file", "Write", "edit_file", "Edit"}
+-
+-
+-_PROJECT_ROOT = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", ".."))
+-
+-
+-def _get_file_path(input_data):
+-    """Extract file path from tool input, checking common key names. Always returns an absolute path."""
+-    if not isinstance(input_data, dict):
+-        return None
+-    fp = input_data.get("file_path") or input_data.get("path") or None
+-    if fp and not os.path.isabs(fp):
+-        fp = os.path.join(_PROJECT_ROOT, fp)
+-    return fp
+-
+-
+ def extract_file_ops(body, response_path):
+     """Extract file operation stats from request body (reads) and response (writes).
+ 
+@@ -1058,6 +1121,8 @@ def extract_source_attribution(directory: str):
+     print(f"\nExtracted source attribution for {count} flows")
+ 
+ 
++# ── Cost Calculation ──────────────────────────────────────────────────────────
++
+ def calculate_costs(directory: str):
+     """Walk output directory, compute dollar costs from usage.json and request.json model info."""
+     count = 0
+@@ -1119,6 +1184,8 @@ def calculate_costs(directory: str):
+     print(f"\nCalculated costs for {count} flows")
+ 
+ 
++# ── Usage Summarization ───────────────────────────────────────────────────────
++
+ def _aggregate_by_source(agg, flow_by_source):
+     """Aggregate per-flow by_source into summary by_source.
+ 
+@@ -1187,19 +1254,6 @@ def _round_by_source(agg):
+             entry["dollars"] = round(entry["dollars"], 6)
+ 
+ 
+-AGENT_COLORS = {
+-    "vix": "#7B2FBE",
+-    "cc": "#D77656",
+-}
+-
+-
+-def _agent_color(name):
+-    """Return a deterministic hex color for an unknown agent name."""
+-    import hashlib
+-    h = int(hashlib.md5(name.encode()).hexdigest()[:6], 16)
+-    return f"#{h:06x}"
+-
+-
+ def summarize_usage(directory: str):
+     """Aggregate per-request usage.json files into a summary usage.json per agent type."""
+     COST_FIELDS = ["input", "cache_write", "cache_read", "output", "total"]
+@@ -1209,7 +1263,8 @@ def summarize_usage(directory: str):
+         bucket["cost"] = {f: {"tokens": 0, "dollars": 0.0} for f in COST_FIELDS}
+         bucket["timing"] = {
+             "total_duration_ms": 0,
+-            "min_request_start": None, "max_response_end": None,
++            "min_request_start": None,
++            "max_response_end": None,
+         }
+         return bucket
+ 
+@@ -1402,6 +1457,8 @@ def summarize_usage(directory: str):
+     print(f"\nSummarized usage for {count} agent types")
+ 
+ 
++# ── Entry Point ───────────────────────────────────────────────────────────────
++
+ def main():
+     script_dir = os.path.dirname(os.path.abspath(__file__))
+     data_dir = os.path.join(script_dir, "data")

@@ -1,0 +1,17 @@
+test_id: task4_WriteTestsForExportFlows
+languages: [python]
+description: >
+  No external repository — the source file (export_flows.py) is bundled in
+  this config directory. Measures test-writing ability: can the agent read a
+  non-trivial Python module, identify all branches, and produce a pytest suite
+  that reaches ≥80 % coverage while mocking filesystem and mitmproxy deps.
+
+workspace: workspace/
+
+agents:
+  claude-code:
+    type: claude-code
+    version: latest
+  vix:
+    type: vix
+    version: latest

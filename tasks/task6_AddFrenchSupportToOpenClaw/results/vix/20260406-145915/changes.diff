@@ -1,0 +1,550 @@
+diff --git a/src/i18n/registry.test.ts b/src/i18n/registry.test.ts
+index a06d372047..19e2d49e24 100644
+--- a/src/i18n/registry.test.ts
++++ b/src/i18n/registry.test.ts
+@@ -20,7 +20,7 @@ function getNestedTranslation(map: TranslationMap | null, ...path: string[]): st
+ 
+ describe("ui i18n locale registry", () => {
+   it("lists supported locales", () => {
+-    expect(SUPPORTED_LOCALES).toEqual(["en", "zh-CN", "zh-TW", "pt-BR", "de", "es"]);
++    expect(SUPPORTED_LOCALES).toEqual(["en", "zh-CN", "zh-TW", "pt-BR", "de", "es", "fr"]);
+     expect(DEFAULT_LOCALE).toBe("en");
+   });
+ 
+@@ -31,6 +31,8 @@ describe("ui i18n locale registry", () => {
+     expect(resolveNavigatorLocale("pt-PT")).toBe("pt-BR");
+     expect(resolveNavigatorLocale("zh-HK")).toBe("zh-TW");
+     expect(resolveNavigatorLocale("en-US")).toBe("en");
++    expect(resolveNavigatorLocale("fr-FR")).toBe("fr");
++    expect(resolveNavigatorLocale("fr-CA")).toBe("fr");
+   });
+ 
+   it("loads lazy locale translations from the registry", async () => {
+@@ -44,6 +46,8 @@ describe("ui i18n locale registry", () => {
+     expect(getNestedTranslation(es, "languages", "de")).toBe("Deutsch (Alemán)");
+     expect(getNestedTranslation(ptBR, "languages", "es")).toBe("Español (Espanhol)");
+     expect(getNestedTranslation(zhCN, "common", "health")).toBe("\u5065\u5eb7\u72b6\u51b5");
++    const fr = await loadLazyLocaleTranslation("fr");
++    expect(getNestedTranslation(fr, "common", "health")).toBe("Santé");
+     expect(await loadLazyLocaleTranslation("en")).toBeNull();
+   });
+ });
+diff --git a/ui/src/i18n/lib/registry.ts b/ui/src/i18n/lib/registry.ts
+index d61911053b..8bdf479930 100644
+--- a/ui/src/i18n/lib/registry.ts
++++ b/ui/src/i18n/lib/registry.ts
+@@ -10,7 +10,7 @@ type LazyLocaleRegistration = {
+ 
+ export const DEFAULT_LOCALE: Locale = "en";
+ 
+-const LAZY_LOCALES: readonly LazyLocale[] = ["zh-CN", "zh-TW", "pt-BR", "de", "es"];
++const LAZY_LOCALES: readonly LazyLocale[] = ["zh-CN", "zh-TW", "pt-BR", "de", "es", "fr"];
+ 
+ const LAZY_LOCALE_REGISTRY: Record<LazyLocale, LazyLocaleRegistration> = {
+   "zh-CN": {
+@@ -33,6 +33,10 @@ const LAZY_LOCALE_REGISTRY: Record<LazyLocale, LazyLocaleRegistration> = {
+     exportName: "es",
+     loader: () => import("../locales/es.ts"),
+   },
++  fr: {
++    exportName: "fr",
++    loader: () => import("../locales/fr.ts"),
++  },
+ };
+ 
+ export const SUPPORTED_LOCALES: ReadonlyArray<Locale> = [DEFAULT_LOCALE, ...LAZY_LOCALES];
+@@ -58,6 +62,9 @@ export function resolveNavigatorLocale(navLang: string): Locale {
+   if (navLang.startsWith("es")) {
+     return "es";
+   }
++  if (navLang.startsWith("fr")) {
++    return "fr";
++  }
+   return DEFAULT_LOCALE;
+ }
+ 
+diff --git a/ui/src/i18n/lib/types.ts b/ui/src/i18n/lib/types.ts
+index 8b25ecbc6d..89c9d87562 100644
+--- a/ui/src/i18n/lib/types.ts
++++ b/ui/src/i18n/lib/types.ts
+@@ -1,6 +1,6 @@
+ export type TranslationMap = { [key: string]: string | TranslationMap };
+ 
+-export type Locale = "en" | "zh-CN" | "zh-TW" | "pt-BR" | "de" | "es";
++export type Locale = "en" | "zh-CN" | "zh-TW" | "pt-BR" | "de" | "es" | "fr";
+ 
+ export interface I18nConfig {
+   locale: Locale;
+diff --git a/ui/src/i18n/locales/de.ts b/ui/src/i18n/locales/de.ts
+index 7fd638766e..5ff033625a 100644
+--- a/ui/src/i18n/locales/de.ts
++++ b/ui/src/i18n/locales/de.ts
+@@ -127,5 +127,6 @@ export const de: TranslationMap = {
+     ptBR: "Português (Brasilianisches Portugiesisch)",
+     de: "Deutsch",
+     es: "Spanisch (Español)",
++    fr: "Französisch (Français)",
+   },
+ };
+diff --git a/ui/src/i18n/locales/en.ts b/ui/src/i18n/locales/en.ts
+index 4d7beb928a..f22534b720 100644
+--- a/ui/src/i18n/locales/en.ts
++++ b/ui/src/i18n/locales/en.ts
+@@ -175,6 +175,7 @@ export const en: TranslationMap = {
+     ptBR: "Português (Brazilian Portuguese)",
+     de: "Deutsch (German)",
+     es: "Español (Spanish)",
++    fr: "Français (French)",
+   },
+   cron: {
+     summary: {
+diff --git a/ui/src/i18n/locales/es.ts b/ui/src/i18n/locales/es.ts
+index 091cd2ca93..570957ee72 100644
+--- a/ui/src/i18n/locales/es.ts
++++ b/ui/src/i18n/locales/es.ts
+@@ -126,6 +126,7 @@ export const es: TranslationMap = {
+     ptBR: "Portugués brasileño (Português)",
+     de: "Deutsch (Alemán)",
+     es: "Español",
++    fr: "Francés (Français)",
+   },
+   cron: {
+     summary: {
+diff --git a/ui/src/i18n/locales/fr.ts b/ui/src/i18n/locales/fr.ts
+new file mode 100644
+index 0000000000..d34d97ba78
+--- /dev/null
++++ b/ui/src/i18n/locales/fr.ts
+@@ -0,0 +1,398 @@
++import type { TranslationMap } from "../lib/types.ts";
++
++export const fr: TranslationMap = {
++  common: {
++    version: "Version",
++    health: "Santé",
++    ok: "Correct",
++    online: "En ligne",
++    offline: "Hors ligne",
++    connect: "Connecter",
++    refresh: "Actualiser",
++    enabled: "Activé",
++    disabled: "Désactivé",
++    na: "n/d",
++    docs: "Docs",
++    resources: "Ressources",
++    search: "Rechercher",
++    theme: "Thème",
++  },
++  nav: {
++    chat: "Chat",
++    control: "Contrôle",
++    agent: "Agent",
++    settings: "Paramètres",
++    expand: "Développer la barre latérale",
++    collapse: "Réduire la barre latérale",
++    resize: "Redimensionner la barre latérale",
++  },
++  tabs: {
++    agents: "Agents",
++    overview: "Vue d'ensemble",
++    channels: "Canaux",
++    instances: "Instances",
++    sessions: "Sessions",
++    usage: "Utilisation",
++    cron: "Tâches Cron",
++    skills: "Compétences",
++    nodes: "Nœuds",
++    chat: "Chat",
++    config: "Config",
++    communications: "Communications",
++    appearance: "Apparence",
++    automation: "Automatisation",
++    infrastructure: "Infrastructure",
++    aiAgents: "IA et Agents",
++    debug: "Débogage",
++    logs: "Journaux",
++  },
++  subtitles: {
++    agents: "Espaces de travail, outils, identités.",
++    overview: "Statut, points d'entrée, santé.",
++    channels: "Canaux et paramètres.",
++    instances: "Clients et nœuds connectés.",
++    sessions: "Sessions actives et paramètres par défaut.",
++    usage: "Utilisation et coûts de l'API.",
++    cron: "Réveils et exécutions récurrentes.",
++    skills: "Compétences et clés API.",
++    nodes: "Appareils associés et commandes.",
++    chat: "Chat de la passerelle pour interventions rapides.",
++    config: "Modifier openclaw.json.",
++    communications: "Canaux, messages et paramètres audio.",
++    appearance: "Thème, interface et paramètres de l'assistant de configuration.",
++    automation: "Commandes, hooks, cron et plugins.",
++    infrastructure: "Passerelle, web, navigateur et paramètres média.",
++    aiAgents: "Agents, modèles, compétences, outils, mémoire, session.",
++    debug: "Instantanés, événements, RPC.",
++    logs: "Journaux en direct de la passerelle.",
++  },
++  overview: {
++    access: {
++      title: "Accès à la passerelle",
++      subtitle: "Où le tableau de bord se connecte et comment il s'authentifie.",
++      wsUrl: "URL WebSocket",
++      token: "Jeton de la passerelle",
++      password: "Mot de passe (non stocké)", // pragma: allowlist secret
++      sessionKey: "Clé de session par défaut",
++      language: "Langue",
++      connectHint: "Cliquez sur Connecter pour appliquer les changements de connexion.",
++      trustedProxy: "Authentifié via un proxy de confiance.",
++    },
++    snapshot: {
++      title: "Instantané",
++      subtitle: "Dernières informations de connexion de la passerelle.",
++      status: "Statut",
++      uptime: "Temps de fonctionnement",
++      tickInterval: "Intervalle de tick",
++      lastChannelsRefresh: "Dernière actualisation des canaux",
++      channelsHint: "Utilisez Canaux pour lier WhatsApp, Telegram, Discord, Signal ou iMessage.",
++    },
++    stats: {
++      instances: "Instances",
++      instancesHint: "Balises de présence au cours des 5 dernières minutes.",
++      sessions: "Sessions",
++      sessionsHint: "Clés de session récentes suivies par la passerelle.",
++      cron: "Cron",
++      cronNext: "Prochain réveil {time}",
++    },
++    notes: {
++      title: "Notes",
++      subtitle: "Rappels rapides pour les configurations de contrôle à distance.",
++      tailscaleTitle: "Tailscale serve",
++      tailscaleText:
++        "Préférez le mode serve pour maintenir la passerelle en loopback avec l'authentification tailnet.",
++      sessionTitle: "Hygiène de session",
++      sessionText: "Utilisez /new ou sessions.patch pour réinitialiser le contexte.",
++      cronTitle: "Rappels Cron",
++      cronText: "Utilisez des sessions isolées pour les exécutions récurrentes.",
++    },
++    auth: {
++      required:
++        "Cette passerelle nécessite une authentification. Ajoutez un jeton ou un mot de passe, puis cliquez sur Connecter.",
++      failed:
++        "Authentification échouée. Recopiez une URL avec jeton via {command}, ou mettez à jour le jeton, puis cliquez sur Connecter.",
++    },
++    pairing: {
++      hint: "Cet appareil nécessite l'approbation d'appairage de l'hôte de la passerelle.",
++      mobileHint:
++        "Sur mobile ? Copiez l'URL complète (incluant #token=...) depuis openclaw dashboard --no-open sur votre bureau.",
++    },
++    insecure: {
++      hint: "Cette page est en HTTP, donc le navigateur bloque l'identité de l'appareil. Utilisez HTTPS (Tailscale Serve) ou ouvrez {url} sur l'hôte de la passerelle.",
++      stayHttp: "Si vous devez rester en HTTP, configurez {config} (jeton uniquement).",
++    },
++    connection: {
++      title: "Comment se connecter",
++      step1: "Démarrez la passerelle sur votre machine hôte :",
++      step2: "Obtenez une URL du tableau de bord avec jeton :",
++      step3:
++        "Collez l'URL WebSocket et le jeton ci-dessus, ou ouvrez directement l'URL avec jeton.",
++      step4: "Ou générez un jeton réutilisable :",
++      docsHint: "Pour l'accès à distance, Tailscale Serve est recommandé. ",
++      docsLink: "Lire la documentation →",
++    },
++    cards: {
++      cost: "Coût",
++      skills: "Compétences",
++      recentSessions: "Sessions récentes",
++    },
++    attention: {
++      title: "Attention",
++    },
++    eventLog: {
++      title: "Journal des événements",
++    },
++    logTail: {
++      title: "Journaux de la passerelle",
++    },
++    quickActions: {
++      newSession: "Nouvelle session",
++      automation: "Automatisation",
++      refreshAll: "Tout actualiser",
++      terminal: "Terminal",
++    },
++    palette: {
++      placeholder: "Tapez une commande…",
++      noResults: "Aucun résultat",
++    },
++  },
++  login: {
++    subtitle: "Tableau de bord de la passerelle",
++    passwordPlaceholder: "optionnel",
++  },
++  chat: {
++    disconnected: "Déconnecté de la passerelle.",
++    refreshTitle: "Actualiser les données du chat",
++    thinkingToggle: "Basculer la sortie de réflexion/travail de l'assistant",
++    toolCallsToggle: "Basculer les appels d'outils et les résultats",
++    focusToggle: "Basculer le mode focus (masquer barre latérale + en-tête)",
++    hideCronSessions: "Masquer les sessions cron",
++    showCronSessions: "Afficher les sessions cron",
++    showCronSessionsHidden: "Afficher les sessions cron ({count} masquées)",
++    onboardingDisabled: "Désactivé pendant la configuration",
++  },
++  languages: {
++    en: "Anglais (English)",
++    zhCN: "Chinois simplifié (简体中文)",
++    zhTW: "Chinois traditionnel (繁體中文)",
++    ptBR: "Portugais brésilien (Português)",
++    de: "Allemand (Deutsch)",
++    es: "Espagnol (Español)",
++    fr: "Français",
++  },
++  cron: {
++    summary: {
++      enabled: "Activé",
++      yes: "Oui",
++      no: "Non",
++      jobs: "Tâches",
++      nextWake: "Prochain réveil",
++      refreshing: "Actualisation...",
++      refresh: "Actualiser",
++    },
++    jobs: {
++      title: "Tâches",
++      subtitle: "Toutes les tâches planifiées stockées dans la passerelle.",
++      shownOf: "{shown} affichées sur {total}",
++      searchJobs: "Rechercher des tâches",
++      searchPlaceholder: "Nom, description ou agent",
++      enabled: "Activé",
++      schedule: "Planification",
++      lastRun: "Dernière exécution",
++      all: "Toutes",
++      sort: "Trier",
++      nextRun: "Prochaine exécution",
++      recentlyUpdated: "Récemment mises à jour",
++      name: "Nom",
++      direction: "Direction",
++      ascending: "Croissant",
++      descending: "Décroissant",
++      reset: "Réinitialiser",
++      noMatching: "Aucune tâche correspondante.",
++      loading: "Chargement...",
++      loadMore: "Charger plus de tâches",
++    },
++    runs: {
++      title: "Historique des exécutions",
++      subtitleAll: "Dernières exécutions de toutes les tâches.",
++      subtitleJob: "Dernières exécutions de {title}.",
++      scope: "Portée",
++      allJobs: "Toutes les tâches",
++      selectedJob: "Tâche sélectionnée",
++      searchRuns: "Rechercher des exécutions",
++      searchPlaceholder: "Résumé, erreur ou tâche",
++      newestFirst: "Plus récentes en premier",
++      oldestFirst: "Plus anciennes en premier",
++      status: "Statut",
++      delivery: "Livraison",
++      clear: "Effacer",
++      allStatuses: "Tous les statuts",
++      allDelivery: "Toutes les livraisons",
++      selectJobHint: "Sélectionnez une tâche pour voir l'historique des exécutions.",
++      noMatching: "Aucune exécution correspondante.",
++      loadMore: "Charger plus d'exécutions",
++      runStatusOk: "OK",
++      runStatusError: "Erreur",
++      runStatusSkipped: "Ignorée",
++      runStatusUnknown: "Inconnu",
++      deliveryDelivered: "Livré",
++      deliveryNotDelivered: "Non livré",
++      deliveryUnknown: "Inconnu",
++      deliveryNotRequested: "Non demandé",
++    },
++    form: {
++      editJob: "Modifier la tâche",
++      newJob: "Nouvelle tâche",
++      updateSubtitle: "Mettre à jour la tâche planifiée sélectionnée.",
++      createSubtitle: "Créer un réveil planifié ou une exécution d'agent.",
++      required: "Requis",
++      requiredSr: "requis",
++      basics: "Informations de base",
++      basicsSub: "Nommez-la, choisissez l'assistant et définissez l'état d'activation.",
++      fieldName: "Nom",
++      description: "Description",
++      agentId: "ID d'agent",
++      namePlaceholder: "Résumé matinal",
++      descriptionPlaceholder: "Contexte optionnel pour cette tâche",
++      agentPlaceholder: "main ou ops",
++      agentHelp:
++        "Commencez à taper pour sélectionner un agent connu, ou entrez-en un personnalisé.",
++      schedule: "Planification",
++      scheduleSub: "Contrôlez quand cette tâche s'exécute.",
++      every: "Chaque",
++      at: "À",
++      cronOption: "Cron",
++      runAt: "Exécuter à",
++      unit: "Unité",
++      minutes: "Minutes",
++      hours: "Heures",
++      days: "Jours",
++      expression: "Expression",
++      expressionPlaceholder: "0 7 * * *",
++      everyAmountPlaceholder: "30",
++      timezoneOptional: "Fuseau horaire (optionnel)",
++      timezonePlaceholder: "America/Los_Angeles",
++      timezoneHelp: "Choisissez un fuseau horaire courant ou entrez un fuseau IANA valide.",
++      jitterHelp: "Besoin de gigue ? Utilisez Avancé → Fenêtre d'étalement / Unité d'étalement.",
++      execution: "Exécution",
++      executionSub: "Choisissez quand se réveiller et ce que cette tâche doit faire.",
++      session: "Session",
++      main: "Principale",
++      isolated: "Isolée",
++      sessionHelp: "Principale publie un événement système. Isolée exécute un tour d'agent dédié.",
++      wakeMode: "Mode de réveil",
++      now: "Maintenant",
++      nextHeartbeat: "Prochain battement",
++      wakeModeHelp:
++        "Maintenant se déclenche immédiatement. Prochain battement attend le prochain cycle.",
++      payloadKind: "Que doit-il s'exécuter ?",
++      systemEvent: "Publier un message sur la chronologie principale",
++      agentTurn: "Exécuter une tâche d'assistant (isolée)",
++      systemEventHelp:
++        "Envoie votre texte à la chronologie principale de la passerelle (idéal pour les rappels/déclencheurs).",
++      agentTurnHelp: "Démarre une exécution d'assistant dans sa propre session avec votre invite.",
++      timeoutSeconds: "Délai d'expiration (secondes)",
++      timeoutPlaceholder: "Optionnel, ex. 90",
++      timeoutHelp:
++        "Optionnel. Laissez vide pour utiliser le comportement de délai d'expiration par défaut de la passerelle.",
++      mainTimelineMessage: "Message de la chronologie principale",
++      assistantTaskPrompt: "Invite de tâche de l'assistant",
++      deliverySection: "Livraison",
++      deliverySub: "Choisissez où les résumés d'exécution sont envoyés.",
++      resultDelivery: "Livraison du résultat",
++      announceDefault: "Annoncer le résumé (par défaut)",
++      webhookPost: "Webhook POST",
++      noneInternal: "Aucune (interne)",
++      deliveryHelp: "Annoncer publie un résumé dans le chat. Aucune garde l'exécution interne.",
++      webhookUrl: "URL du webhook",
++      channel: "Canal",
++      webhookPlaceholder: "https://example.com/cron",
++      channelHelp: "Choisissez quel canal connecté reçoit le résumé.",
++      webhookHelp: "Envoyer les résumés d'exécution à un endpoint webhook.",
++      to: "À",
++      toPlaceholder: "+1555... ou ID de chat",
++      toHelp: "Remplacement optionnel du destinataire (ID de chat, téléphone ou ID d'utilisateur).",
++      advanced: "Avancé",
++      advancedHelp:
++        "Remplacements optionnels pour les garanties de livraison, la gigue de planification et les contrôles de modèle.",
++      deleteAfterRun: "Supprimer après exécution",
++      deleteAfterRunHelp:
++        "Idéal pour les rappels à usage unique qui doivent se nettoyer automatiquement.",
++      clearAgentOverride: "Effacer le remplacement d'agent",
++      clearAgentHelp: "Forcer cette tâche à utiliser l'assistant par défaut de la passerelle.",
++      exactTiming: "Timing exact (sans étalement)",
++      exactTimingHelp: "Exécuter sur des limites cron exactes sans dispersion.",
++      staggerWindow: "Fenêtre d'étalement",
++      staggerUnit: "Unité d'étalement",
++      staggerPlaceholder: "30",
++      seconds: "Secondes",
++      model: "Modèle",
++      modelPlaceholder: "openai/gpt-5.2",
++      modelHelp:
++        "Commencez à taper pour sélectionner un modèle connu, ou entrez-en un personnalisé.",
++      thinking: "Réflexion",
++      thinkingPlaceholder: "faible",
++      thinkingHelp: "Utilisez un niveau suggéré ou entrez une valeur spécifique au fournisseur.",
++      bestEffortDelivery: "Livraison au mieux",
++      bestEffortHelp: "Ne pas échouer la tâche si la livraison elle-même échoue.",
++      cantAddYet: "Impossible d'ajouter la tâche pour l'instant",
++      fillRequired: "Remplissez les champs requis ci-dessous pour activer l'envoi.",
++      fixFields: "Corrigez {count} champ pour continuer.",
++      fixFieldsPlural: "Corrigez {count} champs pour continuer.",
++      saving: "Enregistrement...",
++      saveChanges: "Enregistrer les modifications",
++      addJob: "Ajouter la tâche",
++      cancel: "Annuler",
++    },
++    jobList: {
++      allJobs: "toutes les tâches",
++      selectJob: "(sélectionner une tâche)",
++      enabled: "activée",
++      disabled: "désactivée",
++      edit: "Modifier",
++      clone: "Cloner",
++      disable: "Désactiver",
++      enable: "Activer",
++      run: "Exécuter",
++      history: "Historique",
++      remove: "Supprimer",
++    },
++    jobDetail: {
++      system: "Système",
++      prompt: "Invite",
++      delivery: "Livraison",
++      agent: "Agent",
++    },
++    jobState: {
++      status: "Statut",
++      next: "Prochain",
++      last: "Dernier",
++    },
++    runEntry: {
++      noSummary: "Aucun résumé.",
++      runAt: "Exécuté à",
++      openRunChat: "Ouvrir le chat d'exécution",
++      next: "Prochain {rel}",
++      due: "Prévu {rel}",
++    },
++    errors: {
++      nameRequired: "Le nom est requis.",
++      scheduleAtInvalid: "Entrez une date/heure valide.",
++      everyAmountInvalid: "L'intervalle doit être supérieur à 0.",
++      cronExprRequired: "L'expression Cron est requise.",
++      staggerAmountInvalid: "L'étalement doit être supérieur à 0.",
++      systemTextRequired: "Le texte système est requis.",
++      agentMessageRequired: "Le message de l'agent est requis.",
++      timeoutInvalid: "Si défini, le délai doit être supérieur à 0 secondes.",
++      webhookUrlRequired: "L'URL du webhook est requise.",
++      webhookUrlInvalid: "L'URL du webhook doit commencer par http:// ou https://.",
++      invalidRunTime: "Heure d'exécution invalide.",
++      invalidIntervalAmount: "Montant d'intervalle invalide.",
++      cronExprRequiredShort: "Expression Cron requise.",
++      invalidStaggerAmount: "Montant d'étalement invalide.",
++      systemEventTextRequired: "Texte d'événement système requis.",
++      agentMessageRequiredShort: "Message de l'agent requis.",
++      nameRequiredShort: "Nom requis.",
++    },
++  },
++};
+diff --git a/ui/src/i18n/locales/pt-BR.ts b/ui/src/i18n/locales/pt-BR.ts
+index cb9ba1ba28..69ef018193 100644
+--- a/ui/src/i18n/locales/pt-BR.ts
++++ b/ui/src/i18n/locales/pt-BR.ts
+@@ -175,5 +175,6 @@ export const pt_BR: TranslationMap = {
+     ptBR: "Português (Português Brasileiro)",
+     de: "Deutsch (Alemão)",
+     es: "Español (Espanhol)",
++    fr: "Francês (Français)",
+   },
+ };
+diff --git a/ui/src/i18n/locales/zh-CN.ts b/ui/src/i18n/locales/zh-CN.ts
+index b039be16f4..eae04db095 100644
+--- a/ui/src/i18n/locales/zh-CN.ts
++++ b/ui/src/i18n/locales/zh-CN.ts
+@@ -172,6 +172,7 @@ export const zh_CN: TranslationMap = {
+     ptBR: "Português (巴西葡萄牙语)",
+     de: "Deutsch (德语)",
+     es: "Español (西班牙语)",
++    fr: "Français (法语)",
+   },
+   cron: {
+     summary: {
+diff --git a/ui/src/i18n/locales/zh-TW.ts b/ui/src/i18n/locales/zh-TW.ts
+index a6a616209e..62e056e2b6 100644
+--- a/ui/src/i18n/locales/zh-TW.ts
++++ b/ui/src/i18n/locales/zh-TW.ts
+@@ -172,5 +172,6 @@ export const zh_TW: TranslationMap = {
+     ptBR: "Português (巴西葡萄牙語)",
+     de: "Deutsch (德語)",
+     es: "Español (西班牙語)",
++    fr: "Français (法語)",
+   },
+ };

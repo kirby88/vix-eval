@@ -1,0 +1,2 @@
+Add French language support, as requested in issue #3460. Explore the codebase to find how existing languages and localization are handled, then add complete French (fr) translations following the same patterns. Make sure any existing tests still pass after your changes. Create a PR-ready branch with your work.
+cf. https://github.com/openclaw/openclaw/issues/3460

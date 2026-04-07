@@ -1,0 +1,267 @@
+diff --git a/Package.swift b/Package.swift
+new file mode 100644
+index 0000000..23e4d24
+--- /dev/null
++++ b/Package.swift
+@@ -0,0 +1,14 @@
++// swift-tools-version: 5.9
++import PackageDescription
++
++let package = Package(
++    name: "LRUFileCache",
++    platforms: [.iOS(.v16)],
++    products: [
++        .library(name: "LRUFileCache", targets: ["LRUFileCache"])
++    ],
++    targets: [
++        .target(name: "LRUFileCache"),
++        .testTarget(name: "LRUFileCacheTests", dependencies: ["LRUFileCache"])
++    ]
++)
+diff --git a/Sources/LRUFileCache/CacheConfiguration.swift b/Sources/LRUFileCache/CacheConfiguration.swift
+new file mode 100644
+index 0000000..c9293c1
+--- /dev/null
++++ b/Sources/LRUFileCache/CacheConfiguration.swift
+@@ -0,0 +1,43 @@
++import Foundation
++
++public struct CacheConfiguration {
++    public let name: String
++    public let maxEntryCount: Int
++    public let maxTotalBytes: Int
++    public let evictionDebounceInterval: TimeInterval
++    public let dataProtection: DataProtectionClass
++
++    public enum DataProtectionClass {
++        case none
++        case complete
++        case completeUnlessOpen
++        case completeUntilFirstUserAuthentication
++    }
++
++    public init(
++        name: String,
++        maxEntryCount: Int,
++        maxTotalBytes: Int,
++        evictionDebounceInterval: TimeInterval,
++        dataProtection: DataProtectionClass = .completeUntilFirstUserAuthentication
++    ) {
++        self.name = name
++        self.maxEntryCount = maxEntryCount
++        self.maxTotalBytes = maxTotalBytes
++        self.evictionDebounceInterval = evictionDebounceInterval
++        self.dataProtection = dataProtection
++    }
++
++    var fileProtectionType: FileProtectionType {
++        switch dataProtection {
++        case .none:
++            return .none
++        case .complete:
++            return .complete
++        case .completeUnlessOpen:
++            return .completeUnlessOpen
++        case .completeUntilFirstUserAuthentication:
++            return .completeUntilFirstUserAuthentication
++        }
++    }
++}
+diff --git a/Sources/LRUFileCache/CacheIndex.swift b/Sources/LRUFileCache/CacheIndex.swift
+new file mode 100644
+index 0000000..219cc62
+--- /dev/null
++++ b/Sources/LRUFileCache/CacheIndex.swift
+@@ -0,0 +1,32 @@
++import Foundation
++
++struct CacheEntry: Codable {
++    let key: String
++    let fileName: String
++    var lastAccessedDate: Date
++    var byteSize: Int
++}
++
++struct CacheIndex: Codable {
++    var entries: [String: CacheEntry] = [:]
++
++    var totalBytes: Int {
++        entries.values.reduce(0) { $0 + $1.byteSize }
++    }
++
++    func evictionOrder() -> [CacheEntry] {
++        entries.values.sorted { $0.lastAccessedDate < $1.lastAccessedDate }
++    }
++
++    mutating func insert(_ entry: CacheEntry) {
++        entries[entry.key] = entry
++    }
++
++    mutating func remove(key: String) -> CacheEntry? {
++        entries.removeValue(forKey: key)
++    }
++
++    mutating func touch(key: String, date: Date) {
++        entries[key]?.lastAccessedDate = date
++    }
++}
+diff --git a/Sources/LRUFileCache/LRUFileCache.swift b/Sources/LRUFileCache/LRUFileCache.swift
+new file mode 100644
+index 0000000..9737d9b
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCache.swift
+@@ -0,0 +1,145 @@
++import Foundation
++
++public actor LRUFileCache {
++    private let config: CacheConfiguration
++    private let cacheDirectory: URL
++    private let indexURL: URL
++    private var index: CacheIndex
++    private var debouncedPersistTask: Task<Void, Never>?
++
++    public init(config: CacheConfiguration, baseDirectory: URL) async throws {
++        self.config = config
++        self.cacheDirectory = baseDirectory.appending(path: config.name, directoryHint: .isDirectory)
++        self.indexURL = cacheDirectory.appending(path: "index.json", directoryHint: .notDirectory)
++
++        if let data = try? Data(contentsOf: indexURL),
++           let decoded = try? JSONDecoder().decode(CacheIndex.self, from: data) {
++            self.index = decoded
++        } else {
++            self.index = CacheIndex()
++        }
++    }
++
++    public func add(key: String, data: Data) throws {
++        try ensureCacheDirectoryExists()
++
++        let fileName: String
++        if let existing = index.entries[key] {
++            fileName = existing.fileName
++        } else {
++            fileName = UUID().uuidString
++        }
++
++        let destination = cacheDirectory.appending(path: fileName, directoryHint: .notDirectory)
++        try writeAtomically(data: data, to: destination)
++
++        let entry = CacheEntry(
++            key: key,
++            fileName: fileName,
++            lastAccessedDate: Date(),
++            byteSize: data.count
++        )
++        index.insert(entry)
++        try persistIndex()
++
++        Task { await self.runEvictionIfNeeded() }
++    }
++
++    public func update(key: String, data: Data) throws {
++        try add(key: key, data: data)
++    }
++
++    public func modify(key: String, data: Data) throws {
++        guard index.entries[key] != nil else {
++            throw LRUFileCacheError.keyNotFound(key)
++        }
++        try add(key: key, data: data)
++    }
++
++    public func get(key: String) -> Data? {
++        guard let entry = index.entries[key] else {
++            return nil
++        }
++
++        let fileURL = cacheDirectory.appending(path: entry.fileName, directoryHint: .notDirectory)
++        guard let data = try? Data(contentsOf: fileURL) else {
++            index.remove(key: key)
++            try? persistIndex()
++            return nil
++        }
++
++        index.touch(key: key, date: Date())
++        scheduleDebouncedPersist()
++        return data
++    }
++
++    public func promote(key: String) throws {
++        guard index.entries[key] != nil else {
++            throw LRUFileCacheError.keyNotFound(key)
++        }
++        index.touch(key: key, date: Date())
++        scheduleDebouncedPersist()
++    }
++
++    private func scheduleDebouncedPersist() {
++        debouncedPersistTask?.cancel()
++        let interval = config.evictionDebounceInterval
++        debouncedPersistTask = Task { [weak self] in
++            do {
++                try await Task.sleep(for: .seconds(interval))
++            } catch {
++                return
++            }
++            await self?.forcePersistIndex()
++        }
++    }
++
++    private func forcePersistIndex() {
++        try? persistIndex()
++    }
++
++    @discardableResult
++    private func persistIndex() throws -> Void {
++        let data = try JSONEncoder().encode(index)
++        try writeAtomically(data: data, to: indexURL)
++    }
++
++    private func runEvictionIfNeeded() {
++        while index.entries.count > config.maxEntryCount || index.totalBytes > config.maxTotalBytes {
++            let candidates = index.evictionOrder()
++            guard let oldest = candidates.first else { break }
++
++            let sourceURL = cacheDirectory.appending(path: oldest.fileName, directoryHint: .notDirectory)
++            let tmpName = "\(UUID().uuidString)-\(oldest.fileName)"
++            let tmpURL = FileManager.default.temporaryDirectory.appending(path: tmpName, directoryHint: .notDirectory)
++
++            try? FileManager.default.moveItem(at: sourceURL, to: tmpURL)
++            index.remove(key: oldest.key)
++        }
++        try? persistIndex()
++    }
++
++    private func ensureCacheDirectoryExists() throws {
++        var isDir: ObjCBool = false
++        let exists = FileManager.default.fileExists(atPath: cacheDirectory.path, isDirectory: &isDir)
++        guard !exists || !isDir.boolValue else { return }
++
++        let protection = config.fileProtectionType
++        try FileManager.default.createDirectory(
++            at: cacheDirectory,
++            withIntermediateDirectories: true,
++            attributes: [.protectionKey: protection]
++        )
++    }
++
++    private func writeAtomically(data: Data, to destination: URL) throws {
++        let tmp = destination.deletingLastPathComponent()
++            .appending(path: ".\(UUID().uuidString).tmp", directoryHint: .notDirectory)
++        try data.write(to: tmp)
++        if FileManager.default.fileExists(atPath: destination.path) {
++            _ = try FileManager.default.replaceItemAt(destination, withItemAt: tmp)
++        } else {
++            try FileManager.default.moveItem(at: tmp, to: destination)
++        }
++    }
++}
+diff --git a/Sources/LRUFileCache/LRUFileCacheError.swift b/Sources/LRUFileCache/LRUFileCacheError.swift
+new file mode 100644
+index 0000000..a5e884f
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCacheError.swift
+@@ -0,0 +1,3 @@
++public enum LRUFileCacheError: Error {
++    case keyNotFound(String)
++}

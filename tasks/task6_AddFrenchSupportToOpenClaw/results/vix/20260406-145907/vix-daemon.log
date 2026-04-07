@@ -1,0 +1,352 @@
+14:02:51 [vix-daemon] API key loaded (source: env)
+14:02:51 [vix-daemon] [telemetry] failed to get device ID: failed to store device ID: exec: "dbus-launch": executable file not found in $PATH
+14:02:51 [vix-daemon] [34mRegistered handler: ping[0m
+14:02:51 [vix-daemon] [34mRegistered handler: init[0m
+14:02:51 [vix-daemon] [34mRegistered handler: force_init[0m
+14:02:51 [vix-daemon] [34mRegistered handler: brain.init[0m
+14:02:51 [vix-daemon] [34mRegistered handler: brain.update_files[0m
+14:02:51 [vix-daemon] [31m[tools] ✗ rg (ripgrep) not found in PATH[0m
+14:02:51 [vix-daemon] [33mfalling back to system grep[0m
+14:02:51 [vix-daemon] [31m[tools] ✗ fd not found in PATH[0m
+14:02:51 [vix-daemon] [33mfalling back to builtin glob[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.read_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.read_minified_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.write_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.write_minified_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.edit_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.edit_minified_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.delete_file[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.bash[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.grep[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.glob_files[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.tool_orchestrator[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.web_fetch[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.web_search[0m
+14:02:51 [vix-daemon] [34mRegistered handler: tool.lsp_query[0m
+14:02:51 [vix-daemon] [34mDaemon listening on /tmp/vix_daemon.sock[0m
+14:03:02 [vix-daemon] [34mReceived action=ping[0m
+14:03:02 [vix-daemon] [34mCompleted action=ping status=ok[0m
+14:03:02 [vix-daemon] [34mReceived action=ping[0m
+14:03:02 [vix-daemon] [34mCompleted action=ping status=ok[0m
+14:03:02 [vix-daemon] [34mSession 139efbf593f7f740 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+14:03:02 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+14:03:02 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+14:03:02 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+14:03:02 [vix-daemon] [34mBrain init complete for /workspace[0m
+14:03:02 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+14:03:02 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+14:03:02 [vix-daemon] [session] loaded 1 workflow(s) from config
+14:03:02 [vix-daemon] [session] chat agent: general_cc
+14:03:10 [vix-daemon] [dispatch] tool call: glob_files **/*
+14:03:10 [vix-daemon] [dispatch] tool call: bash $ ls /workspace
+14:03:10 [vix-daemon] [33m[sandbox] no sandbox available — bash commands will run unsandboxed[0m
+14:03:10 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /workspace sandbox=none[0m
+14:03:10 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/*] paths=[/workspace] type=d include_hidden=true[0m
+14:03:10 [vix-daemon] [34m[tool.bash] result=AGENTS.md
+CHANGELOG.md
+CLAUDE.md
+CONTRIBUTING.md
+Dockerfile
+Dockerfile.sandbox
+Dockerfile.sandbox-browser
+Dockerfile.sandbox-common
+LICENSE
+README.md
+SECURITY.md
+Swabble
+VISION.md
+appcast.xml
+apps
+assets
+changelog
+docker-compose.yml
+docker-setup.sh
+docs
+docs.acp.md
+extensions
+fly.private.toml
+fly.toml
+git-hooks
+knip.config.ts
+openclaw.mjs
+openclaw.podman.env
+package.json
+packages
+patches
+pnpm-lock.yaml
+pnpm-workspace.yaml
+pyproject.toml
+render.yaml
+scripts
+setup-podman.sh
+skills
+src
+test
+test-fi...[0m
+14:03:18 [vix-daemon] [dispatch] tool call: glob_files **/i18n/**, **/locales/**, **/translations/**, **/lang/**, **/*.locale.*, **/*.i18n.*
+14:03:18 [vix-daemon] [dispatch] tool call: bash $ ls /workspace/docs/.i18n/ 2>/dev/null && echo "---" && ls /workspace/docs/.i18n/
+14:03:18 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /workspace/docs/.i18n/ 2>/dev/null && echo "---" && ls /workspace/docs/.i18n/ sandbox=none[0m
+14:03:18 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/i18n/** **/locales/** **/translations/** **/lang/** **/*.locale.* **/*.i18n.*] paths=[/workspace] type= include_hidden=true[0m
+14:03:18 [vix-daemon] [34m[tool.bash] result=README.md
+glossary.ja-JP.json
+glossary.zh-CN.json
+ja-JP.tm.jsonl
+zh-CN.tm.jsonl
+---
+README.md
+glossary.ja-JP.json
+glossary.zh-CN.json
+ja-JP.tm.jsonl
+zh-CN.tm.jsonl
+[0m
+14:03:23 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/en.ts
+14:03:23 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/de.ts
+14:03:23 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/lib/registry.ts
+14:03:30 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/lib/types.ts
+14:03:30 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/index.ts
+14:03:30 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/src/i18n/registry.test.ts
+14:03:33 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/es.ts
+14:03:33 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/pt-BR.ts
+14:03:38 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/test/translate.test.ts
+14:03:38 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/lib/translate.ts
+14:03:43 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/zh-CN.ts
+14:03:49 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && git log --oneline -10 && git branch -a
+14:03:49 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/ui/src/i18n/locales/zh-TW.ts
+14:03:49 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && git log --oneline -10 && git branch -a sandbox=none[0m
+14:03:49 [vix-daemon] [34m[tool.bash] result=412811ec19 fix(changelog): add entry for Control UI logger import fix (#48469)
+df3a19051d fix(logging): make logger import browser-safe
+546e4d940a Build: share root dist chunks across tsdown entries
+09df232f39 Plugins: stage local bundled runtime tree
+7e2658908d perf: lazy-load status route startup helpers
+97a7dcf48e perf: reduce status json startup memory
+2c3c48fd8d Channels: ignore enabled-only disabled plugin config
+4649f82b77 Docs: normalize unreleased changelog refs
+c28a52263b Docs: repair ...[0m
+14:03:57 [vix-daemon] [dispatch] tool call: grep Locale|supported.*locale|SUPPORTED_LOCALES|\"de\"|\"es\"|\"pt-BR\"
+14:03:57 [vix-daemon] [dispatch] tool call: grep fr|french|français|francais
+14:03:57 [vix-daemon] [34m[tool.grep] backend=grep cwd=/workspace pattern=fr|french|français|francais path=/workspace include=*.ts[0m
+14:03:57 [vix-daemon] [34m[tool.grep] exec: grep -rn -E --include=*.ts fr|french|français|francais /workspace[0m
+14:03:57 [vix-daemon] [34m[tool.grep] backend=grep cwd=/workspace pattern=Locale|supported.*locale|SUPPORTED_LOCALES|\"de\"|\"es\"|\"pt-BR\" path=/workspace/ui/src/i18n include=[0m
+14:03:57 [vix-daemon] [34m[tool.grep] exec: grep -rn -E Locale|supported.*locale|SUPPORTED_LOCALES|\"de\"|\"es\"|\"pt-BR\" /workspace/ui/src/i18n[0m
+14:03:57 [vix-daemon] [34m[tool.grep] result=/workspace/ui/src/i18n/test/translate.test.ts:42:    await translate.i18n.setLocale("en");
+/workspace/ui/src/i18n/test/translate.test.ts:64:    await translate.i18n.setLocale("zh-CN");
+/workspace/ui/src/i18n/test/translate.test.ts:78:    await translate.i18n.setLocale("zh-CN");
+/workspace/ui/src/i18n/test/translate.test.ts:89:      expect(fresh.i18n.getLocale()).toBe("zh-CN");
+/workspace/ui/src/i18n/test/translate.test.ts:91:    expect(fresh.i18n.getLocale()).toBe("zh-CN");
+/workspace/ui/src/i18...[0m
+14:03:57 [vix-daemon] [34m[tool.grep] result=/workspace/tsdown.config.ts:1:import fs from "node:fs";
+/workspace/tsdown.config.ts:2:import path from "node:path";
+/workspace/tsdown.config.ts:3:import { defineConfig } from "tsdown";
+/workspace/tsdown.config.ts:4:import { buildPluginSdkEntrySources } from "./scripts/lib/plugin-sdk-entries.mjs";
+/workspace/tsdown.config.ts:95:          packageEntries = Array.from(new Set([...packageEntries, setupEntry]));
+/workspace/tsdown.config.ts:121:    "infra/warning-filter": "src/infra/warning-filter.ts",...[0m
+14:05:25 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/en.ts
+14:05:25 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/es.ts
+14:05:34 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/lib/types.ts
+14:05:34 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/lib/registry.ts
+14:05:38 [vix-daemon] [dispatch] tool call: read_file /workspace/src/i18n/registry.test.ts
+14:05:38 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/de.ts
+14:05:43 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/pt-BR.ts
+14:05:43 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/zh-CN.ts
+14:05:46 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/zh-TW.ts:1-20
+14:05:48 [vix-daemon] [dispatch] tool call: grep languages:
+14:05:48 [vix-daemon] [34m[tool.grep] backend=grep cwd=/workspace pattern=languages: path=/workspace/ui/src/i18n/locales/zh-TW.ts include=[0m
+14:05:48 [vix-daemon] [34m[tool.grep] exec: grep -rn -E languages: /workspace/ui/src/i18n/locales/zh-TW.ts[0m
+14:05:48 [vix-daemon] [34m[tool.grep] result=168:  languages: {
+[0m
+14:05:51 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/locales/zh-TW.ts:168-177
+14:05:55 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && git checkout -b feat/fr-i18n
+14:05:55 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && git checkout -b feat/fr-i18n sandbox=none[0m
+14:05:55 [vix-daemon] [34m[tool.bash] result=Switched to a new branch 'feat/fr-i18n'
+[0m
+14:07:13 [vix-daemon] [dispatch] tool call: write_file /workspace/ui/src/i18n/locales/fr.ts (16216 chars)
+14:07:13 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/fr.ts][0m
+14:07:13 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:17 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/lib/types.ts (1 lines changed)
+14:07:17 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/lib/types.ts][0m
+14:07:17 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:20 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/lib/registry.ts (1 lines changed)
+14:07:20 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/lib/registry.ts][0m
+14:07:20 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:23 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/lib/registry.ts (5 lines changed, +4)
+14:07:23 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/lib/registry.ts][0m
+14:07:23 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:26 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/lib/registry.ts (4 lines changed, +3)
+14:07:26 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/lib/registry.ts][0m
+14:07:26 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:29 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/en.ts (3 lines changed, +1)
+14:07:29 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/en.ts][0m
+14:07:29 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:32 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/de.ts (2 lines changed, +1)
+14:07:32 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/de.ts][0m
+14:07:32 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:35 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/es.ts (2 lines changed, +1)
+14:07:35 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/es.ts][0m
+14:07:35 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:37 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/pt-BR.ts (2 lines changed, +1)
+14:07:37 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/pt-BR.ts][0m
+14:07:37 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:39 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/zh-CN.ts (2 lines changed, +1)
+14:07:39 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/zh-CN.ts][0m
+14:07:39 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:42 [vix-daemon] [dispatch] tool call: edit_file /workspace/ui/src/i18n/locales/zh-TW.ts (2 lines changed, +1)
+14:07:42 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/ui/src/i18n/locales/zh-TW.ts][0m
+14:07:42 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:45 [vix-daemon] [dispatch] tool call: edit_file /workspace/src/i18n/registry.test.ts (1 lines changed)
+14:07:45 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/src/i18n/registry.test.ts][0m
+14:07:45 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:48 [vix-daemon] [dispatch] tool call: edit_file /workspace/src/i18n/registry.test.ts (2 lines changed, +1)
+14:07:48 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/src/i18n/registry.test.ts][0m
+14:07:48 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:52 [vix-daemon] [dispatch] tool call: edit_file /workspace/src/i18n/registry.test.ts (2 lines changed, +2)
+14:07:52 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/src/i18n/registry.test.ts][0m
+14:07:52 [vix-daemon] [34mBrain update complete (<nil>)[0m
+14:07:55 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && npx vitest run src/i18n/registry.test.ts 2>&1
+14:07:55 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && npx vitest run src/i18n/registry.test.ts 2>&1 sandbox=none[0m
+14:08:06 [vix-daemon] [34m[tool.bash] result=npm warn exec The following package was not found and will be installed: vitest@4.1.2
+vitest.config.ts (4:29) [33m[UNRESOLVED_IMPORT] Warning:[0m Could not resolve 'vitest/config' in vitest.config.ts
+   [38;5;246m╭[0m[38;5;246m─[0m[38;5;246m[[0m vitest.config.ts:4:30 [38;5;246m][0m
+   [38;5;246m│[0m
+ [38;5;246m4 │[0m [38;5;249mi[0m[38;5;249mm[0m[38;5;249mp[0m[38;5;249mo[0m[38;5;249mr[0m[38;5;249mt[0m[38;5;249m [0m[38;5;249m{[0m[38;5;249m [0m[38;5;249md[0...[0m
+14:08:08 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && cat package.json | grep -E '"test"|"vitest"' 2>&1 | head -20
+14:08:08 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && cat package.json | grep -E '"test"|"vitest"' 2>&1 | head -20 sandbox=none[0m
+14:08:08 [vix-daemon] [34m[tool.bash] result=    "test": "test"
+    "test": "node scripts/test-parallel.mjs",
+    "test:watch": "vitest",
+    "vitest": "^4.1.0"
+[0m
+14:08:12 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && node_modules/.bin/vitest run src/i18n/registry.test.ts 2>&1
+14:08:12 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && node_modules/.bin/vitest run src/i18n/registry.test.ts 2>&1 sandbox=none[0m
+14:08:12 [vix-daemon] [34m[tool.bash] result=bash: line 1: node_modules/.bin/vitest: No such file or directory
+
+[exit code: 127][0m
+14:08:15 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && ls node_modules/.bin/ | grep -i vitest 2>&1; ls node_modules/ |...
+14:08:15 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && ls node_modules/.bin/ | grep -i vitest 2>&1; ls node_modules/ |... sandbox=none[0m
+14:08:15 [vix-daemon] [34m[tool.bash] result=ls: cannot access 'node_modules/.bin/': No such file or directory
+ls: cannot access 'node_modules/': No such file or directory
+
+[exit code: 1][0m
+14:08:19 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && cat package.json | grep -E 'packageManager|workspaces' | head -...
+14:08:19 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && cat package.json | grep -E 'packageManager|workspaces' | head -... sandbox=none[0m
+14:08:19 [vix-daemon] [34m[tool.bash] result=    "deadcode:knip": "pnpm dlx knip --config knip.config.ts --isolate-workspaces --production --no-progress --reporter compact --files --dependencies",
+  "packageManager": "pnpm@10.23.0",
+AGENTS.md
+CHANGELOG.md
+CLAUDE.md
+CONTRIBUTING.md
+Dockerfile
+Dockerfile.sandbox
+Dockerfile.sandbox-browser
+Dockerfile.sandbox-common
+LICENSE
+README.md
+SECURITY.md
+Swabble
+VISION.md
+appcast.xml
+apps
+assets
+changelog
+docker-compose.yml
+docker-setup.sh
+docs
+docs.acp.md
+extensions
+fly.private.toml
+fly.toml
+git-hooks...[0m
+14:08:22 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && pnpm vitest run src/i18n/registry.test.ts 2>&1
+14:08:22 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && pnpm vitest run src/i18n/registry.test.ts 2>&1 sandbox=none[0m
+14:08:24 [vix-daemon] [34m[tool.bash] result= WARN  Unsupported engine: wanted: {"node":">=22.16.0"} (current: {"node":"v20.20.2","pnpm":"10.23.0"})
+ WARN  Unsupported engine: wanted: {"node":">=22.16.0"} (current: {"node":"v20.20.2","pnpm":"10.23.0"})
+undefined
+ ERR_PNPM_RECURSIVE_EXEC_FIRST_FAIL  Command "vitest" not found
+
+Did you mean "pnpm test"?
+
+[exit code: 254][0m
+14:08:28 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && find . -name "vitest" -type f 2>/dev/null | head -5; find . -pa...
+14:08:28 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && find . -name "vitest" -type f 2>/dev/null | head -5; find . -pa... sandbox=none[0m
+14:08:28 [vix-daemon] [34m[tool.bash] result=(no output)[0m
+14:08:31 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && cat scripts/test-parallel.mjs 2>&1 | head -40
+14:08:31 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && cat scripts/test-parallel.mjs 2>&1 | head -40 sandbox=none[0m
+14:08:31 [vix-daemon] [34m[tool.bash] result=import { spawn } from "node:child_process";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+import { channelTestPrefixes } from "../vitest.channel-paths.mjs";
+
+// On Windows, `.cmd` launchers can fail with `spawn EINVAL` when invoked without a shell
+// (especially under GitHub Actions + Git Bash). Use `shell: true` and let the shell resolve pnpm.
+const pnpm = "pnpm";
+
+const unitIsolatedFilesRaw = [
+  "src/plugins/loader.test.ts",
+  "src/plugins/tools.optional.te...[0m
+14:08:33 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && pnpm install 2>&1 | tail -5
+14:08:33 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && pnpm install 2>&1 | tail -5 sandbox=none[0m
+14:09:42 [vix-daemon] [34m[tool.bash] result=╰──────────────────────────────────────────────────────────────────────────────╯
+
+. prepare$ command -v git >/dev/null 2>&1 && git rev-parse --is-inside-work-tree >/dev/null 2>&1 && git config core.hooksPath git-hooks || exit 0
+. prepare: Done
+Done in 1m 8s using pnpm v10.23.0
+[0m
+14:09:45 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && node_modules/.bin/vitest run src/i18n/registry.test.ts 2>&1
+14:09:45 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && node_modules/.bin/vitest run src/i18n/registry.test.ts 2>&1 sandbox=none[0m
+14:09:47 [vix-daemon] [34m[tool.bash] result=
+[1m[46m RUN [49m[22m [36mv4.1.0 [39m[90m/workspace[39m
+
+ [32m✓[39m src/i18n/registry.test.ts [2m([22m[2m3 tests[22m[2m)[22m[32m 40[2mms[22m[39m
+
+[2m Test Files [22m [1m[32m1 passed[39m[22m[90m (1)[39m
+[2m      Tests [22m [1m[32m3 passed[39m[22m[90m (3)[39m
+[2m   Start at [22m 14:09:46
+[2m   Duration [22m 697ms[2m (transform 466ms, setup 525ms, import 13ms, tests 40ms, environment 0ms)[22m
+
+[0m
+14:09:52 [vix-daemon] [dispatch] tool call: read_file /workspace/ui/src/i18n/lib/registry.ts
+14:11:13 [vix-daemon] [34mSession 139efbf593f7f740 ended[0m
+14:11:13 [vix-daemon] [34mReceived action=ping[0m
+14:11:13 [vix-daemon] [34mCompleted action=ping status=ok[0m
+14:11:13 [vix-daemon] [34mSession 404f1690b3d59b1e started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+14:11:13 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+14:11:13 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+14:11:13 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+14:11:13 [vix-daemon] [34mBrain init complete for /workspace[0m
+14:11:13 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+14:11:13 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+14:11:13 [vix-daemon] [session] loaded 1 workflow(s) from config
+14:11:13 [vix-daemon] [session] chat agent: general_cc
+14:11:13 [vix-daemon] [34mSession 404f1690b3d59b1e ended[0m

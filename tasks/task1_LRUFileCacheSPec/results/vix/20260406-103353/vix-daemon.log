@@ -1,0 +1,91 @@
+09:33:55 [vix-daemon] API key loaded (source: env)
+09:33:55 [vix-daemon] [telemetry] failed to get device ID: failed to store device ID: exec: "dbus-launch": executable file not found in $PATH
+09:33:55 [vix-daemon] [34mRegistered handler: ping[0m
+09:33:55 [vix-daemon] [34mRegistered handler: init[0m
+09:33:55 [vix-daemon] [34mRegistered handler: force_init[0m
+09:33:55 [vix-daemon] [34mRegistered handler: brain.init[0m
+09:33:55 [vix-daemon] [34mRegistered handler: brain.update_files[0m
+09:33:55 [vix-daemon] [31m[tools] ✗ rg (ripgrep) not found in PATH[0m
+09:33:55 [vix-daemon] [33mfalling back to system grep[0m
+09:33:55 [vix-daemon] [31m[tools] ✗ fd not found in PATH[0m
+09:33:55 [vix-daemon] [33mfalling back to builtin glob[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.read_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.read_minified_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.write_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.write_minified_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.edit_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.edit_minified_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.delete_file[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.bash[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.grep[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.glob_files[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.tool_orchestrator[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.web_fetch[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.web_search[0m
+09:33:55 [vix-daemon] [34mRegistered handler: tool.lsp_query[0m
+09:33:55 [vix-daemon] [34mDaemon listening on /tmp/vix_daemon.sock[0m
+09:33:57 [vix-daemon] [34mReceived action=ping[0m
+09:33:57 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:33:57 [vix-daemon] [34mReceived action=ping[0m
+09:33:57 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:33:57 [vix-daemon] [34mSession b8bc863b3d56a2c6 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+09:33:57 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+09:33:57 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+09:33:57 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+09:33:57 [vix-daemon] [34mBrain init complete for /workspace[0m
+09:33:57 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+09:33:57 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+09:33:57 [vix-daemon] [session] loaded 1 workflow(s) from config
+09:33:57 [vix-daemon] [session] chat agent: general_cc
+09:34:03 [vix-daemon] [dispatch] tool call: glob_files **/*
+09:34:03 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[**/*] paths=[/workspace] type=any include_hidden=true[0m
+09:35:17 [vix-daemon] [dispatch] tool call: write_file /workspace/Package.swift (363 chars)
+09:35:23 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/LRUFileCacheError.swift (70 chars)
+09:35:28 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/CacheConfiguration.swift (1265 chars)
+09:35:32 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/CacheIndex.swift (734 chars)
+09:35:49 [vix-daemon] [dispatch] tool call: write_file /workspace/Sources/LRUFileCache/LRUFileCache.swift (4948 chars)
+09:36:18 [vix-daemon] [34mSession b8bc863b3d56a2c6 ended[0m
+09:36:18 [vix-daemon] [34mReceived action=ping[0m
+09:36:18 [vix-daemon] [34mCompleted action=ping status=ok[0m
+09:36:18 [vix-daemon] [34mSession 8c0381fae74b5802 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+09:36:18 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+09:36:18 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+09:36:18 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+09:36:18 [vix-daemon] [34mBrain init complete for /workspace[0m
+09:36:18 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+09:36:18 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+09:36:18 [vix-daemon] [session] loaded 1 workflow(s) from config
+09:36:18 [vix-daemon] [session] chat agent: general_cc
+09:36:18 [vix-daemon] [34mSession 8c0381fae74b5802 ended[0m

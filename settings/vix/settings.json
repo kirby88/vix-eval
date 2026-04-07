@@ -1,0 +1,440 @@
+{
+  "version": 1,
+  "agent": "general_cc",
+  "languages": [
+    {
+      "name": "go",
+      "extensions": [
+        ".go"
+      ],
+      "lsp": {
+        "command": "/Users/julien/go/bin/gopls"
+      },
+      "formatter": {
+        "command": "gofmt",
+        "args": [
+          "-w"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "python",
+      "extensions": [
+        ".py"
+      ],
+      "formatter": {
+        "command": "black",
+        "args": [
+          "-q"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "javascript",
+      "extensions": [
+        ".js",
+        ".jsx"
+      ],
+      "formatter": {
+        "command": "prettier",
+        "args": [
+          "--write"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "typescript",
+      "extensions": [
+        ".ts",
+        ".tsx"
+      ],
+      "formatter": {
+        "command": "prettier",
+        "args": [
+          "--write"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "rust",
+      "extensions": [
+        ".rs"
+      ],
+      "formatter": {
+        "command": "rustfmt"
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "ruby",
+      "extensions": [
+        ".rb"
+      ],
+      "formatter": {
+        "command": "rubyfmt",
+        "args": [
+          "-i"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "java",
+      "extensions": [
+        ".java"
+      ],
+      "formatter": {
+        "command": "google-java-format",
+        "args": [
+          "--replace"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "kotlin",
+      "extensions": [
+        ".kt",
+        ".kts"
+      ],
+      "formatter": {
+        "command": "ktfmt"
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "swift",
+      "extensions": [
+        ".swift"
+      ],
+      "formatter": {
+        "command": "swiftformat"
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "c",
+      "extensions": [
+        ".c",
+        ".h"
+      ],
+      "formatter": {
+        "command": "clang-format",
+        "args": [
+          "-i"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "cpp",
+      "extensions": [
+        ".cpp",
+        ".hpp"
+      ],
+      "formatter": {
+        "command": "clang-format",
+        "args": [
+          "-i"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "csharp",
+      "extensions": [
+        ".cs"
+      ],
+      "formatter": {
+        "command": "csharpier",
+        "args": [
+          "format"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "php",
+      "extensions": [
+        ".php"
+      ],
+      "formatter": {
+        "command": "php-cs-fixer",
+        "args": [
+          "fix",
+          "--rules=@PSR12"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "lua",
+      "extensions": [
+        ".lua"
+      ]
+    },
+    {
+      "name": "shell",
+      "extensions": [
+        ".sh",
+        ".bash",
+        ".zsh"
+      ],
+      "formatter": {
+        "command": "shfmt",
+        "args": [
+          "-w"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "yaml",
+      "extensions": [
+        ".yml",
+        ".yaml"
+      ]
+    },
+    {
+      "name": "json",
+      "extensions": [
+        ".json"
+      ],
+      "formatter": {
+        "command": "prettier",
+        "args": [
+          "--write"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "toml",
+      "extensions": [
+        ".toml"
+      ]
+    },
+    {
+      "name": "markdown",
+      "extensions": [
+        ".md"
+      ]
+    },
+    {
+      "name": "html",
+      "extensions": [
+        ".html"
+      ],
+      "formatter": {
+        "command": "prettier",
+        "args": [
+          "--write"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "css",
+      "extensions": [
+        ".css"
+      ],
+      "formatter": {
+        "command": "prettier",
+        "args": [
+          "--write"
+        ]
+      },
+      "vfs": {
+        "enable": true,
+        "keep_comments": true
+      }
+    },
+    {
+      "name": "scss",
+      "extensions": [
+        ".scss"
+      ]
+    },
+    {
+      "name": "sql",
+      "extensions": [
+        ".sql"
+      ]
+    }
+  ],
+  "features": {
+    "tool_orchestrator": false,
+    "read_claude_md": true,
+    "read_agents_md": true,
+    "telemetry": true
+  },
+  "tools": {
+    "grep": {
+      "backend": "rg"
+    },
+    "glob": {
+      "backend": "fd"
+    }
+  },
+  "workflows": [
+    {
+      "name": "Plan",
+      "summary": "",
+      "entry_point": {
+        "id": "explore",
+        "params": {
+          "prompt": "$(workflow.prompt)"
+        }
+      },
+      "steps": {
+        "explore": {
+          "type": "agent",
+          "agent": "general_cc",
+          "input_params": {
+            "prompt": {
+              "description": "The user's plan description"
+            }
+          },
+          "prompt": "$(file:prompts/plan_workflow_cc/explore.md)",
+          "next_steps": [
+            {
+              "id": "plan",
+              "params": {
+                "prompt": "$(step.explore.prompt)"
+              }
+            }
+          ],
+          "stream": true,
+          "explanation": "Exploring the codebase to understand relevant files and patterns"
+        },
+        "plan": {
+          "type": "agent",
+          "fork_from": "explore",
+          "input_params": {
+            "prompt": {
+              "description": "The user's plan description"
+            }
+          },
+          "prompt": "$(file:prompts/plan_workflow_cc/plan.md)",
+          "next_steps": [
+            {
+              "id": "review"
+            }
+          ],
+          "stream": true,
+          "explanation": "Generating a draft implementation plan"
+        },
+        "review": {
+          "type": "tool",
+          "tool": "ask_question_to_user",
+          "question": "Review the plan above. What would you like to do?",
+          "options": [
+            {
+              "title": "Accept",
+              "description": "Approve the plan and proceed to execution",
+              "steps": [
+                {
+                  "id": "execute",
+                  "params": {
+                    "plan": "$(step.plan)"
+                  }
+                },
+                {
+                  "id": "save plan",
+                  "params": {
+                    "content": "$(step.plan)"
+                  }
+                }
+              ]
+            },
+            {
+              "title": "Reject",
+              "description": "Reject the plan and stop the workflow",
+              "steps": [
+                {
+                  "id": "stop"
+                }
+              ]
+            }
+          ],
+          "category": "Plan Review",
+          "explanation": "Reviewing the plan"
+        },
+        "execute": {
+          "input_params": {
+            "plan": {
+              "description": "The LLM's plan for updating the code"
+            }
+          },
+          "type": "agent",
+          "agent": "execute_cc",
+          "prompt": "$(file:prompts/plan_workflow_cc/execute.md)",
+          "explanation": "Executing the approved plan"
+        },
+        "save plan": {
+          "type": "bash",
+          "input_params": {
+            "content": {
+              "description": "Plan content to save"
+            }
+          },
+          "command": "mkdir -p /workspace/.vix/plans && cat > /workspace/.vix/plans/plan_$(date +%Y%m%d_%H%M%S).md",
+          "input": "$(content)",
+          "explanation": "Saving plan to disk"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,95 @@
+diff --git a/src/de.rs b/src/de.rs
+index 942e1c5..6aa2e89 100644
+--- a/src/de.rs
++++ b/src/de.rs
+@@ -2052,7 +2052,7 @@ impl<'de, 'a, R: Read<'de> + 'a> de::EnumAccess<'de> for VariantAccess<'a, R> {
+     where
+         V: de::DeserializeSeed<'de>,
+     {
+-        let val = tri!(seed.deserialize(&mut *self.de));
++        let val = tri!(seed.deserialize(EnumKey { de: &mut *self.de }));
+         tri!(self.de.parse_object_colon());
+         Ok((val, self))
+     }
+@@ -2325,6 +2325,48 @@ where
+     }
+ }
+ 
++struct EnumKey<'a, R: 'a> {
++    de: &'a mut Deserializer<R>,
++}
++
++impl<'de, 'a, R> de::Deserializer<'de> for EnumKey<'a, R>
++where
++    R: Read<'de>,
++{
++    type Error = Error;
++
++    #[inline]
++    fn deserialize_any<V>(self, visitor: V) -> Result<V::Value>
++    where
++        V: de::Visitor<'de>,
++    {
++        let value = match tri!(self.de.parse_whitespace()) {
++            Some(b'"') => {
++                self.de.eat_char();
++                self.de.scratch.clear();
++                match tri!(self.de.read.parse_str(&mut self.de.scratch)) {
++                    Reference::Borrowed(s) => visitor.visit_borrowed_str(s),
++                    Reference::Copied(s) => visitor.visit_str(s),
++                }
++            }
++            Some(b'}') => return Err(self.de.peek_error(ErrorCode::ExpectedSomeValue)),
++            Some(_) => return Err(self.de.peek_error(ErrorCode::KeyMustBeAString)),
++            None => return Err(self.de.peek_error(ErrorCode::EofWhileParsingValue)),
++        };
++
++        match value {
++            Ok(value) => Ok(value),
++            Err(err) => Err(self.de.fix_position(err)),
++        }
++    }
++
++    forward_to_deserialize_any! {
++        bool i8 i16 i32 i64 i128 u8 u16 u32 u64 u128 f32 f64
++        char str string bytes byte_buf option unit unit_struct newtype_struct
++        seq tuple tuple_struct map struct enum identifier ignored_any
++    }
++}
++
+ //////////////////////////////////////////////////////////////////////////////
+ 
+ /// Iterator that deserializes a stream into multiple JSON values.
+diff --git a/tests/regression/issue979.rs b/tests/regression/issue979.rs
+new file mode 100644
+index 0000000..fa4d65b
+--- /dev/null
++++ b/tests/regression/issue979.rs
+@@ -0,0 +1,27 @@
++use serde::de::{Deserializer, VariantAccess, Visitor};
++
++struct V;
++
++impl<'de> Visitor<'de> for V {
++    type Value = (Vec<bool>, ());
++
++    fn expecting(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
++        write!(f, "enum")
++    }
++
++    fn visit_enum<A>(self, data: A) -> Result<Self::Value, A::Error>
++    where
++        A: serde::de::EnumAccess<'de>,
++    {
++        let (key, variant_access) = data.variant()?;
++        let value = variant_access.newtype_variant()?;
++        Ok((key, value))
++    }
++}
++
++#[test]
++fn test_issue979_non_string_enum_key_rejected() {
++    let mut de = serde_json::Deserializer::from_str("{[true]: null}");
++    let result = de.deserialize_enum("name", &[], V);
++    assert!(result.is_err(), "expected error for non-string object key");
++}

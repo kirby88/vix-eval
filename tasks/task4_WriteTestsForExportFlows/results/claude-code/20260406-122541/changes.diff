@@ -1,0 +1,1620 @@
+diff --git a/.coverage b/.coverage
+new file mode 100644
+index 0000000..ec72593
+Binary files /dev/null and b/.coverage differ
+diff --git a/__pycache__/export_flows.cpython-311.pyc b/__pycache__/export_flows.cpython-311.pyc
+new file mode 100644
+index 0000000..056a279
+Binary files /dev/null and b/__pycache__/export_flows.cpython-311.pyc differ
+diff --git a/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc
+new file mode 100644
+index 0000000..eb2d7b8
+Binary files /dev/null and b/__pycache__/test_export_flows.cpython-311-pytest-9.0.2.pyc differ
+diff --git a/test_export_flows.py b/test_export_flows.py
+new file mode 100644
+index 0000000..7acf388
+--- /dev/null
++++ b/test_export_flows.py
+@@ -0,0 +1,1602 @@
++"""Comprehensive test suite for export_flows.py targeting ≥80% code coverage."""
++
++import json
++import os
++import sys
++from unittest.mock import MagicMock, patch, call
++import pytest
++
++# Ensure the workspace root is on the path so we can import export_flows
++sys.path.insert(0, os.path.dirname(__file__))
++import export_flows as ef
++
++
++# ---------------------------------------------------------------------------
++# Helpers
++# ---------------------------------------------------------------------------
++
++def _make_response_sse(stop_reason="end_turn", usage=None, extra_events=None):
++    """Build a minimal SSE response_raw.txt string."""
++    if usage is None:
++        usage = {"input_tokens": 10, "output_tokens": 5}
++    lines = [
++        "HTTP/1.1 200 OK",
++        "",
++        "content-type: text/event-stream",
++        "",
++        'data: {"type":"message_start","message":{"usage":{"input_tokens":10}}}',
++        'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++        'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}',
++        'data: {"type":"content_block_stop","index":0}',
++        f'data: {{"type":"message_delta","delta":{{"stop_reason":"{stop_reason}"}},"usage":{json.dumps(usage)}}}',
++        'data: {"type":"message_stop"}',
++    ]
++    if extra_events:
++        lines.extend(extra_events)
++    return "\n".join(lines)
++
++
++def _make_response_json(stop_reason="end_turn"):
++    """Build a minimal non-streaming JSON response_raw.txt string."""
++    msg = {
++        "type": "message",
++        "role": "assistant",
++        "content": [{"type": "text", "text": "Hello world"}],
++        "stop_reason": stop_reason,
++        "usage": {"input_tokens": 10, "output_tokens": 5},
++    }
++    return f"HTTP/1.1 200 OK\n\ncontent-type: application/json\n\n{json.dumps(msg)}"
++
++
++# ---------------------------------------------------------------------------
++# Tests: count_whitespace_stats
++# ---------------------------------------------------------------------------
++
++class TestCountWhitespaceStats:
++    def test_empty_string(self):
++        r = ef.count_whitespace_stats("")
++        assert r == {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
++
++    def test_newlines_only(self):
++        r = ef.count_whitespace_stats("a\nb\nc")
++        assert r["line_returns_count"] == 2
++        assert r["unnecessary_space_count"] == 0
++        assert r["total_chars"] == 5
++
++    def test_unnecessary_spaces(self):
++        # "a  b" has one run of 2 spaces → 1 unnecessary space
++        r = ef.count_whitespace_stats("a  b   c")
++        assert r["unnecessary_space_count"] == 1 + 2  # 2-space run: 1, 3-space run: 2
++
++    def test_combined(self):
++        r = ef.count_whitespace_stats("hello\nworld  test")
++        assert r["line_returns_count"] == 1
++        assert r["unnecessary_space_count"] == 1
++        assert r["total_chars"] == len("hello\nworld  test")
++
++    def test_single_space_not_counted(self):
++        r = ef.count_whitespace_stats("a b c")
++        assert r["unnecessary_space_count"] == 0
++
++
++# ---------------------------------------------------------------------------
++# Tests: get_canonical_model
++# ---------------------------------------------------------------------------
++
++class TestGetCanonicalModel:
++    def test_exact_match(self):
++        assert ef.get_canonical_model("claude-sonnet-4-6") == "claude-sonnet-4-6"
++
++    def test_date_suffix_stripped(self):
++        assert ef.get_canonical_model("claude-opus-4-5-20250101") == "claude-opus-4-5"
++
++    def test_prefix_order_opus_4_5_before_opus_4(self):
++        # "claude-opus-4-5-..." must match "claude-opus-4-5" not "claude-opus-4"
++        assert ef.get_canonical_model("claude-opus-4-5-20250601") == "claude-opus-4-5"
++
++    def test_unknown_model(self):
++        assert ef.get_canonical_model("gpt-4o") is None
++
++    def test_sonnet_4(self):
++        assert ef.get_canonical_model("claude-sonnet-4-20241201") == "claude-sonnet-4"
++
++    def test_haiku_3_5(self):
++        assert ef.get_canonical_model("claude-haiku-3-5") == "claude-haiku-3-5"
++
++
++# ---------------------------------------------------------------------------
++# Tests: get_pricing
++# ---------------------------------------------------------------------------
++
++class TestGetPricing:
++    def test_known_model_returns_dict(self):
++        p = ef.get_pricing("claude-sonnet-4-6")
++        assert p is not None
++        assert "input" in p
++        assert "output" in p
++        assert "cache_write" in p
++        assert "cache_read" in p
++
++    def test_known_model_with_date_suffix(self):
++        p = ef.get_pricing("claude-haiku-4-5-20250401")
++        assert p == ef.MODEL_PRICING["claude-haiku-4-5"]
++
++    def test_unknown_model_returns_none(self):
++        assert ef.get_pricing("unknown-model") is None
++
++
++# ---------------------------------------------------------------------------
++# Tests: sanitize_path
++# ---------------------------------------------------------------------------
++
++class TestSanitizePath:
++    def test_strips_query_string(self):
++        assert ef.sanitize_path("/v1/messages?key=val") == "v1_messages"
++
++    def test_replaces_slashes(self):
++        assert ef.sanitize_path("/v1/messages") == "v1_messages"
++
++    def test_removes_invalid_chars(self):
++        result = ef.sanitize_path("/v1/mess@ges!")
++        assert "@" not in result
++        assert "!" not in result
++
++    def test_truncates_at_80_chars(self):
++        long_path = "/" + "a" * 100
++        result = ef.sanitize_path(long_path)
++        assert len(result) <= 80
++
++    def test_strips_leading_trailing_underscores(self):
++        result = ef.sanitize_path("/path/")
++        assert not result.startswith("_")
++        assert not result.endswith("_")
++
++
++# ---------------------------------------------------------------------------
++# Tests: format_headers
++# ---------------------------------------------------------------------------
++
++class TestFormatHeaders:
++    def _make_headers(self, pairs):
++        """Build a mock headers object with .fields attribute."""
++        headers = MagicMock()
++        headers.fields = [(k.encode() if isinstance(k, str) else k,
++                           v.encode() if isinstance(v, str) else v)
++                          for k, v in pairs]
++        return headers
++
++    def test_redacts_api_key(self):
++        headers = self._make_headers([("x-api-key", "secret123"), ("content-type", "application/json")])
++        result = ef.format_headers(headers)
++        assert "[REDACTED]" in result
++        assert "secret123" not in result
++        assert "content-type" in result
++
++    def test_redacts_authorization(self):
++        headers = self._make_headers([("Authorization", "Bearer token")])
++        result = ef.format_headers(headers)
++        assert "[REDACTED]" in result
++        assert "Bearer token" not in result
++
++    def test_passthrough_safe_headers(self):
++        headers = self._make_headers([("content-type", "text/plain"), ("x-request-id", "abc")])
++        result = ef.format_headers(headers)
++        assert "text/plain" in result
++        assert "abc" in result
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_stop_reason
++# ---------------------------------------------------------------------------
++
++class TestExtractStopReason:
++    def test_sse_end_turn(self):
++        raw = 'data: {"type":"message_delta","delta":{"stop_reason":"end_turn"},"usage":{}}'
++        assert ef.extract_stop_reason(raw) == "end_turn"
++
++    def test_sse_tool_use(self):
++        raw = 'data: {"type": "message_delta", "delta": {"stop_reason": "tool_use"}, "usage": {}}'
++        assert ef.extract_stop_reason(raw) == "tool_use"
++
++    def test_non_streaming_json(self):
++        raw = _make_response_json("end_turn")
++        assert ef.extract_stop_reason(raw) == "end_turn"
++
++    def test_unknown_when_no_stop_reason(self):
++        raw = "HTTP/1.1 200 OK\n\nsome body text"
++        assert ef.extract_stop_reason(raw) == "unknown"
++
++    def test_empty_string(self):
++        assert ef.extract_stop_reason("") == "unknown"
++
++    def test_bad_json_in_sse_skipped(self):
++        raw = "data: {invalid json}\ndata: {\"type\":\"message_delta\",\"delta\":{\"stop_reason\":\"end_turn\"},\"usage\":{}}"
++        assert ef.extract_stop_reason(raw) == "end_turn"
++
++    def test_message_delta_without_stop_reason_skipped(self):
++        # delta has no stop_reason → continues to fallback
++        raw = 'data: {"type":"message_delta","delta":{},"usage":{}}'
++        assert ef.extract_stop_reason(raw) == "unknown"
++
++
++# ---------------------------------------------------------------------------
++# Tests: _system_prompt_hash
++# ---------------------------------------------------------------------------
++
++class TestSystemPromptHash:
++    def test_cc_agent_uses_index_2(self):
++        body = {
++            "system": [
++                {"type": "text", "text": "zero"},
++                {"type": "text", "text": "one"},
++                {"type": "text", "text": "two"},
++            ]
++        }
++        h = ef._system_prompt_hash(body, "cc")
++        import hashlib
++        expected = hashlib.sha256("two".encode()).hexdigest()[:12]
++        assert h == expected
++
++    def test_vix_agent_uses_index_0(self):
++        body = {"system": [{"type": "text", "text": "first"}]}
++        h = ef._system_prompt_hash(body, "vix")
++        import hashlib
++        expected = hashlib.sha256("first".encode()).hexdigest()[:12]
++        assert h == expected
++
++    def test_no_system_returns_none(self):
++        assert ef._system_prompt_hash({}, "cc") is None
++
++    def test_empty_system_list(self):
++        assert ef._system_prompt_hash({"system": []}, "cc") is None
++
++    def test_index_out_of_bounds(self):
++        body = {"system": [{"type": "text", "text": "only"}]}
++        # cc uses index 2, but list has only 1 element
++        assert ef._system_prompt_hash(body, "cc") is None
++
++    def test_empty_text_returns_none(self):
++        body = {"system": [{"type": "text", "text": ""}]}
++        assert ef._system_prompt_hash(body, "vix") is None
++
++    def test_unknown_agent_defaults_to_index_0(self):
++        body = {"system": [{"type": "text", "text": "hello"}]}
++        h = ef._system_prompt_hash(body, "unknown_agent")
++        assert h is not None
++
++
++# ---------------------------------------------------------------------------
++# Tests: _resolve_read_file_name
++# ---------------------------------------------------------------------------
++
++class TestResolveReadFileName:
++    def test_read_file_compress_mode(self):
++        assert ef._resolve_read_file_name("read_file", {"mode": "compress"}) == "read_file_compressed"
++
++    def test_read_file_original_mode(self):
++        assert ef._resolve_read_file_name("read_file", {"mode": "original"}) == "read_file_uncompressed"
++
++    def test_read_file_no_mode_defaults_uncompressed(self):
++        assert ef._resolve_read_file_name("read_file", {}) == "read_file_uncompressed"
++
++    def test_read_file_non_dict_input(self):
++        assert ef._resolve_read_file_name("read_file", None) == "read_file_uncompressed"
++
++    def test_other_tool_unchanged(self):
++        assert ef._resolve_read_file_name("Write", {"content": "data"}) == "Write"
++
++    def test_read_file_compressed_unchanged(self):
++        assert ef._resolve_read_file_name("read_file_compressed", {}) == "read_file_compressed"
++
++
++# ---------------------------------------------------------------------------
++# Tests: parse_request_body
++# ---------------------------------------------------------------------------
++
++class TestParseRequestBody:
++    def test_valid_json(self, tmp_path):
++        p = tmp_path / "request.json"
++        p.write_text('{"model": "claude-sonnet-4-6", "messages": []}')
++        result = ef.parse_request_body(str(p))
++        assert result == {"model": "claude-sonnet-4-6", "messages": []}
++
++    def test_invalid_json_returns_none(self, tmp_path):
++        p = tmp_path / "request.json"
++        p.write_text("{invalid json}")
++        assert ef.parse_request_body(str(p)) is None
++
++    def test_empty_file_returns_none(self, tmp_path):
++        p = tmp_path / "request.json"
++        p.write_text("")
++        assert ef.parse_request_body(str(p)) is None
++
++
++# ---------------------------------------------------------------------------
++# Tests: write_request / write_response
++# ---------------------------------------------------------------------------
++
++class TestWriteRequest:
++    def _make_flow(self, method="POST", url="https://api.example.com/v1/messages", body=None, headers=None):
++        flow = MagicMock()
++        req = MagicMock()
++        req.method = method
++        req.pretty_url = url
++        # Use explicit sentinel: None means use default JSON, "" means truly empty
++        req.get_text.return_value = '{"model":"claude-sonnet-4-6"}' if body is None else body
++        # Headers mock
++        if headers is None:
++            headers = [("content-type", "application/json")]
++        hdr = MagicMock()
++        hdr.fields = [(k.encode(), v.encode()) for k, v in headers]
++        req.headers = hdr
++        flow.request = req
++        return flow
++
++    def test_creates_request_headers_txt(self, tmp_path):
++        flow = self._make_flow()
++        ef.write_request(flow, str(tmp_path))
++        hdr_file = tmp_path / "request_headers.txt"
++        assert hdr_file.exists()
++        content = hdr_file.read_text()
++        assert "POST https://api.example.com/v1/messages" in content
++
++    def test_creates_request_json_pretty_printed(self, tmp_path):
++        flow = self._make_flow(body='{"model":"claude-sonnet-4-6"}')
++        ef.write_request(flow, str(tmp_path))
++        req_file = tmp_path / "request.json"
++        assert req_file.exists()
++        parsed = json.loads(req_file.read_text())
++        assert parsed["model"] == "claude-sonnet-4-6"
++
++    def test_non_json_body_written_raw(self, tmp_path):
++        flow = self._make_flow(body="not json at all")
++        ef.write_request(flow, str(tmp_path))
++        req_file = tmp_path / "request.json"
++        assert req_file.exists()
++        assert req_file.read_text().strip() == "not json at all"
++
++    def test_empty_body_no_request_json(self, tmp_path):
++        flow = self._make_flow(body="")
++        ef.write_request(flow, str(tmp_path))
++        assert not (tmp_path / "request.json").exists()
++
++
++class TestWriteResponse:
++    def _make_flow(self, status_code=200, reason="OK", body="response body"):
++        flow = MagicMock()
++        resp = MagicMock()
++        resp.status_code = status_code
++        resp.reason = reason
++        resp.get_text.return_value = body
++        hdr = MagicMock()
++        hdr.fields = [(b"content-type", b"text/plain")]
++        resp.headers = hdr
++        flow.response = resp
++        return flow
++
++    def test_creates_response_raw_txt(self, tmp_path):
++        flow = self._make_flow()
++        ef.write_response(flow, str(tmp_path))
++        f = tmp_path / "response_raw.txt"
++        assert f.exists()
++        content = f.read_text()
++        assert "200 OK" in content
++        assert "response body" in content
++
++    def test_none_response_skipped(self, tmp_path):
++        flow = MagicMock()
++        flow.response = None
++        ef.write_response(flow, str(tmp_path))
++        assert not (tmp_path / "response_raw.txt").exists()
++
++    def test_empty_body_no_extra_lines(self, tmp_path):
++        flow = self._make_flow(body="")
++        ef.write_response(flow, str(tmp_path))
++        content = (tmp_path / "response_raw.txt").read_text()
++        assert "200 OK" in content
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_read_file_whitespace
++# ---------------------------------------------------------------------------
++
++class TestExtractReadFileWhitespace:
++    def _body_with_read_result(self, tool_name="read_file", mode=None, content="hello  world\nfoo"):
++        tool_input = {}
++        if mode:
++            tool_input["mode"] = mode
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [
++                        {"type": "tool_use", "id": "tu1", "name": tool_name, "input": tool_input}
++                    ],
++                },
++                {
++                    "role": "user",
++                    "content": [
++                        {"type": "tool_result", "tool_use_id": "tu1", "content": content}
++                    ],
++                },
++            ]
++        }
++        return body
++
++    def test_counts_whitespace_in_read_file_result(self):
++        body = self._body_with_read_result(content="hello  world\nfoo")
++        ws = ef.extract_read_file_whitespace(body)
++        assert ws["line_returns_count"] == 1
++        assert ws["unnecessary_space_count"] == 1
++        assert ws["total_chars"] == len("hello  world\nfoo")
++
++    def test_list_content_type(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [
++                        {"type": "tool_use", "id": "tu1", "name": "Read", "input": {}}
++                    ],
++                },
++                {
++                    "role": "user",
++                    "content": [
++                        {
++                            "type": "tool_result",
++                            "tool_use_id": "tu1",
++                            "content": [{"text": "abc\n"}, {"text": "def"}],
++                        }
++                    ],
++                },
++            ]
++        }
++        ws = ef.extract_read_file_whitespace(body)
++        assert ws["total_chars"] == len("abc\ndef")
++
++    def test_non_read_tool_skipped(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [
++                        {"type": "tool_use", "id": "tu1", "name": "Write", "input": {}}
++                    ],
++                },
++                {
++                    "role": "user",
++                    "content": [
++                        {"type": "tool_result", "tool_use_id": "tu1", "content": "lots   of   spaces"}
++                    ],
++                },
++            ]
++        }
++        ws = ef.extract_read_file_whitespace(body)
++        assert ws["total_chars"] == 0
++
++    def test_empty_messages(self):
++        ws = ef.extract_read_file_whitespace({"messages": []})
++        assert ws == {"line_returns_count": 0, "unnecessary_space_count": 0, "total_chars": 0}
++
++
++# ---------------------------------------------------------------------------
++# Tests: categorize_input_sources
++# ---------------------------------------------------------------------------
++
++class TestCategorizeInputSources:
++    def _make_body(self, messages):
++        return {"messages": messages}
++
++    def test_tool_result_in_last_user_msg_is_cache_write(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [{"type": "tool_use", "id": "tu1", "name": "Read", "input": {}}],
++                },
++                {
++                    "role": "user",
++                    "content": [{"type": "tool_result", "tool_use_id": "tu1", "content": "data"}],
++                },
++            ]
++        }
++        result = ef.categorize_input_sources(body)
++        assert "Read" in result["tool_results"]
++        assert result["tool_results"]["Read"]["cache_write_chars"] > 0
++        assert result["tool_results"]["Read"]["cache_read_chars"] == 0
++
++    def test_tool_result_in_earlier_msg_is_cache_read(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [{"type": "tool_use", "id": "tu1", "name": "Read", "input": {}}],
++                },
++                {
++                    "role": "user",
++                    "content": [{"type": "tool_result", "tool_use_id": "tu1", "content": "old data"}],
++                },
++                {"role": "assistant", "content": [{"type": "text", "text": "ok"}]},
++                {"role": "user", "content": [{"type": "text", "text": "new question"}]},
++            ]
++        }
++        result = ef.categorize_input_sources(body)
++        assert result["tool_results"]["Read"]["cache_read_chars"] > 0
++        assert result["tool_results"]["Read"]["cache_write_chars"] == 0
++
++    def test_tool_call_in_second_to_last_is_cache_write(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [{"type": "tool_use", "id": "tu1", "name": "Write", "input": {}}],
++                },
++                {"role": "user", "content": [{"type": "text", "text": "ok"}]},
++            ]
++        }
++        result = ef.categorize_input_sources(body)
++        assert "Write" in result["tool_calls"]
++        assert result["tool_calls"]["Write"]["cache_write_chars"] > 0
++
++    def test_total_chars_set(self):
++        body = {"messages": [{"role": "user", "content": [{"type": "text", "text": "hi"}]}]}
++        result = ef.categorize_input_sources(body)
++        assert result["total_chars"] == len(json.dumps(body))
++
++    def test_read_file_resolve_applied(self):
++        body = {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [
++                        {"type": "tool_use", "id": "tu1", "name": "read_file", "input": {"mode": "compress"}}
++                    ],
++                },
++                {
++                    "role": "user",
++                    "content": [{"type": "tool_result", "tool_use_id": "tu1", "content": "data"}],
++                },
++            ]
++        }
++        result = ef.categorize_input_sources(body)
++        assert "read_file_compressed" in result["tool_results"]
++
++
++# ---------------------------------------------------------------------------
++# Tests: categorize_output_sources
++# ---------------------------------------------------------------------------
++
++class TestCategorizeOutputSources:
++    def test_sse_text_block(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello world"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        result = ef.categorize_output_sources(str(f))
++        assert result["llm_text"] == len("Hello world")
++        assert result["tool_calls"] == {}
++
++    def test_sse_tool_use_block(self, tmp_path):
++        tool_input = {"file_path": "/foo.py", "content": "data"}
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Write"}}',
++            f'data: {{"type":"content_block_delta","index":0,"delta":{{"type":"input_json_delta","partial_json":{json.dumps(json.dumps(tool_input))}}}}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        result = ef.categorize_output_sources(str(f))
++        assert "Write" in result["tool_calls"]
++        assert result["tool_calls"]["Write"] > 0
++
++    def test_non_streaming_json_fallback(self, tmp_path):
++        raw = _make_response_json("end_turn")
++        f = tmp_path / "response_raw.txt"
++        f.write_text(raw)
++        result = ef.categorize_output_sources(str(f))
++        assert result["llm_text"] == len("Hello world")
++
++    def test_empty_file(self, tmp_path):
++        f = tmp_path / "response_raw.txt"
++        f.write_text("")
++        result = ef.categorize_output_sources(str(f))
++        assert result == {"llm_text": 0, "tool_calls": {}}
++
++    def test_read_file_tool_resolved(self, tmp_path):
++        tool_input = {"file_path": "/foo.py", "mode": "compress"}
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"read_file"}}',
++            f'data: {{"type":"content_block_delta","index":0,"delta":{{"type":"input_json_delta","partial_json":{json.dumps(json.dumps(tool_input))}}}}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        result = ef.categorize_output_sources(str(f))
++        assert "read_file_compressed" in result["tool_calls"]
++
++
++# ---------------------------------------------------------------------------
++# Tests: _format_tool_params
++# ---------------------------------------------------------------------------
++
++class TestFormatToolParams:
++    def test_string_values_quoted(self):
++        result = ef._format_tool_params({"path": "/foo.py"})
++        assert 'path="/foo.py"' in result
++
++    def test_non_string_values_json_encoded(self):
++        result = ef._format_tool_params({"count": 42, "flag": True})
++        assert "count=42" in result
++        assert "flag=true" in result
++
++    def test_empty_dict(self):
++        assert ef._format_tool_params({}) == ""
++
++    def test_multiple_params(self):
++        result = ef._format_tool_params({"a": "x", "b": 1})
++        assert "a=" in result
++        assert "b=" in result
++
++
++# ---------------------------------------------------------------------------
++# Tests: parse_response_content
++# ---------------------------------------------------------------------------
++
++class TestParseResponseContent:
++    def test_sse_text_block(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hi there"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        blocks = ef.parse_response_content(str(f))
++        assert len(blocks) == 1
++        assert blocks[0] == {"type": "text", "text": "Hi there"}
++
++    def test_sse_tool_use_block(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Read"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"file_path\\":\\"/foo\\"}"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        blocks = ef.parse_response_content(str(f))
++        assert len(blocks) == 1
++        assert blocks[0]["type"] == "tool_use"
++        assert blocks[0]["name"] == "Read"
++        assert blocks[0]["input"] == {"file_path": "/foo"}
++
++    def test_non_streaming_json_fallback(self, tmp_path):
++        raw = _make_response_json("end_turn")
++        f = tmp_path / "response_raw.txt"
++        f.write_text(raw)
++        blocks = ef.parse_response_content(str(f))
++        assert any(b["type"] == "text" for b in blocks)
++
++    def test_invalid_json_in_sse_skipped(self, tmp_path):
++        sse = "data: {bad json}\n"
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        blocks = ef.parse_response_content(str(f))
++        assert blocks == []
++
++    def test_multiple_text_deltas_concatenated(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":" world"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        blocks = ef.parse_response_content(str(f))
++        assert blocks[0]["text"] == "Hello world"
++
++    def test_invalid_tool_json_produces_empty_input(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Write"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{bad"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        f = tmp_path / "response_raw.txt"
++        f.write_text(sse)
++        blocks = ef.parse_response_content(str(f))
++        assert blocks[0]["input"] == {}
++
++
++# ---------------------------------------------------------------------------
++# Tests: export_parsed_response / export_parsed_responses
++# ---------------------------------------------------------------------------
++
++class TestExportParsedResponse:
++    def test_text_block_written(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hello"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text(sse)
++        out = tmp_path / "response_parsed.txt"
++        result = ef.export_parsed_response(str(resp), str(out))
++        assert result is True
++        assert "Hello" in out.read_text()
++
++    def test_tool_use_block_formatted(self, tmp_path):
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Write"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"content\\":\\"data\\"}"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text(sse)
++        out = tmp_path / "response_parsed.txt"
++        ef.export_parsed_response(str(resp), str(out))
++        text = out.read_text()
++        assert "[Write(" in text
++
++    def test_empty_blocks_returns_false(self, tmp_path):
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text("")
++        out = tmp_path / "response_parsed.txt"
++        result = ef.export_parsed_response(str(resp), str(out))
++        assert result is False
++        assert not out.exists()
++
++
++class TestExportParsedResponses:
++    def test_creates_parsed_for_each_response(self, tmp_path):
++        for step in ("1", "2"):
++            d = tmp_path / step
++            d.mkdir()
++            sse = "\n".join([
++                'data: {"type":"content_block_start","index":0,"content_block":{"type":"text","name":""}}',
++                'data: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"Hi"}}',
++                'data: {"type":"content_block_stop","index":0}',
++            ])
++            (d / "response_raw.txt").write_text(sse)
++        ef.export_parsed_responses(str(tmp_path))
++        for step in ("1", "2"):
++            assert (tmp_path / step / "response_parsed.txt").exists()
++
++
++# ---------------------------------------------------------------------------
++# Tests: attribute_tokens
++# ---------------------------------------------------------------------------
++
++class TestAttributeTokens:
++    def _pricing(self):
++        return {"input": 3e-6, "cache_write": 3.75e-6, "cache_read": 0.30e-6, "output": 15e-6}
++
++    def _usage(self, input_t=100, cw_t=50, cr_t=20, output_t=30):
++        return {
++            "cost": {
++                "input": {"tokens": input_t, "dollars": input_t * 3e-6},
++                "cache_write": {"tokens": cw_t, "dollars": cw_t * 3.75e-6},
++                "cache_read": {"tokens": cr_t, "dollars": cr_t * 0.30e-6},
++                "output": {"tokens": output_t, "dollars": output_t * 15e-6},
++                "total": {"tokens": input_t + cw_t + cr_t + output_t, "dollars": 0.0},
++            }
++        }
++
++    def test_proportional_output_attribution(self):
++        input_sources = {"total_chars": 1000, "tool_results": {}, "tool_calls": {}}
++        output_sources = {"llm_text": 80, "tool_calls": {"Write": 20}}
++        usage = self._usage()
++        result = ef.attribute_tokens(input_sources, output_sources, usage, self._pricing())
++        out = result["output"]
++        assert "llm_text" in out
++        assert "tool_calls" in out
++        # LLM text gets 80% of output tokens
++        assert out["llm_text"]["tokens"] == round(30 * 0.8)
++
++    def test_zero_total_chars_skips_input(self):
++        input_sources = {"total_chars": 0, "tool_results": {"Read": {"cache_write_chars": 10, "cache_read_chars": 0}}}
++        output_sources = {"llm_text": 0, "tool_calls": {}}
++        usage = self._usage()
++        result = ef.attribute_tokens(input_sources, output_sources, usage, self._pricing())
++        assert result["input"] == {}
++
++    def test_zero_output_tokens_skips_output(self):
++        input_sources = {"total_chars": 500, "tool_results": {}, "tool_calls": {}}
++        output_sources = {"llm_text": 100, "tool_calls": {}}
++        usage = self._usage(output_t=0)
++        result = ef.attribute_tokens(input_sources, output_sources, usage, self._pricing())
++        assert result["output"] == {}
++
++    def test_input_tool_results_attributed(self):
++        input_sources = {
++            "total_chars": 1000,
++            "tool_results": {"Read": {"cache_write_chars": 200, "cache_read_chars": 300}},
++            "tool_calls": {},
++        }
++        output_sources = {"llm_text": 100, "tool_calls": {}}
++        usage = self._usage(input_t=100, cw_t=50, cr_t=20)
++        result = ef.attribute_tokens(input_sources, output_sources, usage, self._pricing())
++        assert "tool_results" in result["input"]
++        assert "Read" in result["input"]["tool_results"]
++
++    def test_no_pricing_skips_input(self):
++        input_sources = {"total_chars": 1000, "tool_results": {"Read": {"cache_write_chars": 100, "cache_read_chars": 0}}}
++        output_sources = {"llm_text": 50, "tool_calls": {}}
++        usage = self._usage()
++        result = ef.attribute_tokens(input_sources, output_sources, usage, None)
++        assert result["input"] == {}
++
++
++# ---------------------------------------------------------------------------
++# Tests: _get_file_path
++# ---------------------------------------------------------------------------
++
++class TestGetFilePath:
++    def test_file_path_key(self):
++        fp = ef._get_file_path({"file_path": "/abs/path.py"})
++        assert fp == "/abs/path.py"
++
++    def test_path_key(self):
++        fp = ef._get_file_path({"path": "/abs/path.py"})
++        assert fp == "/abs/path.py"
++
++    def test_non_dict_returns_none(self):
++        assert ef._get_file_path("not a dict") is None
++        assert ef._get_file_path(None) is None
++
++    def test_relative_path_becomes_absolute(self):
++        fp = ef._get_file_path({"file_path": "relative/path.py"})
++        assert os.path.isabs(fp)
++
++    def test_missing_keys_returns_none(self):
++        assert ef._get_file_path({}) is None
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_file_ops
++# ---------------------------------------------------------------------------
++
++class TestExtractFileOps:
++    def _make_read_body(self, file_path, tool_name="Read"):
++        return {
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [
++                        {"type": "tool_use", "id": "tu1", "name": tool_name, "input": {"file_path": file_path}}
++                    ],
++                },
++                {
++                    "role": "user",
++                    "content": [
++                        {"type": "tool_result", "tool_use_id": "tu1", "content": "file contents here"}
++                    ],
++                },
++            ]
++        }
++
++    def test_read_ops_from_body(self, tmp_path):
++        real_file = tmp_path / "foo.py"
++        real_file.write_text("x" * 100)
++        body = self._make_read_body(str(real_file))
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text("")
++        result = ef.extract_file_ops(body, str(resp))
++        assert result["input"]["unique_files_read"] == 1
++        assert result["input"]["total_read_chars"] == len("file contents here")
++        assert result["input"]["per_file"][str(real_file)]["file_size"] == 100
++
++    def test_write_ops_from_response(self, tmp_path):
++        body = {"messages": []}
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Write"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"file_path\\":\\"/tmp/out.py\\",\\"content\\":\\"hello\\"}"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text(sse)
++        result = ef.extract_file_ops(body, str(resp))
++        assert result["output"]["files_written"] == 1
++        assert "/tmp/out.py" in result["output"]["per_file"]
++
++    def test_edit_ops_counted(self, tmp_path):
++        body = {"messages": []}
++        sse = "\n".join([
++            'data: {"type":"content_block_start","index":0,"content_block":{"type":"tool_use","name":"Edit"}}',
++            'data: {"type":"content_block_delta","index":0,"delta":{"type":"input_json_delta","partial_json":"{\\"file_path\\":\\"/tmp/f.py\\",\\"new_string\\":\\"changed\\"}"}}',
++            'data: {"type":"content_block_stop","index":0}',
++        ])
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text(sse)
++        result = ef.extract_file_ops(body, str(resp))
++        assert result["output"]["files_written"] == 1
++        assert result["output"]["per_file"]["/tmp/f.py"]["chars"] == len("changed")
++
++    def test_missing_file_size_is_none(self, tmp_path):
++        body = self._make_read_body("/nonexistent/file.py")
++        resp = tmp_path / "response_raw.txt"
++        resp.write_text("")
++        result = ef.extract_file_ops(body, str(resp))
++        per = result["input"]["per_file"]
++        if per:
++            fp = list(per.keys())[0]
++            assert per[fp]["file_size"] is None
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_usage
++# ---------------------------------------------------------------------------
++
++class TestExtractUsage:
++    def test_sse_message_delta_usage(self, tmp_path):
++        d = tmp_path / "agent" / "1" / "1"
++        d.mkdir(parents=True)
++        sse = _make_response_sse(usage={"input_tokens": 100, "output_tokens": 50,
++                                         "cache_creation_input_tokens": 10, "cache_read_input_tokens": 5})
++        (d / "response_raw.txt").write_text(sse)
++        ef.extract_usage(str(tmp_path))
++        usage = json.loads((d / "usage.json").read_text())
++        assert usage["input_tokens"] == 100
++        assert usage["output_tokens"] == 50
++        assert usage["cache_creation_input_tokens"] == 10
++        assert usage["cache_read_input_tokens"] == 5
++
++    def test_non_streaming_json_fallback(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        raw = _make_response_json("end_turn")
++        (d / "response_raw.txt").write_text(raw)
++        ef.extract_usage(str(tmp_path))
++        usage = json.loads((d / "usage.json").read_text())
++        assert usage["input_tokens"] == 10
++        assert usage["output_tokens"] == 5
++
++    def test_timing_merged_and_timing_json_removed(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        (d / "response_raw.txt").write_text(_make_response_sse())
++        timing = {"request_start": 1000.0, "response_end": 1002.5}
++        (d / "timing.json").write_text(json.dumps(timing))
++        ef.extract_usage(str(tmp_path))
++        usage = json.loads((d / "usage.json").read_text())
++        assert "timing" in usage
++        assert usage["timing"]["duration_ms"] == 2500
++        assert not (d / "timing.json").exists()
++
++    def test_no_usage_prints_warning(self, tmp_path, capsys):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        (d / "response_raw.txt").write_text("HTTP/1.1 200 OK\n\nno data here")
++        ef.extract_usage(str(tmp_path))
++        captured = capsys.readouterr()
++        assert "Warning" in captured.out
++
++    def test_only_token_fields_kept(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        sse = _make_response_sse(usage={"input_tokens": 5, "output_tokens": 3, "some_other_field": 99})
++        (d / "response_raw.txt").write_text(sse)
++        ef.extract_usage(str(tmp_path))
++        usage = json.loads((d / "usage.json").read_text())
++        assert "some_other_field" not in usage
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_prompts
++# ---------------------------------------------------------------------------
++
++class TestExtractPrompts:
++    def test_system_prompt_extracted(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {
++            "system": [{"type": "text", "text": "You are a helpful assistant."}],
++            "messages": [],
++        }
++        (d / "request.json").write_text(json.dumps(body))
++        ef.extract_prompts(str(tmp_path))
++        assert (d / "system_prompt.md").read_text() == "You are a helpful assistant."
++
++    def test_first_user_message_extracted(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {
++            "messages": [
++                {"role": "user", "content": [{"type": "text", "text": "Hello there"}]},
++            ]
++        }
++        (d / "request.json").write_text(json.dumps(body))
++        ef.extract_prompts(str(tmp_path))
++        assert (d / "first_user_message.md").read_text() == "Hello there"
++
++    def test_invalid_json_skipped(self, tmp_path, capsys):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        (d / "request.json").write_text("{invalid}")
++        ef.extract_prompts(str(tmp_path))
++        captured = capsys.readouterr()
++        assert "Warning" in captured.out
++
++    def test_multiple_system_blocks_joined(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {
++            "system": [
++                {"type": "text", "text": "Block one."},
++                {"type": "text", "text": "Block two."},
++            ],
++            "messages": [],
++        }
++        (d / "request.json").write_text(json.dumps(body))
++        ef.extract_prompts(str(tmp_path))
++        content = (d / "system_prompt.md").read_text()
++        assert "Block one." in content
++        assert "Block two." in content
++
++    def test_only_first_user_message_extracted(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {
++            "messages": [
++                {"role": "user", "content": [{"type": "text", "text": "First message"}]},
++                {"role": "assistant", "content": [{"type": "text", "text": "Reply"}]},
++                {"role": "user", "content": [{"type": "text", "text": "Second message"}]},
++            ]
++        }
++        (d / "request.json").write_text(json.dumps(body))
++        ef.extract_prompts(str(tmp_path))
++        content = (d / "first_user_message.md").read_text()
++        assert content == "First message"
++
++
++# ---------------------------------------------------------------------------
++# Tests: calculate_costs
++# ---------------------------------------------------------------------------
++
++class TestCalculateCosts:
++    def test_calculates_cost_for_known_model(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {"model": "claude-sonnet-4-6"}
++        (d / "request.json").write_text(json.dumps(body))
++        usage = {"input_tokens": 1000, "output_tokens": 500,
++                 "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.calculate_costs(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        assert "cost" in result
++        assert result["cost"]["input"]["tokens"] == 1000
++        assert result["cost"]["output"]["tokens"] == 500
++        assert result["cost"]["total"]["tokens"] == 1500
++        assert abs(result["cost"]["input"]["dollars"] - 1000 * 3e-6) < 1e-10
++
++    def test_unknown_model_skipped(self, tmp_path, capsys):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {"model": "gpt-4o"}
++        (d / "request.json").write_text(json.dumps(body))
++        usage = {"input_tokens": 100, "output_tokens": 50}
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.calculate_costs(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        assert "cost" not in result
++        captured = capsys.readouterr()
++        assert "Warning" in captured.out
++
++    def test_token_keys_removed_after_cost(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {"model": "claude-haiku-4-5"}
++        (d / "request.json").write_text(json.dumps(body))
++        usage = {"input_tokens": 100, "output_tokens": 50,
++                 "cache_creation_input_tokens": 10, "cache_read_input_tokens": 5}
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.calculate_costs(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        for key in ("input_tokens", "output_tokens", "cache_creation_input_tokens", "cache_read_input_tokens"):
++            assert key not in result
++
++    def test_canonical_model_set(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {"model": "claude-sonnet-4-6-20250101"}
++        (d / "request.json").write_text(json.dumps(body))
++        usage = {"input_tokens": 100, "output_tokens": 50,
++                 "cache_creation_input_tokens": 0, "cache_read_input_tokens": 0}
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.calculate_costs(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        assert result["model"] == "claude-sonnet-4-6"
++
++    def test_no_model_key_skipped(self, tmp_path):
++        d = tmp_path / "1" / "1"
++        d.mkdir(parents=True)
++        body = {}
++        (d / "request.json").write_text(json.dumps(body))
++        usage = {"input_tokens": 100, "output_tokens": 50}
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.calculate_costs(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        assert "cost" not in result
++
++
++# ---------------------------------------------------------------------------
++# Tests: _aggregate_by_source
++# ---------------------------------------------------------------------------
++
++class TestAggregateBySource:
++    def test_basic_tool_results_aggregation(self):
++        agg = {"input": {}, "output": {}}
++        flow_by_source = {
++            "input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.001, "chars": 100}}},
++            "output": {},
++        }
++        ef._aggregate_by_source(agg, flow_by_source)
++        assert agg["input"]["tool_results"]["Read"]["tokens"] == 10
++        ef._aggregate_by_source(agg, flow_by_source)
++        assert agg["input"]["tool_results"]["Read"]["tokens"] == 20
++
++    def test_llm_text_output_aggregation(self):
++        agg = {"input": {}, "output": {}}
++        flow = {"input": {}, "output": {"llm_text": {"tokens": 30, "dollars": 0.002, "chars": 200}}}
++        ef._aggregate_by_source(agg, flow)
++        assert agg["output"]["llm_text"]["tokens"] == 30
++
++    def test_tool_calls_output_aggregation(self):
++        agg = {"input": {}, "output": {}}
++        flow = {
++            "input": {},
++            "output": {"tool_calls": {"Write": {"tokens": 5, "dollars": 0.001, "chars": 50}}},
++        }
++        ef._aggregate_by_source(agg, flow)
++        assert agg["output"]["tool_calls"]["Write"]["tokens"] == 5
++
++    def test_empty_flow_no_changes(self):
++        agg = {"input": {}, "output": {}}
++        ef._aggregate_by_source(agg, {"input": {}, "output": {}})
++        assert agg == {"input": {}, "output": {}}
++
++
++# ---------------------------------------------------------------------------
++# Tests: _round_by_source
++# ---------------------------------------------------------------------------
++
++class TestRoundBySource:
++    def test_rounds_input_tool_results(self):
++        agg = {
++            "input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.0000001234567, "chars": 100}}},
++            "output": {},
++        }
++        ef._round_by_source(agg)
++        assert agg["input"]["tool_results"]["Read"]["dollars"] == round(0.0000001234567, 6)
++
++    def test_rounds_output_llm_text(self):
++        agg = {
++            "input": {},
++            "output": {"llm_text": {"tokens": 5, "dollars": 0.0000009876543, "chars": 50}},
++        }
++        ef._round_by_source(agg)
++        assert agg["output"]["llm_text"]["dollars"] == round(0.0000009876543, 6)
++
++    def test_rounds_output_tool_calls(self):
++        agg = {
++            "input": {},
++            "output": {"tool_calls": {"Write": {"tokens": 3, "dollars": 0.0000123456789, "chars": 30}}},
++        }
++        ef._round_by_source(agg)
++        assert agg["output"]["tool_calls"]["Write"]["dollars"] == round(0.0000123456789, 6)
++
++
++# ---------------------------------------------------------------------------
++# Tests: _agent_color
++# ---------------------------------------------------------------------------
++
++class TestAgentColor:
++    def test_returns_hex_color(self):
++        color = ef._agent_color("myagent")
++        assert color.startswith("#")
++        assert len(color) == 7
++
++    def test_deterministic(self):
++        assert ef._agent_color("foo") == ef._agent_color("foo")
++
++    def test_different_agents_different_colors(self):
++        assert ef._agent_color("agent_a") != ef._agent_color("agent_b")
++
++
++# ---------------------------------------------------------------------------
++# Tests: extract_source_attribution
++# ---------------------------------------------------------------------------
++
++class TestExtractSourceAttribution:
++    def test_enriches_usage_json(self, tmp_path):
++        d = tmp_path / "agent" / "1" / "1"
++        d.mkdir(parents=True)
++        body = {
++            "model": "claude-sonnet-4-6",
++            "messages": [
++                {
++                    "role": "assistant",
++                    "content": [{"type": "tool_use", "id": "tu1", "name": "Read", "input": {"file_path": "/foo"}}],
++                },
++                {
++                    "role": "user",
++                    "content": [{"type": "tool_result", "tool_use_id": "tu1", "content": "data"}],
++                },
++            ],
++        }
++        (d / "request.json").write_text(json.dumps(body))
++        sse = _make_response_sse()
++        (d / "response_raw.txt").write_text(sse)
++        usage = {
++            "cost": {
++                "input": {"tokens": 100, "dollars": 0.0003},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": 50, "dollars": 0.00075},
++                "total": {"tokens": 150, "dollars": 0.00105},
++            }
++        }
++        (d / "usage.json").write_text(json.dumps(usage))
++        ef.extract_source_attribution(str(tmp_path))
++        result = json.loads((d / "usage.json").read_text())
++        assert "by_source" in result
++        assert "read_file_whitespace" in result
++        assert "file_ops" in result
++
++
++# ---------------------------------------------------------------------------
++# Tests: summarize_usage
++# ---------------------------------------------------------------------------
++
++class TestSummarizeUsage:
++    def _create_agent_dir(self, base, agent_name, steps):
++        """Create a fake agent directory with numbered step/request dirs.
++        steps: list of dicts {step: int, req: int, usage: dict}
++        """
++        agent_dir = base / agent_name
++        agent_dir.mkdir()
++        for item in steps:
++            d = agent_dir / str(item["step"]) / str(item["req"])
++            d.mkdir(parents=True, exist_ok=True)
++            (d / "usage.json").write_text(json.dumps(item["usage"]))
++
++    def test_creates_summary_for_agent_dir(self, tmp_path):
++        usage = {
++            "model": "claude-sonnet-4-6",
++            "cost": {
++                "input": {"tokens": 100, "dollars": 0.0003},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": 50, "dollars": 0.00075},
++                "total": {"tokens": 150, "dollars": 0.00105},
++            },
++            "timing": {"request_start": 1000.0, "response_end": 1002.0, "duration_ms": 2000},
++        }
++        self._create_agent_dir(tmp_path, "vix", [{"step": 1, "req": 1, "usage": usage}])
++        ef.summarize_usage(str(tmp_path))
++        summary_path = tmp_path / "vix" / "usage.json"
++        assert summary_path.exists()
++        summary = json.loads(summary_path.read_text())
++        assert summary["title"] == "vix"
++        assert summary["color"] == ef.AGENT_COLORS["vix"]
++        assert summary["total"]["request_count"] == 1
++
++    def test_known_agent_color(self, tmp_path):
++        usage = {
++            "model": "claude-sonnet-4-6",
++            "cost": {f: {"tokens": 0, "dollars": 0.0} for f in ["input", "cache_write", "cache_read", "output", "total"]},
++        }
++        self._create_agent_dir(tmp_path, "cc", [{"step": 1, "req": 1, "usage": usage}])
++        ef.summarize_usage(str(tmp_path))
++        summary = json.loads((tmp_path / "cc" / "usage.json").read_text())
++        assert summary["color"] == ef.AGENT_COLORS["cc"]
++
++    def test_unknown_agent_uses_hash_color(self, tmp_path):
++        usage = {
++            "model": "claude-sonnet-4-6",
++            "cost": {f: {"tokens": 0, "dollars": 0.0} for f in ["input", "cache_write", "cache_read", "output", "total"]},
++        }
++        self._create_agent_dir(tmp_path, "mybot", [{"step": 1, "req": 1, "usage": usage}])
++        ef.summarize_usage(str(tmp_path))
++        summary = json.loads((tmp_path / "mybot" / "usage.json").read_text())
++        assert summary["color"].startswith("#")
++
++    def test_aggregates_multiple_steps(self, tmp_path):
++        usage1 = {
++            "model": "claude-sonnet-4-6",
++            "cost": {
++                "input": {"tokens": 100, "dollars": 0.0003},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": 50, "dollars": 0.00075},
++                "total": {"tokens": 150, "dollars": 0.00105},
++            },
++        }
++        usage2 = {
++            "model": "claude-sonnet-4-6",
++            "cost": {
++                "input": {"tokens": 200, "dollars": 0.0006},
++                "cache_write": {"tokens": 0, "dollars": 0.0},
++                "cache_read": {"tokens": 0, "dollars": 0.0},
++                "output": {"tokens": 100, "dollars": 0.0015},
++                "total": {"tokens": 300, "dollars": 0.0021},
++            },
++        }
++        self._create_agent_dir(tmp_path, "vix", [
++            {"step": 1, "req": 1, "usage": usage1},
++            {"step": 2, "req": 1, "usage": usage2},
++        ])
++        ef.summarize_usage(str(tmp_path))
++        summary = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert summary["total"]["request_count"] == 2
++        assert summary["total"]["cost"]["input"]["tokens"] == 300
++        assert "1" in summary["by_step"]
++        assert "2" in summary["by_step"]
++
++    def test_non_dir_entries_skipped(self, tmp_path):
++        (tmp_path / "README.md").write_text("not a dir")
++        ef.summarize_usage(str(tmp_path))  # should not crash
++
++    def test_dirs_without_numbered_subdirs_skipped(self, tmp_path):
++        d = tmp_path / "agent"
++        d.mkdir()
++        (d / "some_file.txt").write_text("data")
++        ef.summarize_usage(str(tmp_path))
++        assert not (d / "usage.json").exists()
++
++    def test_wall_clock_computed(self, tmp_path):
++        usage = {
++            "model": "claude-sonnet-4-6",
++            "cost": {f: {"tokens": 0, "dollars": 0.0} for f in ["input", "cache_write", "cache_read", "output", "total"]},
++            "timing": {"request_start": 1000.0, "response_end": 1005.0, "duration_ms": 5000},
++        }
++        self._create_agent_dir(tmp_path, "vix", [{"step": 1, "req": 1, "usage": usage}])
++        ef.summarize_usage(str(tmp_path))
++        summary = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert summary["total"]["timing"]["wall_clock_ms"] == 5000
++
++    def test_by_source_aggregated(self, tmp_path):
++        usage = {
++            "model": "claude-sonnet-4-6",
++            "cost": {f: {"tokens": 0, "dollars": 0.0} for f in ["input", "cache_write", "cache_read", "output", "total"]},
++            "by_source": {
++                "input": {"tool_results": {"Read": {"tokens": 10, "dollars": 0.001, "chars": 100}}},
++                "output": {"llm_text": {"tokens": 5, "dollars": 0.0005, "chars": 50}},
++            },
++        }
++        self._create_agent_dir(tmp_path, "vix", [{"step": 1, "req": 1, "usage": usage}])
++        ef.summarize_usage(str(tmp_path))
++        summary = json.loads((tmp_path / "vix" / "usage.json").read_text())
++        assert "by_source" in summary
++        assert "Read" in summary["by_source"]["input"]["tool_results"]
++
++
++# ---------------------------------------------------------------------------
++# Tests: redact_flow_files (mocked mitmproxy)
++# ---------------------------------------------------------------------------
++
++class TestRedactFlowFiles:
++    def test_no_flow_files_returns_early(self, tmp_path):
++        # No .flow files in dir → should not crash
++        ef.redact_flow_files(str(tmp_path))
++
++    @patch("export_flows.FlowReader")
++    @patch("export_flows.FlowWriter")
++    def test_redacts_api_key_header(self, mock_writer_cls, mock_reader_cls, tmp_path):
++        flow_file = tmp_path / "test.flow"
++        flow_file.write_bytes(b"dummy")
++
++        # Create a mock HTTPFlow - use __class__ trick so isinstance(mock, HTTPFlow) is True
++        mock_flow = MagicMock()
++        mock_flow.__class__ = ef.HTTPFlow
++        mock_flow.request.headers.get.side_effect = lambda h: b"secret" if h == b"x-api-key" else None
++
++        # FlowReader context: stream() yields one flow
++        mock_reader = MagicMock()
++        mock_reader.stream.return_value = [mock_flow]
++        mock_reader_cls.return_value = mock_reader
++
++        mock_writer = MagicMock()
++        mock_writer_cls.return_value = mock_writer
++
++        ef.redact_flow_files(str(tmp_path))
++
++        # The header should have been set to [REDACTED]
++        mock_flow.request.headers.__setitem__.assert_called()
++
++    @patch("export_flows.FlowReader")
++    def test_flow_read_exception_skipped(self, mock_reader_cls, tmp_path, capsys):
++        flow_file = tmp_path / "bad.flow"
++        flow_file.write_bytes(b"corrupted")
++
++        from mitmproxy.exceptions import FlowReadException
++        mock_reader = MagicMock()
++        mock_reader.stream.side_effect = FlowReadException("bad")
++        mock_reader_cls.return_value = mock_reader
++
++        ef.redact_flow_files(str(tmp_path))
++        captured = capsys.readouterr()
++        assert "Skipping" in captured.out
++
++
++# ---------------------------------------------------------------------------
++# Tests: export_flows (mocked mitmproxy)
++# ---------------------------------------------------------------------------
++
++class TestExportFlows:
++    def test_no_flow_files_prints_message(self, tmp_path, capsys):
++        ef.export_flows(str(tmp_path), str(tmp_path / "out"))
++        captured = capsys.readouterr()
++        assert "No *.flow files found" in captured.out
++
++    def _make_mock_flow(self, url="https://api.anthropic.com/v1/messages",
++                        body=None, stop_reason="end_turn",
++                        req_start=1000.0, resp_end=1001.0):
++        """Build a mock HTTPFlow for export_flows tests."""
++        # Use __class__ trick so isinstance(flow, HTTPFlow) returns True
++        flow = MagicMock()
++        flow.__class__ = ef.HTTPFlow
++        if body is None:
++            body = json.dumps({
++                "model": "claude-sonnet-4-6",
++                "system": [{"type": "text", "text": "You are helpful."}],
++                "messages": [{"role": "user", "content": [{"type": "text", "text": "Hello"}]}],
++            })
++
++        flow.request.pretty_url = url
++        flow.request.method = "POST"
++        flow.request.get_text.return_value = body
++        flow.request.timestamp_start = req_start
++
++        # Headers
++        hdr = MagicMock()
++        hdr.fields = [(b"content-type", b"application/json")]
++        flow.request.headers = hdr
++
++        # Response
++        resp_body = f'data: {{"type":"message_delta","delta":{{"stop_reason":"{stop_reason}"}},"usage":{{"input_tokens":10,"output_tokens":5}}}}'
++        flow.response.status_code = 200
++        flow.response.reason = "OK"
++        flow.response.get_text.return_value = resp_body
++        flow.response.timestamp_end = resp_end
++        resp_hdr = MagicMock()
++        resp_hdr.fields = [(b"content-type", b"text/event-stream")]
++        flow.response.headers = resp_hdr
++
++        return flow
++
++    @patch("export_flows.FlowReader")
++    def test_count_token_url_skipped(self, mock_reader_cls, tmp_path):
++        flow_file = tmp_path / "vix.flow"
++        flow_file.write_bytes(b"dummy")
++        mock_flow = self._make_mock_flow(url="https://api.anthropic.com/v1/count_token")
++        mock_reader = MagicMock()
++        mock_reader.stream.return_value = [mock_flow]
++        mock_reader_cls.return_value = mock_reader
++
++        out = tmp_path / "out"
++        out.mkdir()
++        ef.export_flows(str(tmp_path), str(out))
++        # count_token flows should be skipped → no step dirs created
++        vix_dir = out / "vix"
++        assert not (vix_dir / "1").exists()
++
++    @patch("export_flows.FlowReader")
++    def test_quota_request_skipped(self, mock_reader_cls, tmp_path):
++        flow_file = tmp_path / "vix.flow"
++        flow_file.write_bytes(b"dummy")
++        quota_body = json.dumps({
++            "messages": [{"role": "user", "content": "quota"}],
++        })
++        mock_flow = self._make_mock_flow(body=quota_body)
++        mock_reader = MagicMock()
++        mock_reader.stream.return_value = [mock_flow]
++        mock_reader_cls.return_value = mock_reader
++
++        out = tmp_path / "out"
++        out.mkdir()
++        ef.export_flows(str(tmp_path), str(out))
++        vix_dir = out / "vix"
++        assert not (vix_dir / "1").exists()
++
++    @patch("export_flows.FlowReader")
++    def test_vix_step_increments_on_end_turn(self, mock_reader_cls, tmp_path):
++        flow_file = tmp_path / "vix.flow"
++        flow_file.write_bytes(b"dummy")
++
++        flow1 = self._make_mock_flow(stop_reason="end_turn")
++        flow2 = self._make_mock_flow(stop_reason="tool_use")
++
++        mock_reader = MagicMock()
++        mock_reader.stream.return_value = [flow1, flow2]
++        mock_reader_cls.return_value = mock_reader
++
++        out = tmp_path / "out"
++        out.mkdir()
++        ef.export_flows(str(tmp_path), str(out))
++
++        vix_dir = out / "vix"
++        # After end_turn on flow1, step increments → flow2 goes to step 2
++        assert (vix_dir / "1" / "1").exists()
++        assert (vix_dir / "2" / "1").exists()
++
++    @patch("export_flows.FlowReader")
++    def test_cc_step_increments_on_prompt_hash_change(self, mock_reader_cls, tmp_path):
++        flow_file = tmp_path / "cc.flow"
++        flow_file.write_bytes(b"dummy")
++
++        def make_cc_body(prompt_text):
++            return json.dumps({
++                "model": "claude-sonnet-4-6",
++                "system": [
++                    {"type": "text", "text": "zero"},
++                    {"type": "text", "text": "one"},
++                    {"type": "text", "text": prompt_text},
++                ],
++                "messages": [{"role": "user", "content": [{"type": "text", "text": "hi"}]}],
++            })
++
++        flow1 = self._make_mock_flow(body=make_cc_body("prompt_A"), stop_reason="tool_use")
++        flow2 = self._make_mock_flow(body=make_cc_body("prompt_B"), stop_reason="tool_use")
++
++        mock_reader = MagicMock()
++        mock_reader.stream.return_value = [flow1, flow2]
++        mock_reader_cls.return_value = mock_reader
++
++        out = tmp_path / "out"
++        out.mkdir()
++        ef.export_flows(str(tmp_path), str(out))
++
++        cc_dir = out / "cc"
++        # flow1 → step 1, flow2 → step 2 (prompt hash changed)
++        assert (cc_dir / "1" / "1").exists()
++        assert (cc_dir / "2" / "1").exists()
++
++    @patch("export_flows.FlowReader")
++    def test_flow_read_exception_skipped(self, mock_reader_cls, tmp_path, capsys):
++        flow_file = tmp_path / "vix.flow"
++        flow_file.write_bytes(b"corrupted")
++
++        from mitmproxy.exceptions import FlowReadException
++        mock_reader = MagicMock()
++        mock_reader.stream.side_effect = FlowReadException("bad flow")
++        mock_reader_cls.return_value = mock_reader
++
++        out = tmp_path / "out"
++        out.mkdir()
++        ef.export_flows(str(tmp_path), str(out))
++        captured = capsys.readouterr()
++        assert "Skipping" in captured.out
++
++
++# ---------------------------------------------------------------------------
++# Tests: main (integration-level smoke test)
++# ---------------------------------------------------------------------------
++
++class TestMain:
++    @patch("export_flows.summarize_usage")
++    @patch("export_flows.extract_source_attribution")
++    @patch("export_flows.calculate_costs")
++    @patch("export_flows.extract_prompts")
++    @patch("export_flows.export_parsed_responses")
++    @patch("export_flows.extract_usage")
++    @patch("export_flows.export_flows")
++    @patch("export_flows.redact_flow_files")
++    def test_main_calls_pipeline(self, mock_redact, mock_export, mock_usage, mock_parsed,
++                                  mock_prompts, mock_costs, mock_attr, mock_summarize, tmp_path):
++        with patch("sys.argv", ["export_flows.py",
++                                 "--input-directory", str(tmp_path),
++                                 "--output-directory", str(tmp_path)]):
++            ef.main()
++        mock_redact.assert_called_once()
++        mock_export.assert_called_once()
++        mock_usage.assert_called_once()
++        mock_parsed.assert_called_once()
++        mock_prompts.assert_called_once()
++        mock_costs.assert_called_once()
++        mock_attr.assert_called_once()
++        mock_summarize.assert_called_once()

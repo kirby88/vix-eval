@@ -1,0 +1,299 @@
+diff --git a/Sources/LRUFileCache/LRUFileCache.swift b/Sources/LRUFileCache/LRUFileCache.swift
+new file mode 100644
+index 0000000..8817ffc
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCache.swift
+@@ -0,0 +1,153 @@
++import Foundation
++
++public final class LRUFileCache {
++    private let config: LRUFileCacheConfig
++    private let cacheDirectory: URL
++    private let queue: DispatchQueue
++    private let index: LRUFileCacheIndex
++    private var evictionWorkItem: DispatchWorkItem?
++
++    public init(config: LRUFileCacheConfig, baseDirectory: URL) throws {
++        self.config = config
++        self.cacheDirectory = baseDirectory.appendingPathComponent(config.name, isDirectory: true)
++        self.queue = DispatchQueue(label: "com.lrufilecache.\(config.name)", qos: .userInitiated)
++
++        try FileManager.default.createDirectory(
++            at: cacheDirectory,
++            withIntermediateDirectories: true,
++            attributes: [.protectionKey: config.dataProtectionClass]
++        )
++
++        self.index = LRUFileCacheIndex(cacheDirectory: cacheDirectory, queue: queue)
++    }
++
++    // MARK: - Public API
++
++    public func add(key: String, data: Data) throws {
++        try queue.sync {
++            try _add(key: key, data: data)
++        }
++    }
++
++    public func update(key: String, data: Data) throws {
++        try add(key: key, data: data)
++    }
++
++    public func modify(key: String, data: Data) throws {
++        try queue.sync {
++            guard index.entries[key] != nil else {
++                throw LRUFileCacheError.keyNotFound(key)
++            }
++            try _add(key: key, data: data)
++        }
++    }
++
++    public func get(key: String) -> Data? {
++        queue.sync {
++            guard let entry = index.entries[key] else { return nil }
++            let fileURL = cacheDirectory.appendingPathComponent(entry.fileName)
++            guard let data = try? Data(contentsOf: fileURL) else {
++                index.remove(key: key)
++                index.save()
++                return nil
++            }
++            index.touch(key: key)
++            index.scheduleDebouncedSave(interval: config.evictionDebounceInterval)
++            return data
++        }
++    }
++
++    public func promote(key: String) throws {
++        try queue.sync {
++            guard index.entries[key] != nil else {
++                throw LRUFileCacheError.keyNotFound(key)
++            }
++            index.touch(key: key)
++            index.scheduleDebouncedSave(interval: config.evictionDebounceInterval)
++        }
++    }
++
++    // MARK: - Private helpers
++
++    private func _add(key: String, data: Data) throws {
++        ensureCacheDirectoryExists()
++
++        if let existing = index.entries[key] {
++            let oldURL = cacheDirectory.appendingPathComponent(existing.fileName)
++            moveToTmp(fileURL: oldURL)
++        }
++
++        let fileName = UUID().uuidString
++        let fileURL = cacheDirectory.appendingPathComponent(fileName)
++
++        try data.write(to: fileURL, options: .atomic)
++        try? FileManager.default.setAttributes(
++            [.protectionKey: config.dataProtectionClass],
++            ofItemAtPath: fileURL.path
++        )
++
++        let entry = IndexEntry(
++            key: key,
++            fileName: fileName,
++            lastAccessedDate: Date(),
++            byteSize: data.count
++        )
++        index.upsert(entry: entry)
++        index.save()
++        scheduleEviction()
++    }
++
++    private func ensureCacheDirectoryExists() {
++        if !FileManager.default.fileExists(atPath: cacheDirectory.path) {
++            try? FileManager.default.createDirectory(
++                at: cacheDirectory,
++                withIntermediateDirectories: true,
++                attributes: [.protectionKey: config.dataProtectionClass]
++            )
++        }
++    }
++
++    private func moveToTmp(fileURL: URL) {
++        let tmpDir = FileManager.default.temporaryDirectory
++        var destination = tmpDir.appendingPathComponent(fileURL.lastPathComponent)
++        if FileManager.default.fileExists(atPath: destination.path) {
++            destination = tmpDir.appendingPathComponent("\(UUID().uuidString)_\(fileURL.lastPathComponent)")
++        }
++        try? FileManager.default.moveItem(at: fileURL, to: destination)
++    }
++
++    private func scheduleEviction() {
++        evictionWorkItem?.cancel()
++        let item = DispatchWorkItem { [weak self] in
++            self?.performEviction()
++        }
++        evictionWorkItem = item
++        DispatchQueue.global(qos: .background).asyncAfter(
++            deadline: .now() + config.evictionDebounceInterval,
++            execute: item
++        )
++    }
++
++    private func performEviction() {
++        let toEvict: [IndexEntry] = queue.sync {
++            index.entriesExceedingLimits(
++                maxCount: config.maxEntryCount,
++                maxBytes: config.maxTotalBytes
++            )
++        }
++
++        guard !toEvict.isEmpty else { return }
++
++        for entry in toEvict {
++            let fileURL = cacheDirectory.appendingPathComponent(entry.fileName)
++            moveToTmp(fileURL: fileURL)
++        }
++
++        queue.sync {
++            for entry in toEvict {
++                index.remove(key: entry.key)
++            }
++            index.save()
++        }
++    }
++}
+diff --git a/Sources/LRUFileCache/LRUFileCacheConfig.swift b/Sources/LRUFileCache/LRUFileCacheConfig.swift
+new file mode 100644
+index 0000000..228b053
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCacheConfig.swift
+@@ -0,0 +1,23 @@
++import Foundation
++
++public struct LRUFileCacheConfig {
++    public let name: String
++    public let maxEntryCount: Int
++    public let maxTotalBytes: Int
++    public let evictionDebounceInterval: TimeInterval
++    public let dataProtectionClass: FileProtectionType
++
++    public init(
++        name: String,
++        maxEntryCount: Int,
++        maxTotalBytes: Int,
++        evictionDebounceInterval: TimeInterval = 1.0,
++        dataProtectionClass: FileProtectionType = .complete
++    ) {
++        self.name = name
++        self.maxEntryCount = maxEntryCount
++        self.maxTotalBytes = maxTotalBytes
++        self.evictionDebounceInterval = evictionDebounceInterval
++        self.dataProtectionClass = dataProtectionClass
++    }
++}
+diff --git a/Sources/LRUFileCache/LRUFileCacheError.swift b/Sources/LRUFileCache/LRUFileCacheError.swift
+new file mode 100644
+index 0000000..cd138f0
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCacheError.swift
+@@ -0,0 +1,5 @@
++import Foundation
++
++public enum LRUFileCacheError: Error {
++    case keyNotFound(String)
++}
+diff --git a/Sources/LRUFileCache/LRUFileCacheIndex.swift b/Sources/LRUFileCache/LRUFileCacheIndex.swift
+new file mode 100644
+index 0000000..e5d2ea4
+--- /dev/null
++++ b/Sources/LRUFileCache/LRUFileCacheIndex.swift
+@@ -0,0 +1,94 @@
++import Foundation
++
++struct IndexEntry: Codable {
++    let key: String
++    var fileName: String
++    var lastAccessedDate: Date
++    var byteSize: Int
++}
++
++final class LRUFileCacheIndex {
++    private(set) var entries: [String: IndexEntry] = [:]
++    private(set) var totalBytes: Int = 0
++
++    private let indexFileURL: URL
++    private var debouncedSaveWorkItem: DispatchWorkItem?
++    private let queue: DispatchQueue
++
++    init(cacheDirectory: URL, queue: DispatchQueue) {
++        self.indexFileURL = cacheDirectory.appendingPathComponent("index.json")
++        self.queue = queue
++        load()
++    }
++
++    private func load() {
++        guard let data = try? Data(contentsOf: indexFileURL) else { return }
++        guard let decoded = try? JSONDecoder().decode([IndexEntry].self, from: data) else { return }
++        for entry in decoded {
++            entries[entry.key] = entry
++        }
++        totalBytes = entries.values.reduce(0) { $0 + $1.byteSize }
++    }
++
++    func save() {
++        let list = Array(entries.values)
++        guard let data = try? JSONEncoder().encode(list) else { return }
++        try? data.write(to: indexFileURL, options: .atomic)
++    }
++
++    func scheduleDebouncedSave(interval: TimeInterval) {
++        debouncedSaveWorkItem?.cancel()
++        let item = DispatchWorkItem { [weak self] in
++            self?.queue.sync {
++                self?.save()
++            }
++        }
++        debouncedSaveWorkItem = item
++        DispatchQueue.global(qos: .utility).asyncAfter(deadline: .now() + interval, execute: item)
++    }
++
++    func upsert(entry: IndexEntry) {
++        if let existing = entries[entry.key] {
++            totalBytes -= existing.byteSize
++        }
++        entries[entry.key] = entry
++        totalBytes += entry.byteSize
++    }
++
++    func remove(key: String) {
++        if let existing = entries[key] {
++            totalBytes -= existing.byteSize
++            entries.removeValue(forKey: key)
++        }
++    }
++
++    func touch(key: String) {
++        entries[key]?.lastAccessedDate = Date()
++    }
++
++    func entriesExceedingLimits(maxCount: Int, maxBytes: Int) -> [IndexEntry] {
++        let overCount = entries.count - maxCount
++        let overBytes = totalBytes - maxBytes
++        guard overCount > 0 || overBytes > 0 else { return [] }
++
++        let sorted = entries.values.sorted { $0.lastAccessedDate < $1.lastAccessedDate }
++
++        var toEvict: [IndexEntry] = []
++        var removedCount = 0
++        var removedBytes = 0
++
++        for entry in sorted {
++            let stillOverCount = (entries.count - removedCount) > maxCount
++            let stillOverBytes = (totalBytes - removedBytes) > maxBytes
++            if stillOverCount || stillOverBytes {
++                toEvict.append(entry)
++                removedCount += 1
++                removedBytes += entry.byteSize
++            } else {
++                break
++            }
++        }
++
++        return toEvict
++    }
++}

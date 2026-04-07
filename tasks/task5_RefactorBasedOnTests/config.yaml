@@ -1,0 +1,14 @@
+test_id: task5_RefactorBasedOnTests
+languages: [python]
+description: >
+  Give a passing test suite + code with a structural problem (e.g. a God struct, no error wrapping, hardcoded constants). Ask both to refactor. Pass = tests still green. Measures how much each agent reads before touching files, and how many edit/verify cycles it takes.
+
+workspace: workspace/
+
+agents:
+  claude-code:
+    type: claude-code
+    version: latest
+  vix:
+    type: vix
+    version: latest

@@ -1,0 +1,2847 @@
+{
+  "title": "vix",
+  "color": "#7B2FBE",
+  "by_run": {
+    "20260406-103306": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 12,
+          "cost": {
+            "input": {
+              "tokens": 18,
+              "dollars": 5.4e-05
+            },
+            "cache_write": {
+              "tokens": 24664,
+              "dollars": 0.092491
+            },
+            "cache_read": {
+              "tokens": 99684,
+              "dollars": 0.029905
+            },
+            "output": {
+              "tokens": 9576,
+              "dollars": 0.14364
+            },
+            "total": {
+              "tokens": 133942,
+              "dollars": 0.26609
+            }
+          },
+          "timing": {
+            "total_duration_ms": 146606,
+            "wall_clock_ms": 160973,
+            "avg_duration_ms": 12217
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 2,
+          "cost": {
+            "input": {
+              "tokens": 4,
+              "dollars": 1.2e-05
+            },
+            "cache_write": {
+              "tokens": 7770,
+              "dollars": 0.029138
+            },
+            "cache_read": {
+              "tokens": 7117,
+              "dollars": 0.002135
+            },
+            "output": {
+              "tokens": 210,
+              "dollars": 0.00315
+            },
+            "total": {
+              "tokens": 15101,
+              "dollars": 0.034435
+            }
+          },
+          "timing": {
+            "total_duration_ms": 6595,
+            "wall_clock_ms": 6604,
+            "avg_duration_ms": 3298
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 412,
+                  "dollars": 0.001545,
+                  "chars": 1601
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 75,
+                  "dollars": 0.000281,
+                  "chars": 293
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 99,
+                "dollars": 0.001488,
+                "chars": 347
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 111,
+                  "dollars": 0.001662,
+                  "chars": 253
+                },
+                "glob_files": {
+                  "tokens": 111,
+                  "dollars": 0.001662,
+                  "chars": 253
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1310,
+              "dollars": 0.004913
+            },
+            "cache_read": {
+              "tokens": 7770,
+              "dollars": 0.002331
+            },
+            "output": {
+              "tokens": 2825,
+              "dollars": 0.042375
+            },
+            "total": {
+              "tokens": 11908,
+              "dollars": 0.049628
+            }
+          },
+          "timing": {
+            "total_duration_ms": 53673,
+            "wall_clock_ms": 53673,
+            "avg_duration_ms": 53673
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 407,
+                  "dollars": 0.000122,
+                  "chars": 1601
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 75,
+                  "dollars": 2.2e-05,
+                  "chars": 293
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 2825,
+                "dollars": 0.042375,
+                "chars": 10292
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 9,
+          "cost": {
+            "input": {
+              "tokens": 11,
+              "dollars": 3.3e-05
+            },
+            "cache_write": {
+              "tokens": 15584,
+              "dollars": 0.05844
+            },
+            "cache_read": {
+              "tokens": 84797,
+              "dollars": 0.025439
+            },
+            "output": {
+              "tokens": 6541,
+              "dollars": 0.098115
+            },
+            "total": {
+              "tokens": 106933,
+              "dollars": 0.182027
+            }
+          },
+          "timing": {
+            "total_duration_ms": 86338,
+            "wall_clock_ms": 86513,
+            "avg_duration_ms": 9593
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 415,
+                  "dollars": 0.00063,
+                  "chars": 1575
+                },
+                "write_file": {
+                  "tokens": 1383,
+                  "dollars": 0.001473,
+                  "chars": 5263
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 540,
+                  "dollars": 0.000587,
+                  "chars": 2071
+                },
+                "write_file": {
+                  "tokens": 14647,
+                  "dollars": 0.022144,
+                  "chars": 55218
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 585,
+                "dollars": 0.008761,
+                "chars": 1879
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 5956,
+                  "dollars": 0.089354,
+                  "chars": 19680
+                },
+                "glob_files": {
+                  "tokens": 205,
+                  "dollars": 0.003084,
+                  "chars": 388
+                },
+                "write_file": {
+                  "tokens": 5751,
+                  "dollars": 0.08627,
+                  "chars": 19292
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 6,
+              "unique_files_written": 6,
+              "total_write_chars": 17795,
+              "per_file": {
+                "/workspace/Package.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 532
+                },
+                "/workspace/Sources/DiskCache/CacheConfiguration.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 664
+                },
+                "/workspace/Sources/DiskCache/CacheEntry.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 124
+                },
+                "/workspace/Sources/DiskCache/CacheError.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 126
+                },
+                "/workspace/Sources/DiskCache/DiskCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 7248
+                },
+                "/workspace/Tests/DiskCacheTests/DiskCacheTests.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 9101
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 1234,
+              "dollars": 0.002297,
+              "chars": 4777
+            },
+            "write_file": {
+              "tokens": 1383,
+              "dollars": 0.001473,
+              "chars": 5263
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 690,
+              "dollars": 0.00089,
+              "chars": 2657
+            },
+            "write_file": {
+              "tokens": 14647,
+              "dollars": 0.022144,
+              "chars": 55218
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 3509,
+            "dollars": 0.052624,
+            "chars": 12518
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 6067,
+              "dollars": 0.091016,
+              "chars": 19933
+            },
+            "glob_files": {
+              "tokens": 316,
+              "dollars": 0.004746,
+              "chars": 641
+            },
+            "write_file": {
+              "tokens": 5751,
+              "dollars": 0.08627,
+              "chars": 19292
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 0,
+        "unnecessary_space_count": 0,
+        "total_chars": 0
+      },
+      "total": {
+        "request_count": 12,
+        "cost": {
+          "input": {
+            "tokens": 18,
+            "dollars": 5.4e-05
+          },
+          "cache_write": {
+            "tokens": 24664,
+            "dollars": 0.092491
+          },
+          "cache_read": {
+            "tokens": 99684,
+            "dollars": 0.029905
+          },
+          "output": {
+            "tokens": 9576,
+            "dollars": 0.14364
+          },
+          "total": {
+            "tokens": 133942,
+            "dollars": 0.26609
+          }
+        },
+        "timing": {
+          "total_duration_ms": 146606,
+          "wall_clock_ms": 160973,
+          "avg_duration_ms": 12217
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 0,
+            "total_read_chars": 0,
+            "per_file": {}
+          },
+          "output": {
+            "files_written": 6,
+            "unique_files_written": 6,
+            "total_write_chars": 17795,
+            "per_file": {
+              "/workspace/Package.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 532
+              },
+              "/workspace/Sources/DiskCache/CacheConfiguration.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 664
+              },
+              "/workspace/Sources/DiskCache/CacheEntry.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 124
+              },
+              "/workspace/Sources/DiskCache/CacheError.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 126
+              },
+              "/workspace/Sources/DiskCache/DiskCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 7248
+              },
+              "/workspace/Tests/DiskCacheTests/DiskCacheTests.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 9101
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-103315": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 15,
+          "cost": {
+            "input": {
+              "tokens": 21,
+              "dollars": 6.3e-05
+            },
+            "cache_write": {
+              "tokens": 20105,
+              "dollars": 0.075393
+            },
+            "cache_read": {
+              "tokens": 138233,
+              "dollars": 0.041469
+            },
+            "output": {
+              "tokens": 7924,
+              "dollars": 0.11886
+            },
+            "total": {
+              "tokens": 166283,
+              "dollars": 0.235786
+            }
+          },
+          "timing": {
+            "total_duration_ms": 138137,
+            "wall_clock_ms": 166303,
+            "avg_duration_ms": 9209
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 4,
+          "cost": {
+            "input": {
+              "tokens": 6,
+              "dollars": 1.8e-05
+            },
+            "cache_write": {
+              "tokens": 1597,
+              "dollars": 0.005989
+            },
+            "cache_read": {
+              "tokens": 29879,
+              "dollars": 0.008964
+            },
+            "output": {
+              "tokens": 553,
+              "dollars": 0.008295
+            },
+            "total": {
+              "tokens": 32035,
+              "dollars": 0.023266
+            }
+          },
+          "timing": {
+            "total_duration_ms": 12519,
+            "wall_clock_ms": 12548,
+            "avg_duration_ms": 3130
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "bash": {
+                  "tokens": 1032,
+                  "dollars": 0.001548,
+                  "chars": 3986
+                },
+                "read_minified_file": {
+                  "tokens": 638,
+                  "dollars": 0.002393,
+                  "chars": 2447
+                }
+              },
+              "tool_calls": {
+                "bash": {
+                  "tokens": 576,
+                  "dollars": 0.000967,
+                  "chars": 2225
+                },
+                "read_minified_file": {
+                  "tokens": 57,
+                  "dollars": 0.000214,
+                  "chars": 220
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 85,
+                "dollars": 0.00127,
+                "chars": 303
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 468,
+                  "dollars": 0.007025,
+                  "chars": 992
+                },
+                "bash": {
+                  "tokens": 376,
+                  "dollars": 0.005645,
+                  "chars": 812
+                },
+                "read_minified_file": {
+                  "tokens": 92,
+                  "dollars": 0.00138,
+                  "chars": 180
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1291,
+              "dollars": 0.004841
+            },
+            "cache_read": {
+              "tokens": 8714,
+              "dollars": 0.002614
+            },
+            "output": {
+              "tokens": 2787,
+              "dollars": 0.041805
+            },
+            "total": {
+              "tokens": 12795,
+              "dollars": 0.049269
+            }
+          },
+          "timing": {
+            "total_duration_ms": 54876,
+            "wall_clock_ms": 54876,
+            "avg_duration_ms": 54876
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "bash": {
+                  "tokens": 359,
+                  "dollars": 0.000108,
+                  "chars": 1394
+                },
+                "read_minified_file": {
+                  "tokens": 630,
+                  "dollars": 0.000189,
+                  "chars": 2447
+                }
+              },
+              "tool_calls": {
+                "bash": {
+                  "tokens": 230,
+                  "dollars": 6.9e-05,
+                  "chars": 892
+                },
+                "read_minified_file": {
+                  "tokens": 57,
+                  "dollars": 1.7e-05,
+                  "chars": 220
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 2787,
+                "dollars": 0.041805,
+                "chars": 10567
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 10,
+          "cost": {
+            "input": {
+              "tokens": 12,
+              "dollars": 3.6e-05
+            },
+            "cache_write": {
+              "tokens": 17217,
+              "dollars": 0.064563
+            },
+            "cache_read": {
+              "tokens": 99640,
+              "dollars": 0.029891
+            },
+            "output": {
+              "tokens": 4584,
+              "dollars": 0.06876
+            },
+            "total": {
+              "tokens": 121453,
+              "dollars": 0.163251
+            }
+          },
+          "timing": {
+            "total_duration_ms": 70742,
+            "wall_clock_ms": 70894,
+            "avg_duration_ms": 7074
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 3949,
+                  "dollars": 0.002679,
+                  "chars": 15039
+                },
+                "bash": {
+                  "tokens": 305,
+                  "dollars": 0.00022,
+                  "chars": 1160
+                },
+                "write_file": {
+                  "tokens": 1206,
+                  "dollars": 0.001111,
+                  "chars": 4566
+                },
+                "edit_file": {
+                  "tokens": 291,
+                  "dollars": 0.000484,
+                  "chars": 1095
+                },
+                "read_file_uncompressed": {
+                  "tokens": 2729,
+                  "dollars": 0.010234,
+                  "chars": 10107
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 555,
+                  "dollars": 0.000378,
+                  "chars": 2115
+                },
+                "bash": {
+                  "tokens": 748,
+                  "dollars": 0.000542,
+                  "chars": 2840
+                },
+                "write_file": {
+                  "tokens": 11820,
+                  "dollars": 0.012217,
+                  "chars": 44680
+                },
+                "edit_file": {
+                  "tokens": 901,
+                  "dollars": 0.001605,
+                  "chars": 3382
+                },
+                "read_file_uncompressed": {
+                  "tokens": 113,
+                  "dollars": 0.000424,
+                  "chars": 418
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 971,
+                "dollars": 0.014555,
+                "chars": 3025
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3613,
+                  "dollars": 0.054205,
+                  "chars": 11662
+                },
+                "glob_files": {
+                  "tokens": 103,
+                  "dollars": 0.001549,
+                  "chars": 195
+                },
+                "bash": {
+                  "tokens": 163,
+                  "dollars": 0.002446,
+                  "chars": 315
+                },
+                "write_file": {
+                  "tokens": 2749,
+                  "dollars": 0.041235,
+                  "chars": 9424
+                },
+                "edit_file": {
+                  "tokens": 486,
+                  "dollars": 0.00729,
+                  "chars": 1390
+                },
+                "read_file_uncompressed": {
+                  "tokens": 112,
+                  "dollars": 0.001685,
+                  "chars": 338
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 247,
+            "unnecessary_space_count": 1980,
+            "total_chars": 9334
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 9334,
+              "per_file": {
+                "/workspace/Sources/LRUFileCache/LRUFileCacheIndex.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3449
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 5885
+                }
+              }
+            },
+            "output": {
+              "files_written": 4,
+              "unique_files_written": 4,
+              "total_write_chars": 1353,
+              "per_file": {
+                "/workspace/Sources/LRUFileCache/LRUFileCacheConfig.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 716
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCacheError.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 89
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCacheIndex.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 164
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 384
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "bash": {
+              "tokens": 1696,
+              "dollars": 0.001876,
+              "chars": 6540
+            },
+            "read_minified_file": {
+              "tokens": 1268,
+              "dollars": 0.002582,
+              "chars": 4894
+            },
+            "glob_files": {
+              "tokens": 3949,
+              "dollars": 0.002679,
+              "chars": 15039
+            },
+            "write_file": {
+              "tokens": 1206,
+              "dollars": 0.001111,
+              "chars": 4566
+            },
+            "edit_file": {
+              "tokens": 291,
+              "dollars": 0.000484,
+              "chars": 1095
+            },
+            "read_file_uncompressed": {
+              "tokens": 2729,
+              "dollars": 0.010234,
+              "chars": 10107
+            }
+          },
+          "tool_calls": {
+            "bash": {
+              "tokens": 1554,
+              "dollars": 0.001578,
+              "chars": 5957
+            },
+            "read_minified_file": {
+              "tokens": 114,
+              "dollars": 0.000231,
+              "chars": 440
+            },
+            "glob_files": {
+              "tokens": 555,
+              "dollars": 0.000378,
+              "chars": 2115
+            },
+            "write_file": {
+              "tokens": 11820,
+              "dollars": 0.012217,
+              "chars": 44680
+            },
+            "edit_file": {
+              "tokens": 901,
+              "dollars": 0.001605,
+              "chars": 3382
+            },
+            "read_file_uncompressed": {
+              "tokens": 113,
+              "dollars": 0.000424,
+              "chars": 418
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 3843,
+            "dollars": 0.05763,
+            "chars": 13895
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 4081,
+              "dollars": 0.06123,
+              "chars": 12654
+            },
+            "bash": {
+              "tokens": 539,
+              "dollars": 0.008091,
+              "chars": 1127
+            },
+            "read_minified_file": {
+              "tokens": 92,
+              "dollars": 0.00138,
+              "chars": 180
+            },
+            "glob_files": {
+              "tokens": 103,
+              "dollars": 0.001549,
+              "chars": 195
+            },
+            "write_file": {
+              "tokens": 2749,
+              "dollars": 0.041235,
+              "chars": 9424
+            },
+            "edit_file": {
+              "tokens": 486,
+              "dollars": 0.00729,
+              "chars": 1390
+            },
+            "read_file_uncompressed": {
+              "tokens": 112,
+              "dollars": 0.001685,
+              "chars": 338
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 247,
+        "unnecessary_space_count": 1980,
+        "total_chars": 9334
+      },
+      "total": {
+        "request_count": 15,
+        "cost": {
+          "input": {
+            "tokens": 21,
+            "dollars": 6.3e-05
+          },
+          "cache_write": {
+            "tokens": 20105,
+            "dollars": 0.075393
+          },
+          "cache_read": {
+            "tokens": 138233,
+            "dollars": 0.041469
+          },
+          "output": {
+            "tokens": 7924,
+            "dollars": 0.11886
+          },
+          "total": {
+            "tokens": 166283,
+            "dollars": 0.235786
+          }
+        },
+        "timing": {
+          "total_duration_ms": 138137,
+          "wall_clock_ms": 166303,
+          "avg_duration_ms": 9209
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 9334,
+            "per_file": {
+              "/workspace/Sources/LRUFileCache/LRUFileCacheIndex.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3449
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 5885
+              }
+            }
+          },
+          "output": {
+            "files_written": 4,
+            "unique_files_written": 4,
+            "total_write_chars": 1353,
+            "per_file": {
+              "/workspace/Sources/LRUFileCache/LRUFileCacheConfig.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 716
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCacheError.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 89
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCacheIndex.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 164
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 384
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-103351": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 25,
+          "cost": {
+            "input": {
+              "tokens": 31,
+              "dollars": 9.3e-05
+            },
+            "cache_write": {
+              "tokens": 27638,
+              "dollars": 0.103644
+            },
+            "cache_read": {
+              "tokens": 344397,
+              "dollars": 0.103318
+            },
+            "output": {
+              "tokens": 13876,
+              "dollars": 0.20814
+            },
+            "total": {
+              "tokens": 385942,
+              "dollars": 0.415195
+            }
+          },
+          "timing": {
+            "total_duration_ms": 223580,
+            "wall_clock_ms": 251047,
+            "avg_duration_ms": 8943
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 3,
+          "cost": {
+            "input": {
+              "tokens": 5,
+              "dollars": 1.5e-05
+            },
+            "cache_write": {
+              "tokens": 891,
+              "dollars": 0.003342
+            },
+            "cache_read": {
+              "tokens": 21992,
+              "dollars": 0.006597
+            },
+            "output": {
+              "tokens": 409,
+              "dollars": 0.006135
+            },
+            "total": {
+              "tokens": 23297,
+              "dollars": 0.016089
+            }
+          },
+          "timing": {
+            "total_duration_ms": 9722,
+            "wall_clock_ms": 9741,
+            "avg_duration_ms": 3241
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 826,
+                  "dollars": 0.001669,
+                  "chars": 3202
+                },
+                "bash": {
+                  "tokens": 44,
+                  "dollars": 0.000165,
+                  "chars": 169
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 116,
+                  "dollars": 0.000235,
+                  "chars": 452
+                },
+                "bash": {
+                  "tokens": 90,
+                  "dollars": 0.000338,
+                  "chars": 350
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 176,
+                "dollars": 0.002639,
+                "chars": 465
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 233,
+                  "dollars": 0.003496,
+                  "chars": 496
+                },
+                "glob_files": {
+                  "tokens": 95,
+                  "dollars": 0.001421,
+                  "chars": 186
+                },
+                "bash": {
+                  "tokens": 138,
+                  "dollars": 0.002075,
+                  "chars": 310
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1291,
+              "dollars": 0.004841
+            },
+            "cache_read": {
+              "tokens": 8008,
+              "dollars": 0.002402
+            },
+            "output": {
+              "tokens": 3073,
+              "dollars": 0.046095
+            },
+            "total": {
+              "tokens": 12375,
+              "dollars": 0.053348
+            }
+          },
+          "timing": {
+            "total_duration_ms": 56393,
+            "wall_clock_ms": 56393,
+            "avg_duration_ms": 56393
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 409,
+                  "dollars": 0.000123,
+                  "chars": 1601
+                },
+                "bash": {
+                  "tokens": 43,
+                  "dollars": 1.3e-05,
+                  "chars": 169
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 58,
+                  "dollars": 1.7e-05,
+                  "chars": 226
+                },
+                "bash": {
+                  "tokens": 89,
+                  "dollars": 2.7e-05,
+                  "chars": 350
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 3073,
+                "dollars": 0.046095,
+                "chars": 11181
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 21,
+          "cost": {
+            "input": {
+              "tokens": 23,
+              "dollars": 6.9e-05
+            },
+            "cache_write": {
+              "tokens": 25456,
+              "dollars": 0.095461
+            },
+            "cache_read": {
+              "tokens": 314397,
+              "dollars": 0.094319
+            },
+            "output": {
+              "tokens": 10394,
+              "dollars": 0.15591
+            },
+            "total": {
+              "tokens": 350270,
+              "dollars": 0.345758
+            }
+          },
+          "timing": {
+            "total_duration_ms": 157465,
+            "wall_clock_ms": 170504,
+            "avg_duration_ms": 7498
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "write_file": {
+                  "tokens": 9158,
+                  "dollars": 0.004777,
+                  "chars": 33345
+                },
+                "bash": {
+                  "tokens": 21488,
+                  "dollars": 0.022195,
+                  "chars": 75486
+                },
+                "edit_file": {
+                  "tokens": 862,
+                  "dollars": 0.000893,
+                  "chars": 3026
+                }
+              },
+              "tool_calls": {
+                "write_file": {
+                  "tokens": 89722,
+                  "dollars": 0.04967,
+                  "chars": 324575
+                },
+                "bash": {
+                  "tokens": 3083,
+                  "dollars": 0.002953,
+                  "chars": 10867
+                },
+                "edit_file": {
+                  "tokens": 2945,
+                  "dollars": 0.003079,
+                  "chars": 10342
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 981,
+                "dollars": 0.014725,
+                "chars": 2957
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 9413,
+                  "dollars": 0.141185,
+                  "chars": 28426
+                },
+                "write_file": {
+                  "tokens": 7600,
+                  "dollars": 0.113998,
+                  "chars": 24433
+                },
+                "bash": {
+                  "tokens": 1016,
+                  "dollars": 0.015239,
+                  "chars": 1851
+                },
+                "edit_file": {
+                  "tokens": 797,
+                  "dollars": 0.011948,
+                  "chars": 2142
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 11,
+              "unique_files_written": 11,
+              "total_write_chars": 11437,
+              "per_file": {
+                "/workspace/Package.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 556
+                },
+                "/workspace/Sources/LRUFileCache/CacheEntry.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 144
+                },
+                "/workspace/Sources/LRUFileCache/CacheConfiguration.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 726
+                },
+                "/workspace/Sources/LRUFileCache/CacheIndex.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 268
+                },
+                "/workspace/Sources/LRUFileCache/IndexPersistence.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 434
+                },
+                "/workspace/Sources/LRUFileCache/Debouncer.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 642
+                },
+                "/workspace/Sources/LRUFileCache/EvictionManager.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1113
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 222
+                },
+                "/workspace/Tests/LRUFileCacheTests/CacheIndexTests.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3538
+                },
+                "/workspace/Tests/LRUFileCacheTests/EvictionTests.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3481
+                },
+                "/workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 313
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 1235,
+              "dollars": 0.001792,
+              "chars": 4803
+            },
+            "bash": {
+              "tokens": 21575,
+              "dollars": 0.022373,
+              "chars": 75824
+            },
+            "write_file": {
+              "tokens": 9158,
+              "dollars": 0.004777,
+              "chars": 33345
+            },
+            "edit_file": {
+              "tokens": 862,
+              "dollars": 0.000893,
+              "chars": 3026
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 174,
+              "dollars": 0.000252,
+              "chars": 678
+            },
+            "bash": {
+              "tokens": 3262,
+              "dollars": 0.003318,
+              "chars": 11567
+            },
+            "write_file": {
+              "tokens": 89722,
+              "dollars": 0.04967,
+              "chars": 324575
+            },
+            "edit_file": {
+              "tokens": 2945,
+              "dollars": 0.003079,
+              "chars": 10342
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 4230,
+            "dollars": 0.063459,
+            "chars": 14603
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 9646,
+              "dollars": 0.144681,
+              "chars": 28922
+            },
+            "glob_files": {
+              "tokens": 95,
+              "dollars": 0.001421,
+              "chars": 186
+            },
+            "bash": {
+              "tokens": 1154,
+              "dollars": 0.017314,
+              "chars": 2161
+            },
+            "write_file": {
+              "tokens": 7600,
+              "dollars": 0.113998,
+              "chars": 24433
+            },
+            "edit_file": {
+              "tokens": 797,
+              "dollars": 0.011948,
+              "chars": 2142
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 0,
+        "unnecessary_space_count": 0,
+        "total_chars": 0
+      },
+      "total": {
+        "request_count": 25,
+        "cost": {
+          "input": {
+            "tokens": 31,
+            "dollars": 9.3e-05
+          },
+          "cache_write": {
+            "tokens": 27638,
+            "dollars": 0.103644
+          },
+          "cache_read": {
+            "tokens": 344397,
+            "dollars": 0.103318
+          },
+          "output": {
+            "tokens": 13876,
+            "dollars": 0.20814
+          },
+          "total": {
+            "tokens": 385942,
+            "dollars": 0.415195
+          }
+        },
+        "timing": {
+          "total_duration_ms": 223580,
+          "wall_clock_ms": 251047,
+          "avg_duration_ms": 8943
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 0,
+            "total_read_chars": 0,
+            "per_file": {}
+          },
+          "output": {
+            "files_written": 11,
+            "unique_files_written": 11,
+            "total_write_chars": 11437,
+            "per_file": {
+              "/workspace/Package.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 556
+              },
+              "/workspace/Sources/LRUFileCache/CacheEntry.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 144
+              },
+              "/workspace/Sources/LRUFileCache/CacheConfiguration.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 726
+              },
+              "/workspace/Sources/LRUFileCache/CacheIndex.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 268
+              },
+              "/workspace/Sources/LRUFileCache/IndexPersistence.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 434
+              },
+              "/workspace/Sources/LRUFileCache/Debouncer.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 642
+              },
+              "/workspace/Sources/LRUFileCache/EvictionManager.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1113
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 222
+              },
+              "/workspace/Tests/LRUFileCacheTests/CacheIndexTests.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3538
+              },
+              "/workspace/Tests/LRUFileCacheTests/EvictionTests.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 3481
+              },
+              "/workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 313
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-103353": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 9,
+          "cost": {
+            "input": {
+              "tokens": 15,
+              "dollars": 4.5e-05
+            },
+            "cache_write": {
+              "tokens": 13586,
+              "dollars": 0.050947
+            },
+            "cache_read": {
+              "tokens": 69434,
+              "dollars": 0.02083
+            },
+            "output": {
+              "tokens": 5727,
+              "dollars": 0.085905
+            },
+            "total": {
+              "tokens": 88762,
+              "dollars": 0.157728
+            }
+          },
+          "timing": {
+            "total_duration_ms": 96835,
+            "wall_clock_ms": 116622,
+            "avg_duration_ms": 10759
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 2,
+          "cost": {
+            "input": {
+              "tokens": 4,
+              "dollars": 1.2e-05
+            },
+            "cache_write": {
+              "tokens": 646,
+              "dollars": 0.002423
+            },
+            "cache_read": {
+              "tokens": 14234,
+              "dollars": 0.00427
+            },
+            "output": {
+              "tokens": 195,
+              "dollars": 0.002925
+            },
+            "total": {
+              "tokens": 15079,
+              "dollars": 0.00963
+            }
+          },
+          "timing": {
+            "total_duration_ms": 5319,
+            "wall_clock_ms": 5325,
+            "avg_duration_ms": 2660
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 412,
+                  "dollars": 0.001545,
+                  "chars": 1601
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 62,
+                  "dollars": 0.000233,
+                  "chars": 240
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 97,
+                "dollars": 0.001462,
+                "chars": 334
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 98,
+                  "dollars": 0.001463,
+                  "chars": 200
+                },
+                "glob_files": {
+                  "tokens": 98,
+                  "dollars": 0.001463,
+                  "chars": 200
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1304,
+              "dollars": 0.00489
+            },
+            "cache_read": {
+              "tokens": 7763,
+              "dollars": 0.002329
+            },
+            "output": {
+              "tokens": 2709,
+              "dollars": 0.040635
+            },
+            "total": {
+              "tokens": 11779,
+              "dollars": 0.047863
+            }
+          },
+          "timing": {
+            "total_duration_ms": 48603,
+            "wall_clock_ms": 48603,
+            "avg_duration_ms": 48603
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 407,
+                  "dollars": 0.000122,
+                  "chars": 1601
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 61,
+                  "dollars": 1.8e-05,
+                  "chars": 240
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 2709,
+                "dollars": 0.040635,
+                "chars": 9717
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 6,
+          "cost": {
+            "input": {
+              "tokens": 8,
+              "dollars": 2.4e-05
+            },
+            "cache_write": {
+              "tokens": 11636,
+              "dollars": 0.043634
+            },
+            "cache_read": {
+              "tokens": 47437,
+              "dollars": 0.014231
+            },
+            "output": {
+              "tokens": 2823,
+              "dollars": 0.042345
+            },
+            "total": {
+              "tokens": 61904,
+              "dollars": 0.100235
+            }
+          },
+          "timing": {
+            "total_duration_ms": 42913,
+            "wall_clock_ms": 43003,
+            "avg_duration_ms": 7152
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "write_file": {
+                  "tokens": 770,
+                  "dollars": 0.001131,
+                  "chars": 2949
+                }
+              },
+              "tool_calls": {
+                "write_file": {
+                  "tokens": 3989,
+                  "dollars": 0.008844,
+                  "chars": 15249
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 338,
+                "dollars": 0.005064,
+                "chars": 1067
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2485,
+                  "dollars": 0.037281,
+                  "chars": 8271
+                },
+                "write_file": {
+                  "tokens": 2485,
+                  "dollars": 0.037281,
+                  "chars": 8271
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 5,
+              "unique_files_written": 5,
+              "total_write_chars": 7380,
+              "per_file": {
+                "/workspace/Package.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 363
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCacheError.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 70
+                },
+                "/workspace/Sources/LRUFileCache/CacheConfiguration.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1265
+                },
+                "/workspace/Sources/LRUFileCache/CacheIndex.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 734
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4948
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 819,
+              "dollars": 0.001667,
+              "chars": 3202
+            },
+            "write_file": {
+              "tokens": 770,
+              "dollars": 0.001131,
+              "chars": 2949
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 123,
+              "dollars": 0.000251,
+              "chars": 480
+            },
+            "write_file": {
+              "tokens": 3989,
+              "dollars": 0.008844,
+              "chars": 15249
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 3144,
+            "dollars": 0.047161,
+            "chars": 11118
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 2583,
+              "dollars": 0.038744,
+              "chars": 8471
+            },
+            "glob_files": {
+              "tokens": 98,
+              "dollars": 0.001463,
+              "chars": 200
+            },
+            "write_file": {
+              "tokens": 2485,
+              "dollars": 0.037281,
+              "chars": 8271
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 0,
+        "unnecessary_space_count": 0,
+        "total_chars": 0
+      },
+      "total": {
+        "request_count": 9,
+        "cost": {
+          "input": {
+            "tokens": 15,
+            "dollars": 4.5e-05
+          },
+          "cache_write": {
+            "tokens": 13586,
+            "dollars": 0.050947
+          },
+          "cache_read": {
+            "tokens": 69434,
+            "dollars": 0.02083
+          },
+          "output": {
+            "tokens": 5727,
+            "dollars": 0.085905
+          },
+          "total": {
+            "tokens": 88762,
+            "dollars": 0.157728
+          }
+        },
+        "timing": {
+          "total_duration_ms": 96835,
+          "wall_clock_ms": 116622,
+          "avg_duration_ms": 10759
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 0,
+            "total_read_chars": 0,
+            "per_file": {}
+          },
+          "output": {
+            "files_written": 5,
+            "unique_files_written": 5,
+            "total_write_chars": 7380,
+            "per_file": {
+              "/workspace/Package.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 363
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCacheError.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 70
+              },
+              "/workspace/Sources/LRUFileCache/CacheConfiguration.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1265
+              },
+              "/workspace/Sources/LRUFileCache/CacheIndex.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 734
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 4948
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-103407": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 22,
+          "cost": {
+            "input": {
+              "tokens": 28,
+              "dollars": 8.4e-05
+            },
+            "cache_write": {
+              "tokens": 28415,
+              "dollars": 0.106556
+            },
+            "cache_read": {
+              "tokens": 322285,
+              "dollars": 0.096683
+            },
+            "output": {
+              "tokens": 13649,
+              "dollars": 0.204735
+            },
+            "total": {
+              "tokens": 364377,
+              "dollars": 0.408061
+            }
+          },
+          "timing": {
+            "total_duration_ms": 209975,
+            "wall_clock_ms": 254396,
+            "avg_duration_ms": 9544
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 3,
+          "cost": {
+            "input": {
+              "tokens": 5,
+              "dollars": 1.5e-05
+            },
+            "cache_write": {
+              "tokens": 887,
+              "dollars": 0.003326
+            },
+            "cache_read": {
+              "tokens": 21998,
+              "dollars": 0.006599
+            },
+            "output": {
+              "tokens": 371,
+              "dollars": 0.005565
+            },
+            "total": {
+              "tokens": 23261,
+              "dollars": 0.015505
+            }
+          },
+          "timing": {
+            "total_duration_ms": 14665,
+            "wall_clock_ms": 14686,
+            "avg_duration_ms": 4888
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 824,
+                  "dollars": 0.001665,
+                  "chars": 3202
+                },
+                "bash": {
+                  "tokens": 42,
+                  "dollars": 0.000158,
+                  "chars": 161
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 144,
+                  "dollars": 0.000292,
+                  "chars": 558
+                },
+                "bash": {
+                  "tokens": 114,
+                  "dollars": 0.000428,
+                  "chars": 441
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 94,
+                "dollars": 0.00141,
+                "chars": 219
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 277,
+                  "dollars": 0.004155,
+                  "chars": 640
+                },
+                "glob_files": {
+                  "tokens": 105,
+                  "dollars": 0.001582,
+                  "chars": 239
+                },
+                "bash": {
+                  "tokens": 172,
+                  "dollars": 0.002573,
+                  "chars": 401
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1254,
+              "dollars": 0.004703
+            },
+            "cache_read": {
+              "tokens": 8004,
+              "dollars": 0.002401
+            },
+            "output": {
+              "tokens": 3387,
+              "dollars": 0.050805
+            },
+            "total": {
+              "tokens": 12648,
+              "dollars": 0.057918
+            }
+          },
+          "timing": {
+            "total_duration_ms": 59964,
+            "wall_clock_ms": 59964,
+            "avg_duration_ms": 59964
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 409,
+                  "dollars": 0.000123,
+                  "chars": 1601
+                },
+                "bash": {
+                  "tokens": 41,
+                  "dollars": 1.2e-05,
+                  "chars": 161
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 71,
+                  "dollars": 2.1e-05,
+                  "chars": 279
+                },
+                "bash": {
+                  "tokens": 113,
+                  "dollars": 3.4e-05,
+                  "chars": 441
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 3387,
+                "dollars": 0.050805,
+                "chars": 11604
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 18,
+          "cost": {
+            "input": {
+              "tokens": 20,
+              "dollars": 6e-05
+            },
+            "cache_write": {
+              "tokens": 26274,
+              "dollars": 0.098527
+            },
+            "cache_read": {
+              "tokens": 292283,
+              "dollars": 0.087683
+            },
+            "output": {
+              "tokens": 9891,
+              "dollars": 0.148365
+            },
+            "total": {
+              "tokens": 328468,
+              "dollars": 0.334638
+            }
+          },
+          "timing": {
+            "total_duration_ms": 135346,
+            "wall_clock_ms": 152770,
+            "avg_duration_ms": 7519
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "write_file": {
+                  "tokens": 4914,
+                  "dollars": 0.002592,
+                  "chars": 17539
+                },
+                "bash": {
+                  "tokens": 30195,
+                  "dollars": 0.02617,
+                  "chars": 104968
+                },
+                "read_file_uncompressed": {
+                  "tokens": 3326,
+                  "dollars": 0.002709,
+                  "chars": 11576
+                },
+                "edit_file": {
+                  "tokens": 1481,
+                  "dollars": 0.001312,
+                  "chars": 5136
+                }
+              },
+              "tool_calls": {
+                "write_file": {
+                  "tokens": 76481,
+                  "dollars": 0.0425,
+                  "chars": 271096
+                },
+                "bash": {
+                  "tokens": 3317,
+                  "dollars": 0.003191,
+                  "chars": 11529
+                },
+                "read_file_uncompressed": {
+                  "tokens": 1059,
+                  "dollars": 0.000832,
+                  "chars": 3698
+                },
+                "edit_file": {
+                  "tokens": 6967,
+                  "dollars": 0.005558,
+                  "chars": 24203
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1327,
+                "dollars": 0.019907,
+                "chars": 3853
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 8564,
+                  "dollars": 0.128458,
+                  "chars": 26700
+                },
+                "write_file": {
+                  "tokens": 6254,
+                  "dollars": 0.093803,
+                  "chars": 20830
+                },
+                "bash": {
+                  "tokens": 973,
+                  "dollars": 0.014599,
+                  "chars": 2023
+                },
+                "read_file_uncompressed": {
+                  "tokens": 167,
+                  "dollars": 0.002499,
+                  "chars": 450
+                },
+                "edit_file": {
+                  "tokens": 1170,
+                  "dollars": 0.017557,
+                  "chars": 3397
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 216,
+            "unnecessary_space_count": 1948,
+            "total_chars": 9254
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 1421,
+              "per_file": {
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 1421
+                }
+              }
+            },
+            "output": {
+              "files_written": 6,
+              "unique_files_written": 6,
+              "total_write_chars": 3545,
+              "per_file": {
+                "/workspace/Package.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 578
+                },
+                "/workspace/Sources/LRUFileCache/LRUCacheConfiguration.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 782
+                },
+                "/workspace/Sources/LRUFileCache/LRUCacheEntry.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 161
+                },
+                "/workspace/Sources/LRUFileCache/LRUCacheIndex.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1773
+                },
+                "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 114
+                },
+                "/workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 137
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 1233,
+              "dollars": 0.001788,
+              "chars": 4803
+            },
+            "bash": {
+              "tokens": 30278,
+              "dollars": 0.02634,
+              "chars": 105290
+            },
+            "write_file": {
+              "tokens": 4914,
+              "dollars": 0.002592,
+              "chars": 17539
+            },
+            "read_file_uncompressed": {
+              "tokens": 3326,
+              "dollars": 0.002709,
+              "chars": 11576
+            },
+            "edit_file": {
+              "tokens": 1481,
+              "dollars": 0.001312,
+              "chars": 5136
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 215,
+              "dollars": 0.000313,
+              "chars": 837
+            },
+            "bash": {
+              "tokens": 3544,
+              "dollars": 0.003653,
+              "chars": 12411
+            },
+            "write_file": {
+              "tokens": 76481,
+              "dollars": 0.0425,
+              "chars": 271096
+            },
+            "read_file_uncompressed": {
+              "tokens": 1059,
+              "dollars": 0.000832,
+              "chars": 3698
+            },
+            "edit_file": {
+              "tokens": 6967,
+              "dollars": 0.005558,
+              "chars": 24203
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 4808,
+            "dollars": 0.072122,
+            "chars": 15676
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 8841,
+              "dollars": 0.132613,
+              "chars": 27340
+            },
+            "glob_files": {
+              "tokens": 105,
+              "dollars": 0.001582,
+              "chars": 239
+            },
+            "bash": {
+              "tokens": 1145,
+              "dollars": 0.017172,
+              "chars": 2424
+            },
+            "write_file": {
+              "tokens": 6254,
+              "dollars": 0.093803,
+              "chars": 20830
+            },
+            "read_file_uncompressed": {
+              "tokens": 167,
+              "dollars": 0.002499,
+              "chars": 450
+            },
+            "edit_file": {
+              "tokens": 1170,
+              "dollars": 0.017557,
+              "chars": 3397
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 216,
+        "unnecessary_space_count": 1948,
+        "total_chars": 9254
+      },
+      "total": {
+        "request_count": 22,
+        "cost": {
+          "input": {
+            "tokens": 28,
+            "dollars": 8.4e-05
+          },
+          "cache_write": {
+            "tokens": 28415,
+            "dollars": 0.106556
+          },
+          "cache_read": {
+            "tokens": 322285,
+            "dollars": 0.096683
+          },
+          "output": {
+            "tokens": 13649,
+            "dollars": 0.204735
+          },
+          "total": {
+            "tokens": 364377,
+            "dollars": 0.408061
+          }
+        },
+        "timing": {
+          "total_duration_ms": 209975,
+          "wall_clock_ms": 254396,
+          "avg_duration_ms": 9544
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 1,
+            "total_read_chars": 1421,
+            "per_file": {
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 1421
+              }
+            }
+          },
+          "output": {
+            "files_written": 6,
+            "unique_files_written": 6,
+            "total_write_chars": 3545,
+            "per_file": {
+              "/workspace/Package.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 578
+              },
+              "/workspace/Sources/LRUFileCache/LRUCacheConfiguration.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 782
+              },
+              "/workspace/Sources/LRUFileCache/LRUCacheEntry.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 161
+              },
+              "/workspace/Sources/LRUFileCache/LRUCacheIndex.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1773
+              },
+              "/workspace/Sources/LRUFileCache/LRUFileCache.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 114
+              },
+              "/workspace/Tests/LRUFileCacheTests/LRUFileCacheTests.swift": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 137
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "by_model": {
+    "claude-sonnet-4-6": {
+      "request_count": 83,
+      "cost": {
+        "input": {
+          "tokens": 113,
+          "dollars": 0.000339
+        },
+        "cache_write": {
+          "tokens": 114408,
+          "dollars": 0.429031
+        },
+        "cache_read": {
+          "tokens": 974033,
+          "dollars": 0.292205
+        },
+        "output": {
+          "tokens": 50752,
+          "dollars": 0.76128
+        },
+        "total": {
+          "tokens": 1139306,
+          "dollars": 1.48286
+        }
+      },
+      "timing": {
+        "total_duration_ms": 815133,
+        "avg_duration_ms": 9821
+      }
+    }
+  },
+  "by_source": {
+    "input": {
+      "tool_results": {
+        "glob_files": {
+          "tokens": 8470,
+          "dollars": 0.010223,
+          "chars": 32624
+        },
+        "write_file": {
+          "tokens": 17431,
+          "dollars": 0.011084,
+          "chars": 63662
+        },
+        "bash": {
+          "tokens": 53549,
+          "dollars": 0.050589,
+          "chars": 187654
+        },
+        "read_minified_file": {
+          "tokens": 1268,
+          "dollars": 0.002582,
+          "chars": 4894
+        },
+        "edit_file": {
+          "tokens": 2634,
+          "dollars": 0.002689,
+          "chars": 9257
+        },
+        "read_file_uncompressed": {
+          "tokens": 6055,
+          "dollars": 0.012943,
+          "chars": 21683
+        }
+      },
+      "tool_calls": {
+        "glob_files": {
+          "tokens": 1757,
+          "dollars": 0.002084,
+          "chars": 6767
+        },
+        "write_file": {
+          "tokens": 196659,
+          "dollars": 0.135375,
+          "chars": 710818
+        },
+        "bash": {
+          "tokens": 8360,
+          "dollars": 0.008549,
+          "chars": 29935
+        },
+        "read_minified_file": {
+          "tokens": 114,
+          "dollars": 0.000231,
+          "chars": 440
+        },
+        "edit_file": {
+          "tokens": 10813,
+          "dollars": 0.010242,
+          "chars": 37927
+        },
+        "read_file_uncompressed": {
+          "tokens": 1172,
+          "dollars": 0.001256,
+          "chars": 4116
+        }
+      }
+    },
+    "output": {
+      "llm_text": {
+        "tokens": 19534,
+        "dollars": 0.292996,
+        "chars": 67810
+      },
+      "tool_calls": {
+        "__total": {
+          "tokens": 31218,
+          "dollars": 0.468284,
+          "chars": 97320
+        },
+        "glob_files": {
+          "tokens": 717,
+          "dollars": 0.010761,
+          "chars": 1461
+        },
+        "write_file": {
+          "tokens": 24839,
+          "dollars": 0.372587,
+          "chars": 82250
+        },
+        "bash": {
+          "tokens": 2838,
+          "dollars": 0.042577,
+          "chars": 5712
+        },
+        "read_minified_file": {
+          "tokens": 92,
+          "dollars": 0.00138,
+          "chars": 180
+        },
+        "edit_file": {
+          "tokens": 2453,
+          "dollars": 0.036795,
+          "chars": 6929
+        },
+        "read_file_uncompressed": {
+          "tokens": 279,
+          "dollars": 0.004184,
+          "chars": 788
+        }
+      }
+    }
+  },
+  "read_file_whitespace": {
+    "line_returns_count": 463,
+    "unnecessary_space_count": 3928,
+    "total_chars": 18588
+  },
+  "total": {
+    "request_count": 83,
+    "cost": {
+      "input": {
+        "tokens": 113,
+        "dollars": 0.000339
+      },
+      "cache_write": {
+        "tokens": 114408,
+        "dollars": 0.429031
+      },
+      "cache_read": {
+        "tokens": 974033,
+        "dollars": 0.292205
+      },
+      "output": {
+        "tokens": 50752,
+        "dollars": 0.76128
+      },
+      "total": {
+        "tokens": 1139306,
+        "dollars": 1.48286
+      }
+    },
+    "timing": {
+      "total_duration_ms": 815133,
+      "avg_duration_ms": 9821
+    }
+  }
+}

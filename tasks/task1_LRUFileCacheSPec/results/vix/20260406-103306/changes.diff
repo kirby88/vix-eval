@@ -1,0 +1,581 @@
+diff --git a/Package.swift b/Package.swift
+new file mode 100644
+index 0000000..2f18b60
+--- /dev/null
++++ b/Package.swift
+@@ -0,0 +1,26 @@
++// swift-tools-version: 5.9
++import PackageDescription
++
++let package = Package(
++    name: "DiskCache",
++    platforms: [
++        .iOS(.v16)
++    ],
++    products: [
++        .library(
++            name: "DiskCache",
++            targets: ["DiskCache"]
++        ),
++    ],
++    targets: [
++        .target(
++            name: "DiskCache",
++            path: "Sources/DiskCache"
++        ),
++        .testTarget(
++            name: "DiskCacheTests",
++            dependencies: ["DiskCache"],
++            path: "Tests/DiskCacheTests"
++        ),
++    ]
++)
+diff --git a/Sources/DiskCache/CacheConfiguration.swift b/Sources/DiskCache/CacheConfiguration.swift
+new file mode 100644
+index 0000000..f87d920
+--- /dev/null
++++ b/Sources/DiskCache/CacheConfiguration.swift
+@@ -0,0 +1,23 @@
++import Foundation
++
++public struct CacheConfiguration {
++    public let name: String
++    public let maxEntryCount: Int
++    public let maxTotalBytes: Int
++    public let evictionDebounce: Duration
++    public let dataProtection: FileProtectionType
++
++    public init(
++        name: String,
++        maxEntryCount: Int,
++        maxTotalBytes: Int,
++        evictionDebounce: Duration = .seconds(1),
++        dataProtection: FileProtectionType = .complete
++    ) {
++        self.name = name
++        self.maxEntryCount = maxEntryCount
++        self.maxTotalBytes = maxTotalBytes
++        self.evictionDebounce = evictionDebounce
++        self.dataProtection = dataProtection
++    }
++}
+diff --git a/Sources/DiskCache/CacheEntry.swift b/Sources/DiskCache/CacheEntry.swift
+new file mode 100644
+index 0000000..439e783
+--- /dev/null
++++ b/Sources/DiskCache/CacheEntry.swift
+@@ -0,0 +1,7 @@
++import Foundation
++
++struct CacheEntry: Codable {
++    let filename: String
++    var byteSize: Int
++    var lastAccessed: Date
++}
+diff --git a/Sources/DiskCache/CacheError.swift b/Sources/DiskCache/CacheError.swift
+new file mode 100644
+index 0000000..a3f3964
+--- /dev/null
++++ b/Sources/DiskCache/CacheError.swift
+@@ -0,0 +1,6 @@
++import Foundation
++
++public enum CacheError: Error {
++    case keyNotFound(String)
++    case fileSystemError(underlying: Error)
++}
+diff --git a/Sources/DiskCache/DiskCache.swift b/Sources/DiskCache/DiskCache.swift
+new file mode 100644
+index 0000000..290eba8
+--- /dev/null
++++ b/Sources/DiskCache/DiskCache.swift
+@@ -0,0 +1,222 @@
++import Foundation
++
++public actor DiskCache {
++    private let config: CacheConfiguration
++    private let cacheDirectory: URL
++    private let indexURL: URL
++    private var index: [String: CacheEntry] = [:]
++    private var totalBytes: Int = 0
++    private var evictionTask: Task<Void, Never>?
++    private var indexFlushTask: Task<Void, Never>?
++    private var indexLoaded: Bool = false
++
++    public init(
++        configuration: CacheConfiguration,
++        baseDirectory: URL = FileManager.default.urls(for: .cachesDirectory, in: .userDomainMask)[0]
++    ) {
++        self.config = configuration
++        self.cacheDirectory = baseDirectory.appendingPathComponent(configuration.name)
++        self.indexURL = cacheDirectory.appendingPathComponent("_index.json")
++
++        Task {
++            await loadIndex()
++        }
++    }
++
++    private func loadIndex() {
++        do {
++            try ensureCacheDirectory()
++        } catch {
++            indexLoaded = true
++            return
++        }
++
++        guard FileManager.default.fileExists(atPath: indexURL.path) else {
++            indexLoaded = true
++            return
++        }
++
++        do {
++            let data = try Data(contentsOf: indexURL)
++            let decoded = try JSONDecoder().decode([String: CacheEntry].self, from: data)
++            index = decoded
++            totalBytes = decoded.values.reduce(0) { $0 + $1.byteSize }
++        } catch {
++            index = [:]
++            totalBytes = 0
++        }
++
++        indexLoaded = true
++    }
++
++    private func ensureCacheDirectory() throws {
++        let fm = FileManager.default
++        if !fm.fileExists(atPath: cacheDirectory.path) {
++            do {
++                try fm.createDirectory(at: cacheDirectory, withIntermediateDirectories: true)
++            } catch {
++                throw CacheError.fileSystemError(underlying: error)
++            }
++            do {
++                try fm.setAttributes(
++                    [.protectionKey: config.dataProtection],
++                    ofItemAtPath: cacheDirectory.path
++                )
++            } catch {
++                // Non-fatal: protection attribute failure does not prevent caching
++            }
++        }
++    }
++
++    public func add(key: String, data: Data) async throws {
++        try ensureCacheDirectory()
++
++        let existingEntry = index[key]
++        let filename = existingEntry?.filename ?? UUID().uuidString
++        let finalURL = cacheDirectory.appendingPathComponent(filename)
++        let tmpURL = cacheDirectory.appendingPathComponent(filename + ".tmp")
++
++        do {
++            try data.write(to: tmpURL, options: .atomic)
++            if FileManager.default.fileExists(atPath: finalURL.path) {
++                _ = try FileManager.default.replaceItemAt(finalURL, withItemAt: tmpURL)
++            } else {
++                try FileManager.default.moveItem(at: tmpURL, to: finalURL)
++            }
++        } catch {
++            try? FileManager.default.removeItem(at: tmpURL)
++            throw CacheError.fileSystemError(underlying: error)
++        }
++
++        let oldSize = existingEntry?.byteSize ?? 0
++        index[key] = CacheEntry(filename: filename, byteSize: data.count, lastAccessed: Date())
++        totalBytes = totalBytes - oldSize + data.count
++
++        persistIndexImmediately()
++        scheduleEviction()
++    }
++
++    public func update(key: String, data: Data) async throws {
++        try await add(key: key, data: data)
++    }
++
++    public func modify(key: String, data: Data) async throws {
++        guard index[key] != nil else {
++            throw CacheError.keyNotFound(key)
++        }
++        try await add(key: key, data: data)
++    }
++
++    public func get(key: String) async throws -> Data? {
++        guard let entry = index[key] else {
++            return nil
++        }
++
++        let fileURL = cacheDirectory.appendingPathComponent(entry.filename)
++
++        let data: Data
++        do {
++            data = try Data(contentsOf: fileURL)
++        } catch {
++            selfHeal(key: key)
++            return nil
++        }
++
++        index[key]?.lastAccessed = Date()
++        scheduleDebouncedIndexFlush()
++
++        return data
++    }
++
++    public func promote(key: String) async throws {
++        guard index[key] != nil else {
++            throw CacheError.keyNotFound(key)
++        }
++        index[key]?.lastAccessed = Date()
++        scheduleDebouncedIndexFlush()
++    }
++
++    private func selfHeal(key: String) {
++        if let entry = index.removeValue(forKey: key) {
++            totalBytes -= entry.byteSize
++        }
++        persistIndexImmediately()
++    }
++
++    private func persistIndexImmediately() {
++        indexFlushTask?.cancel()
++        indexFlushTask = nil
++
++        let indexURL = self.indexURL
++        let snapshot = index
++
++        Task.detached {
++            guard let data = try? JSONEncoder().encode(snapshot) else { return }
++            let tmpURL = indexURL.deletingLastPathComponent().appendingPathComponent("_index.json.tmp")
++            do {
++                try data.write(to: tmpURL, options: .atomic)
++                if FileManager.default.fileExists(atPath: indexURL.path) {
++                    _ = try FileManager.default.replaceItemAt(indexURL, withItemAt: tmpURL)
++                } else {
++                    try FileManager.default.moveItem(at: tmpURL, to: indexURL)
++                }
++            } catch {
++                try? FileManager.default.removeItem(at: tmpURL)
++            }
++        }
++    }
++
++    private func scheduleDebouncedIndexFlush() {
++        indexFlushTask?.cancel()
++        indexFlushTask = Task {
++            try? await Task.sleep(for: config.evictionDebounce)
++            guard !Task.isCancelled else { return }
++            persistIndexImmediately()
++        }
++    }
++
++    private func scheduleEviction() {
++        evictionTask?.cancel()
++        evictionTask = Task {
++            try? await Task.sleep(for: config.evictionDebounce)
++            guard !Task.isCancelled else { return }
++            await evict()
++        }
++    }
++
++    private func evict() {
++        guard index.count > config.maxEntryCount || totalBytes > config.maxTotalBytes else {
++            return
++        }
++
++        let sorted = index.sorted { $0.value.lastAccessed < $1.value.lastAccessed }
++        var toRemove: [String] = []
++
++        var remainingCount = index.count
++        var remainingBytes = totalBytes
++
++        for (key, entry) in sorted {
++            if remainingCount <= config.maxEntryCount && remainingBytes <= config.maxTotalBytes {
++                break
++            }
++            toRemove.append(key)
++            remainingCount -= 1
++            remainingBytes -= entry.byteSize
++        }
++
++        let tmpBase = FileManager.default.temporaryDirectory
++        for key in toRemove {
++            guard let entry = index.removeValue(forKey: key) else { continue }
++            totalBytes -= entry.byteSize
++
++            let sourceURL = cacheDirectory.appendingPathComponent(entry.filename)
++            var destURL = tmpBase.appendingPathComponent(entry.filename)
++            if FileManager.default.fileExists(atPath: destURL.path) {
++                destURL = tmpBase.appendingPathComponent(entry.filename + "-" + UUID().uuidString)
++            }
++            try? FileManager.default.moveItem(at: sourceURL, to: destURL)
++        }
++
++        persistIndexImmediately()
++    }
++}
+diff --git a/Tests/DiskCacheTests/DiskCacheTests.swift b/Tests/DiskCacheTests/DiskCacheTests.swift
+new file mode 100644
+index 0000000..24a7ec0
+--- /dev/null
++++ b/Tests/DiskCacheTests/DiskCacheTests.swift
+@@ -0,0 +1,261 @@
++import XCTest
++@testable import DiskCache
++
++final class DiskCacheTests: XCTestCase {
++    private var tmpDir: URL!
++
++    override func setUp() async throws {
++        try await super.setUp()
++        tmpDir = FileManager.default.temporaryDirectory
++            .appendingPathComponent("DiskCacheTests-\(UUID().uuidString)")
++        try FileManager.default.createDirectory(at: tmpDir, withIntermediateDirectories: true)
++    }
++
++    override func tearDown() async throws {
++        try? FileManager.default.removeItem(at: tmpDir)
++        try await super.tearDown()
++    }
++
++    private func makeCache(
++        name: String = "test",
++        maxEntryCount: Int = 100,
++        maxTotalBytes: Int = 10 * 1024 * 1024,
++        evictionDebounce: Duration = .milliseconds(50)
++    ) -> DiskCache {
++        DiskCache(
++            configuration: CacheConfiguration(
++                name: name,
++                maxEntryCount: maxEntryCount,
++                maxTotalBytes: maxTotalBytes,
++                evictionDebounce: evictionDebounce
++            ),
++            baseDirectory: tmpDir
++        )
++    }
++
++    // MARK: - add / get round-trip
++
++    func testAddAndGet() async throws {
++        let cache = makeCache()
++        let data = Data("hello".utf8)
++        try await cache.add(key: "k1", data: data)
++        let result = try await cache.get(key: "k1")
++        XCTAssertEqual(result, data)
++    }
++
++    func testGetMissingKeyReturnsNil() async throws {
++        let cache = makeCache()
++        let result = try await cache.get(key: "missing")
++        XCTAssertNil(result)
++    }
++
++    func testAddOverwritesExistingKey() async throws {
++        let cache = makeCache()
++        try await cache.add(key: "k", data: Data("first".utf8))
++        try await cache.add(key: "k", data: Data("second".utf8))
++        let result = try await cache.get(key: "k")
++        XCTAssertEqual(result, Data("second".utf8))
++    }
++
++    // MARK: - update
++
++    func testUpdateBehavesLikeAdd() async throws {
++        let cache = makeCache()
++        let data = Data("updated".utf8)
++        try await cache.update(key: "k", data: data)
++        let result = try await cache.get(key: "k")
++        XCTAssertEqual(result, data)
++    }
++
++    func testUpdateOverwritesExistingKey() async throws {
++        let cache = makeCache()
++        try await cache.add(key: "k", data: Data("v1".utf8))
++        try await cache.update(key: "k", data: Data("v2".utf8))
++        let result = try await cache.get(key: "k")
++        XCTAssertEqual(result, Data("v2".utf8))
++    }
++
++    // MARK: - modify
++
++    func testModifyUpdatesExistingKey() async throws {
++        let cache = makeCache()
++        try await cache.add(key: "k", data: Data("original".utf8))
++        try await cache.modify(key: "k", data: Data("modified".utf8))
++        let result = try await cache.get(key: "k")
++        XCTAssertEqual(result, Data("modified".utf8))
++    }
++
++    func testModifyThrowsForMissingKey() async throws {
++        let cache = makeCache()
++        do {
++            try await cache.modify(key: "absent", data: Data("x".utf8))
++            XCTFail("Expected CacheError.keyNotFound")
++        } catch CacheError.keyNotFound(let key) {
++            XCTAssertEqual(key, "absent")
++        }
++    }
++
++    // MARK: - promote
++
++    func testPromoteThrowsForMissingKey() async throws {
++        let cache = makeCache()
++        do {
++            try await cache.promote(key: "ghost")
++            XCTFail("Expected CacheError.keyNotFound")
++        } catch CacheError.keyNotFound(let key) {
++            XCTAssertEqual(key, "ghost")
++        }
++    }
++
++    func testPromoteUpdatesAccessOrder() async throws {
++        let cache = makeCache(maxEntryCount: 2, evictionDebounce: .milliseconds(50))
++
++        // Add two entries. k1 is oldest.
++        try await cache.add(key: "k1", data: Data("aaa".utf8))
++        try await cache.add(key: "k2", data: Data("bbb".utf8))
++
++        // Promote k1 so it is now the most-recently-used entry.
++        try await cache.promote(key: "k1")
++
++        // Add a third entry to trigger eviction (maxEntryCount == 2).
++        try await cache.add(key: "k3", data: Data("ccc".utf8))
++
++        // Wait for the debounced eviction to fire.
++        try await Task.sleep(for: .milliseconds(200))
++
++        // k2 should have been evicted (it was the least recently used after the promote).
++        let r1 = try await cache.get(key: "k1")
++        let r2 = try await cache.get(key: "k2")
++        let r3 = try await cache.get(key: "k3")
++
++        XCTAssertNotNil(r1)
++        XCTAssertNil(r2)
++        XCTAssertNotNil(r3)
++    }
++
++    // MARK: - eviction by entry count
++
++    func testEvictionByEntryCount() async throws {
++        let cache = makeCache(maxEntryCount: 2, evictionDebounce: .milliseconds(50))
++
++        try await cache.add(key: "a", data: Data("1".utf8))
++        try await cache.add(key: "b", data: Data("2".utf8))
++        try await cache.add(key: "c", data: Data("3".utf8))
++
++        try await Task.sleep(for: .milliseconds(200))
++
++        // Only 2 entries should remain.
++        var count = 0
++        for key in ["a", "b", "c"] {
++            if try await cache.get(key: key) != nil { count += 1 }
++        }
++        XCTAssertEqual(count, 2)
++    }
++
++    func testEvictionRemovesLRUEntries() async throws {
++        let cache = makeCache(maxEntryCount: 2, evictionDebounce: .milliseconds(50))
++
++        try await cache.add(key: "old", data: Data("x".utf8))
++        try await cache.add(key: "mid", data: Data("y".utf8))
++        // Touch "old" so "mid" becomes LRU.
++        _ = try await cache.get(key: "old")
++        try await cache.add(key: "new", data: Data("z".utf8))
++
++        try await Task.sleep(for: .milliseconds(200))
++
++        XCTAssertNotNil(try await cache.get(key: "old"))
++        XCTAssertNil(try await cache.get(key: "mid"))
++        XCTAssertNotNil(try await cache.get(key: "new"))
++    }
++
++    // MARK: - eviction by byte size
++
++    func testEvictionByTotalBytes() async throws {
++        let cache = makeCache(maxEntryCount: 1000, maxTotalBytes: 10, evictionDebounce: .milliseconds(50))
++
++        try await cache.add(key: "big1", data: Data(repeating: 0x01, count: 6))
++        try await cache.add(key: "big2", data: Data(repeating: 0x02, count: 6))
++
++        try await Task.sleep(for: .milliseconds(200))
++
++        // Total 12 bytes > 10 byte limit; "big1" (LRU) should be evicted.
++        XCTAssertNil(try await cache.get(key: "big1"))
++        XCTAssertNotNil(try await cache.get(key: "big2"))
++    }
++
++    // MARK: - index persistence
++
++    func testIndexPersistsAcrossInstances() async throws {
++        let config = CacheConfiguration(
++            name: "persist-test",
++            maxEntryCount: 100,
++            maxTotalBytes: 10 * 1024 * 1024,
++            evictionDebounce: .milliseconds(50)
++        )
++
++        let cache1 = DiskCache(configuration: config, baseDirectory: tmpDir)
++        let data = Data("persisted".utf8)
++        try await cache1.add(key: "pk", data: data)
++
++        // Allow the index to flush to disk.
++        try await Task.sleep(for: .milliseconds(200))
++
++        let cache2 = DiskCache(configuration: config, baseDirectory: tmpDir)
++        // Allow cache2's background index load to complete.
++        try await Task.sleep(for: .milliseconds(200))
++
++        let result = try await cache2.get(key: "pk")
++        XCTAssertEqual(result, data)
++    }
++
++    // MARK: - multiple independent caches
++
++    func testMultipleCachesAreIndependent() async throws {
++        let cache1 = makeCache(name: "alpha")
++        let cache2 = makeCache(name: "beta")
++
++        try await cache1.add(key: "shared", data: Data("from-alpha".utf8))
++        try await cache2.add(key: "shared", data: Data("from-beta".utf8))
++
++        let r1 = try await cache1.get(key: "shared")
++        let r2 = try await cache2.get(key: "shared")
++
++        XCTAssertEqual(r1, Data("from-alpha".utf8))
++        XCTAssertEqual(r2, Data("from-beta".utf8))
++    }
++
++    // MARK: - large data
++
++    func testLargeDataRoundTrip() async throws {
++        let cache = makeCache(maxTotalBytes: 100 * 1024 * 1024)
++        let large = Data(repeating: 0xAB, count: 1 * 1024 * 1024)
++        try await cache.add(key: "large", data: large)
++        let result = try await cache.get(key: "large")
++        XCTAssertEqual(result, large)
++    }
++
++    // MARK: - self-heal
++
++    func testGetReturnsNilAndHealsWhenFileDeleted() async throws {
++        let cache = makeCache()
++        try await cache.add(key: "k", data: Data("v".utf8))
++
++        // Manually delete all files in the cache directory (simulating external deletion).
++        let cacheDir = tmpDir.appendingPathComponent("test")
++        if let contents = try? FileManager.default.contentsOfDirectory(
++            at: cacheDir,
++            includingPropertiesForKeys: nil
++        ) {
++            for url in contents where url.lastPathComponent != "_index.json" {
++                try? FileManager.default.removeItem(at: url)
++            }
++        }
++
++        let result = try await cache.get(key: "k")
++        XCTAssertNil(result)
++
++        // Subsequent get should also return nil (entry was healed out of index).
++        let result2 = try await cache.get(key: "k")
++        XCTAssertNil(result2)
++    }
++}

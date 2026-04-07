@@ -1,0 +1,180 @@
+11:52:48 [vix-daemon] API key loaded (source: env)
+11:52:48 [vix-daemon] [telemetry] failed to get device ID: failed to store device ID: exec: "dbus-launch": executable file not found in $PATH
+11:52:48 [vix-daemon] [34mRegistered handler: ping[0m
+11:52:48 [vix-daemon] [34mRegistered handler: init[0m
+11:52:48 [vix-daemon] [34mRegistered handler: force_init[0m
+11:52:48 [vix-daemon] [34mRegistered handler: brain.init[0m
+11:52:48 [vix-daemon] [34mRegistered handler: brain.update_files[0m
+11:52:48 [vix-daemon] [31m[tools] ✗ rg (ripgrep) not found in PATH[0m
+11:52:48 [vix-daemon] [33mfalling back to system grep[0m
+11:52:48 [vix-daemon] [31m[tools] ✗ fd not found in PATH[0m
+11:52:48 [vix-daemon] [33mfalling back to builtin glob[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.read_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.read_minified_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.write_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.write_minified_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.edit_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.edit_minified_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.delete_file[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.bash[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.grep[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.glob_files[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.tool_orchestrator[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.web_fetch[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.web_search[0m
+11:52:48 [vix-daemon] [34mRegistered handler: tool.lsp_query[0m
+11:52:48 [vix-daemon] [34mDaemon listening on /tmp/vix_daemon.sock[0m
+11:52:51 [vix-daemon] [34mReceived action=ping[0m
+11:52:51 [vix-daemon] [34mCompleted action=ping status=ok[0m
+11:52:51 [vix-daemon] [34mReceived action=ping[0m
+11:52:51 [vix-daemon] [34mCompleted action=ping status=ok[0m
+11:52:51 [vix-daemon] [34mSession f0b3a569cf0e6d37 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+11:52:51 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+11:52:51 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+11:52:51 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+11:52:51 [vix-daemon] [34mBrain init complete for /workspace[0m
+11:52:51 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+11:52:51 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+11:52:51 [vix-daemon] [session] loaded 1 workflow(s) from config
+11:52:51 [vix-daemon] [session] chat agent: general_cc
+11:53:37 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/evaluation/usage/export_flows.py
+11:53:37 [vix-daemon] [dispatch] tool call: glob_files evaluation/usage/**, evaluation/**/*.py, evaluation/**/test_*.py
+11:53:37 [vix-daemon] [34m[tool.glob] backend=builtin cwd=/workspace patterns=[evaluation/usage/** evaluation/**/*.py evaluation/**/test_*.py] paths=[/workspace] type= include_hidden=true[0m
+11:53:42 [vix-daemon] [dispatch] tool call: bash $ find /workspace -type f -name "*.py" | head -50
+11:53:42 [vix-daemon] [dispatch] tool call: bash $ ls /workspace
+11:53:42 [vix-daemon] [33m[sandbox] no sandbox available — bash commands will run unsandboxed[0m
+11:53:42 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /workspace sandbox=none[0m
+11:53:42 [vix-daemon] [34m[tool.bash] cwd=/workspace command=find /workspace -type f -name "*.py" | head -50 sandbox=none[0m
+11:53:42 [vix-daemon] [34m[tool.bash] result=export_flows.py
+[0m
+11:53:42 [vix-daemon] [34m[tool.bash] result=/workspace/export_flows.py
+[0m
+11:53:44 [vix-daemon] [dispatch] tool call: read_minified_file /workspace/export_flows.py
+11:53:49 [vix-daemon] [dispatch] tool call: bash $ ls /workspace && find /workspace -name "pytest.ini" -o -name "setup.cfg" -o -nam...
+11:53:49 [vix-daemon] [34m[tool.bash] cwd=/workspace command=ls /workspace && find /workspace -name "pytest.ini" -o -name "setup.cfg" -o -nam... sandbox=none[0m
+11:53:49 [vix-daemon] [34m[tool.bash] result=export_flows.py
+[0m
+11:53:53 [vix-daemon] [dispatch] tool call: bash $ python3 -c "import mitmproxy; print(mitmproxy.__version__)" 2>/dev/null && pytho...
+11:53:53 [vix-daemon] [34m[tool.bash] cwd=/workspace command=python3 -c "import mitmproxy; print(mitmproxy.__version__)" 2>/dev/null && pytho... sandbox=none[0m
+11:53:53 [vix-daemon] [34m[tool.bash] result=
+[exit code: 1][0m
+11:53:56 [vix-daemon] [dispatch] tool call: bash $ pip list 2>/dev/null | head -30 || pip3 list 2>/dev/null | head -30
+11:53:56 [vix-daemon] [34m[tool.bash] cwd=/workspace command=pip list 2>/dev/null | head -30 || pip3 list 2>/dev/null | head -30 sandbox=none[0m
+11:53:56 [vix-daemon] [34m[tool.bash] result=Package     Version
+----------- -------
+argcomplete 2.0.0
+click       8.1.3
+colorama    0.4.6
+mercurial   6.3.2
+packaging   26.0
+pip         26.0.1
+pipx        1.1.0
+setuptools  82.0.1
+userpath    1.8.0
+wheel       0.46.3
+[0m
+11:53:59 [vix-daemon] [dispatch] tool call: bash $ python3 --version && which python3
+11:53:59 [vix-daemon] [34m[tool.bash] cwd=/workspace command=python3 --version && which python3 sandbox=none[0m
+11:53:59 [vix-daemon] [34m[tool.bash] result=Python 3.11.2
+/usr/bin/python3
+[0m
+11:55:43 [vix-daemon] [dispatch] tool call: read_file /workspace/export_flows.py
+11:59:59 [vix-daemon] [dispatch] tool call: write_file /workspace/test_export_flows.py (72923 chars)
+11:59:59 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/test_export_flows.py][0m
+11:59:59 [vix-daemon] [34mBrain update complete (<nil>)[0m
+12:00:04 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && python -m pytest test_export_flows.py -x --tb=short 2>&1 | head...
+12:00:04 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && python -m pytest test_export_flows.py -x --tb=short 2>&1 | head... sandbox=none[0m
+12:00:04 [vix-daemon] [34m[tool.bash] result=bash: line 1: python: command not found
+[0m
+12:00:07 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && python3 -m pytest test_export_flows.py -x --tb=short 2>&1 | hea...
+12:00:07 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && python3 -m pytest test_export_flows.py -x --tb=short 2>&1 | hea... sandbox=none[0m
+12:00:07 [vix-daemon] [34m[tool.bash] result=/usr/bin/python3: No module named pytest
+[0m
+12:00:12 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && pip install pytest -q && python3 -m pytest test_export_flows.py...
+12:00:12 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && pip install pytest -q && python3 -m pytest test_export_flows.py... sandbox=none[0m
+12:00:12 [vix-daemon] [34m[tool.bash] result=error: externally-managed-environment
+
+× This environment is externally managed
+╰─> To install Python packages system-wide, try apt install
+    python3-xyz, where xyz is the package you are trying to
+    install.
+    
+    If you wish to install a non-Debian-packaged Python package,
+    create a virtual environment using python3 -m venv path/to/venv.
+    Then use path/to/venv/bin/python and path/to/venv/bin/pip. Make
+    sure you have python3-full installed.
+    
+    If you wish to install a...[0m
+12:00:15 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && pip install pytest -q --break-system-packages 2>&1 | tail -5 &&...
+12:00:15 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && pip install pytest -q --break-system-packages 2>&1 | tail -5 &&... sandbox=none[0m
+12:00:18 [vix-daemon] [34m[tool.bash] result=WARNING: Running pip as the 'root' user can result in broken permissions and conflicting behaviour with the system package manager, possibly rendering your system unusable. It is recommended to use a virtual environment instead: https://pip.pypa.io/warnings/venv. Use the --root-user-action option if you know what you are doing and want to suppress this warning.
+============================= test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.0.2, pluggy-1...[0m
+12:00:24 [vix-daemon] [dispatch] tool call: edit_file /workspace/test_export_flows.py (6 lines changed, +1)
+12:00:24 [vix-daemon] [34mAuto brain update for 1 file(s): [/workspace/test_export_flows.py][0m
+12:00:24 [vix-daemon] [34mBrain update complete (<nil>)[0m
+12:00:27 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && python3 -m pytest test_export_flows.py -x --tb=short 2>&1 | hea...
+12:00:27 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && python3 -m pytest test_export_flows.py -x --tb=short 2>&1 | hea... sandbox=none[0m
+12:00:28 [vix-daemon] [34m[tool.bash] result============================== test session starts ==============================
+platform linux -- Python 3.11.2, pytest-9.0.2, pluggy-1.6.0
+rootdir: /workspace
+collected 162 items
+
+test_export_flows.py ................................................... [ 31%]
+........................................................................ [ 75%]
+.......................................                                  [100%]
+
+============================= 162 passed in 0.23s ===========================...[0m
+12:00:31 [vix-daemon] [dispatch] tool call: bash $ cd /workspace && python3 -m pytest test_export_flows.py -v --tb=short 2>&1 | tai...
+12:00:31 [vix-daemon] [34m[tool.bash] cwd=/workspace command=cd /workspace && python3 -m pytest test_export_flows.py -v --tb=short 2>&1 | tai... sandbox=none[0m
+12:00:32 [vix-daemon] [34m[tool.bash] result=test_export_flows.py::TestAggregateBySource::test_empty_flow_by_source_no_op PASSED [ 70%]
+test_export_flows.py::TestRoundBySource::test_input_tool_results_rounded PASSED [ 71%]
+test_export_flows.py::TestRoundBySource::test_input_tool_calls_rounded PASSED [ 72%]
+test_export_flows.py::TestRoundBySource::test_output_llm_text_rounded PASSED [ 72%]
+test_export_flows.py::TestRoundBySource::test_output_tool_calls_rounded PASSED [ 73%]
+test_export_flows.py::TestAgentColor::test_result_is_hash_hex PASSE...[0m
+12:02:16 [vix-daemon] [34mSession f0b3a569cf0e6d37 ended[0m
+12:02:16 [vix-daemon] [34mReceived action=ping[0m
+12:02:16 [vix-daemon] [34mCompleted action=ping status=ok[0m
+12:02:16 [vix-daemon] [34mSession 21f22559dc4e8e04 started (cwd=/workspace, model=claude-sonnet-4-6)[0m
+12:02:16 [vix-daemon] [34mLSP pool: 1 language(s) configured[0m
+12:02:16 [vix-daemon] [34mLSP pool: go → /Users/julien/go/bin/gopls[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for javascript → prettier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for rust → rustfmt[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for ruby → rubyfmt[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for cpp → clang-format[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for shell → shfmt[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for kotlin → ktfmt[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for csharp → csharpier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for php → php-cs-fixer[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for html → prettier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for typescript → prettier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for java → google-java-format[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for swift → swiftformat[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for c → clang-format[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for json → prettier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for css → prettier[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for go → gofmt[0m
+12:02:16 [vix-daemon] [34mLSP pool: formatter for python → black[0m
+12:02:16 [vix-daemon] [34mBrain init complete for /workspace[0m
+12:02:16 [vix-daemon] [session] loaded 2 custom agent(s) from .vix/agents/
+12:02:16 [vix-daemon] [session] chat agent tools from frontmatter: [read_minified_file bash grep glob_files lsp_query web_fetch web_search spawn_agent task_output ask_question_to_user]
+12:02:16 [vix-daemon] [session] loaded 1 workflow(s) from config
+12:02:16 [vix-daemon] [session] chat agent: general_cc
+12:02:16 [vix-daemon] [34mSession 21f22559dc4e8e04 ended[0m

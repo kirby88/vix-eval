@@ -1,0 +1,3578 @@
+{
+  "title": "vix",
+  "color": "#7B2FBE",
+  "by_run": {
+    "20260406-111923": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 49,
+          "cost": {
+            "input": {
+              "tokens": 55,
+              "dollars": 0.000165
+            },
+            "cache_write": {
+              "tokens": 65245,
+              "dollars": 0.244671
+            },
+            "cache_read": {
+              "tokens": 944378,
+              "dollars": 0.28331
+            },
+            "output": {
+              "tokens": 15887,
+              "dollars": 0.238305
+            },
+            "total": {
+              "tokens": 1025565,
+              "dollars": 0.766452
+            }
+          },
+          "timing": {
+            "total_duration_ms": 293340,
+            "wall_clock_ms": 330056,
+            "avg_duration_ms": 5987
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 16,
+          "cost": {
+            "input": {
+              "tokens": 18,
+              "dollars": 5.4e-05
+            },
+            "cache_write": {
+              "tokens": 21342,
+              "dollars": 0.080033
+            },
+            "cache_read": {
+              "tokens": 195017,
+              "dollars": 0.058505
+            },
+            "output": {
+              "tokens": 2340,
+              "dollars": 0.0351
+            },
+            "total": {
+              "tokens": 218717,
+              "dollars": 0.173692
+            }
+          },
+          "timing": {
+            "total_duration_ms": 43595,
+            "wall_clock_ms": 43758,
+            "avg_duration_ms": 2725
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 11174,
+                  "dollars": 0.00568,
+                  "chars": 38430
+                },
+                "grep": {
+                  "tokens": 15362,
+                  "dollars": 0.012192,
+                  "chars": 51427
+                },
+                "read_minified_file": {
+                  "tokens": 40696,
+                  "dollars": 0.028737,
+                  "chars": 136679
+                },
+                "bash": {
+                  "tokens": 635,
+                  "dollars": 0.001281,
+                  "chars": 2092
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 908,
+                  "dollars": 0.000462,
+                  "chars": 3120
+                },
+                "grep": {
+                  "tokens": 3230,
+                  "dollars": 0.002055,
+                  "chars": 10897
+                },
+                "read_minified_file": {
+                  "tokens": 7560,
+                  "dollars": 0.005382,
+                  "chars": 25415
+                },
+                "bash": {
+                  "tokens": 287,
+                  "dollars": 0.000579,
+                  "chars": 946
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 121,
+                "dollars": 0.001819,
+                "chars": 265
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2219,
+                  "dollars": 0.033281,
+                  "chars": 4120
+                },
+                "glob_files": {
+                  "tokens": 84,
+                  "dollars": 0.001255,
+                  "chars": 168
+                },
+                "grep": {
+                  "tokens": 474,
+                  "dollars": 0.007113,
+                  "chars": 943
+                },
+                "read_minified_file": {
+                  "tokens": 1468,
+                  "dollars": 0.022017,
+                  "chars": 2576
+                },
+                "bash": {
+                  "tokens": 193,
+                  "dollars": 0.002896,
+                  "chars": 433
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1528,
+              "dollars": 0.00573
+            },
+            "cache_read": {
+              "tokens": 19090,
+              "dollars": 0.005727
+            },
+            "output": {
+              "tokens": 1538,
+              "dollars": 0.02307
+            },
+            "total": {
+              "tokens": 22159,
+              "dollars": 0.034536
+            }
+          },
+          "timing": {
+            "total_duration_ms": 25062,
+            "wall_clock_ms": 25062,
+            "avg_duration_ms": 25062
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 770,
+                  "dollars": 0.000231,
+                  "chars": 2562
+                },
+                "grep": {
+                  "tokens": 2248,
+                  "dollars": 0.000674,
+                  "chars": 7477
+                },
+                "read_minified_file": {
+                  "tokens": 4926,
+                  "dollars": 0.001478,
+                  "chars": 16380
+                },
+                "bash": {
+                  "tokens": 315,
+                  "dollars": 9.4e-05,
+                  "chars": 1046
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 63,
+                  "dollars": 1.9e-05,
+                  "chars": 208
+                },
+                "grep": {
+                  "tokens": 332,
+                  "dollars": 0.0001,
+                  "chars": 1103
+                },
+                "read_minified_file": {
+                  "tokens": 931,
+                  "dollars": 0.000279,
+                  "chars": 3096
+                },
+                "bash": {
+                  "tokens": 142,
+                  "dollars": 4.3e-05,
+                  "chars": 473
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1538,
+                "dollars": 0.02307,
+                "chars": 5131
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 32,
+          "cost": {
+            "input": {
+              "tokens": 34,
+              "dollars": 0.000102
+            },
+            "cache_write": {
+              "tokens": 42375,
+              "dollars": 0.158908
+            },
+            "cache_read": {
+              "tokens": 730271,
+              "dollars": 0.219078
+            },
+            "output": {
+              "tokens": 12009,
+              "dollars": 0.180135
+            },
+            "total": {
+              "tokens": 784689,
+              "dollars": 0.558224
+            }
+          },
+          "timing": {
+            "total_duration_ms": 224683,
+            "wall_clock_ms": 245130,
+            "avg_duration_ms": 7021
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "read_file_uncompressed": {
+                  "tokens": 202119,
+                  "dollars": 0.094996,
+                  "chars": 656706
+                },
+                "edit_file": {
+                  "tokens": 4570,
+                  "dollars": 0.002529,
+                  "chars": 14912
+                },
+                "write_file": {
+                  "tokens": 1692,
+                  "dollars": 0.000689,
+                  "chars": 5568
+                },
+                "bash": {
+                  "tokens": 106567,
+                  "dollars": 0.063733,
+                  "chars": 347501
+                },
+                "grep": {
+                  "tokens": 10610,
+                  "dollars": 0.005609,
+                  "chars": 34443
+                }
+              },
+              "tool_calls": {
+                "read_file_uncompressed": {
+                  "tokens": 19961,
+                  "dollars": 0.009687,
+                  "chars": 64930
+                },
+                "edit_file": {
+                  "tokens": 17659,
+                  "dollars": 0.01049,
+                  "chars": 57484
+                },
+                "write_file": {
+                  "tokens": 8150,
+                  "dollars": 0.003295,
+                  "chars": 26738
+                },
+                "bash": {
+                  "tokens": 4125,
+                  "dollars": 0.002378,
+                  "chars": 13457
+                },
+                "grep": {
+                  "tokens": 7405,
+                  "dollars": 0.003955,
+                  "chars": 24045
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 7301,
+                "dollars": 0.109501,
+                "chars": 22628
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 4708,
+                  "dollars": 0.070634,
+                  "chars": 10894
+                },
+                "read_file_uncompressed": {
+                  "tokens": 1524,
+                  "dollars": 0.02288,
+                  "chars": 2973
+                },
+                "edit_file": {
+                  "tokens": 1657,
+                  "dollars": 0.024847,
+                  "chars": 4707
+                },
+                "write_file": {
+                  "tokens": 340,
+                  "dollars": 0.0051,
+                  "chars": 882
+                },
+                "bash": {
+                  "tokens": 557,
+                  "dollars": 0.008356,
+                  "chars": 974
+                },
+                "grep": {
+                  "tokens": 630,
+                  "dollars": 0.009451,
+                  "chars": 1358
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 15496,
+            "unnecessary_space_count": 95671,
+            "total_chars": 581293
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 3,
+              "total_read_chars": 28851,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 10,
+                  "chars": 17789
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 3,
+                  "chars": 10228
+                },
+                "/workspace/src/error.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 834
+                }
+              }
+            },
+            "output": {
+              "files_written": 3,
+              "unique_files_written": 3,
+              "total_write_chars": 1320,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 530
+                },
+                "/workspace/tests/regression/issue979.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 728
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 62
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 11944,
+              "dollars": 0.005911,
+              "chars": 40992
+            },
+            "grep": {
+              "tokens": 28220,
+              "dollars": 0.018475,
+              "chars": 93347
+            },
+            "read_minified_file": {
+              "tokens": 45622,
+              "dollars": 0.030215,
+              "chars": 153059
+            },
+            "bash": {
+              "tokens": 107517,
+              "dollars": 0.065108,
+              "chars": 350639
+            },
+            "read_file_uncompressed": {
+              "tokens": 202119,
+              "dollars": 0.094996,
+              "chars": 656706
+            },
+            "edit_file": {
+              "tokens": 4570,
+              "dollars": 0.002529,
+              "chars": 14912
+            },
+            "write_file": {
+              "tokens": 1692,
+              "dollars": 0.000689,
+              "chars": 5568
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 971,
+              "dollars": 0.000481,
+              "chars": 3328
+            },
+            "grep": {
+              "tokens": 10967,
+              "dollars": 0.00611,
+              "chars": 36045
+            },
+            "read_minified_file": {
+              "tokens": 8491,
+              "dollars": 0.005661,
+              "chars": 28511
+            },
+            "bash": {
+              "tokens": 4554,
+              "dollars": 0.003,
+              "chars": 14876
+            },
+            "read_file_uncompressed": {
+              "tokens": 19961,
+              "dollars": 0.009687,
+              "chars": 64930
+            },
+            "edit_file": {
+              "tokens": 17659,
+              "dollars": 0.01049,
+              "chars": 57484
+            },
+            "write_file": {
+              "tokens": 8150,
+              "dollars": 0.003295,
+              "chars": 26738
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 8960,
+            "dollars": 0.13439,
+            "chars": 28024
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 6927,
+              "dollars": 0.103915,
+              "chars": 15014
+            },
+            "glob_files": {
+              "tokens": 84,
+              "dollars": 0.001255,
+              "chars": 168
+            },
+            "grep": {
+              "tokens": 1104,
+              "dollars": 0.016564,
+              "chars": 2301
+            },
+            "read_minified_file": {
+              "tokens": 1468,
+              "dollars": 0.022017,
+              "chars": 2576
+            },
+            "bash": {
+              "tokens": 750,
+              "dollars": 0.011252,
+              "chars": 1407
+            },
+            "read_file_uncompressed": {
+              "tokens": 1524,
+              "dollars": 0.02288,
+              "chars": 2973
+            },
+            "edit_file": {
+              "tokens": 1657,
+              "dollars": 0.024847,
+              "chars": 4707
+            },
+            "write_file": {
+              "tokens": 340,
+              "dollars": 0.0051,
+              "chars": 882
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 15496,
+        "unnecessary_space_count": 95671,
+        "total_chars": 581293
+      },
+      "total": {
+        "request_count": 49,
+        "cost": {
+          "input": {
+            "tokens": 55,
+            "dollars": 0.000165
+          },
+          "cache_write": {
+            "tokens": 65245,
+            "dollars": 0.244671
+          },
+          "cache_read": {
+            "tokens": 944378,
+            "dollars": 0.28331
+          },
+          "output": {
+            "tokens": 15887,
+            "dollars": 0.238305
+          },
+          "total": {
+            "tokens": 1025565,
+            "dollars": 0.766452
+          }
+        },
+        "timing": {
+          "total_duration_ms": 293340,
+          "wall_clock_ms": 330056,
+          "avg_duration_ms": 5987
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 3,
+            "total_read_chars": 28851,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 10,
+                "chars": 17789
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 10228
+              },
+              "/workspace/src/error.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 834
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 1320,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 530
+              },
+              "/workspace/tests/regression/issue979.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 728
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 62
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-111936": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 72,
+          "cost": {
+            "input": {
+              "tokens": 78,
+              "dollars": 0.000234
+            },
+            "cache_write": {
+              "tokens": 69463,
+              "dollars": 0.260483
+            },
+            "cache_read": {
+              "tokens": 1692188,
+              "dollars": 0.507651
+            },
+            "output": {
+              "tokens": 22104,
+              "dollars": 0.33156
+            },
+            "total": {
+              "tokens": 1783833,
+              "dollars": 1.099935
+            }
+          },
+          "timing": {
+            "total_duration_ms": 385529,
+            "wall_clock_ms": 419173,
+            "avg_duration_ms": 5355
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 25,
+          "cost": {
+            "input": {
+              "tokens": 27,
+              "dollars": 8.1e-05
+            },
+            "cache_write": {
+              "tokens": 22999,
+              "dollars": 0.086244
+            },
+            "cache_read": {
+              "tokens": 455886,
+              "dollars": 0.136761
+            },
+            "output": {
+              "tokens": 4398,
+              "dollars": 0.06597
+            },
+            "total": {
+              "tokens": 483310,
+              "dollars": 0.289064
+            }
+          },
+          "timing": {
+            "total_duration_ms": 76002,
+            "wall_clock_ms": 76314,
+            "avg_duration_ms": 3040
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 18312,
+                  "dollars": 0.007826,
+                  "chars": 61488
+                },
+                "grep": {
+                  "tokens": 36347,
+                  "dollars": 0.020231,
+                  "chars": 118653
+                },
+                "read_minified_file": {
+                  "tokens": 153776,
+                  "dollars": 0.079822,
+                  "chars": 503766
+                },
+                "bash": {
+                  "tokens": 15357,
+                  "dollars": 0.017116,
+                  "chars": 49645
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 1496,
+                  "dollars": 0.000635,
+                  "chars": 5016
+                },
+                "grep": {
+                  "tokens": 5891,
+                  "dollars": 0.002857,
+                  "chars": 19430
+                },
+                "read_minified_file": {
+                  "tokens": 20338,
+                  "dollars": 0.010423,
+                  "chars": 66807
+                },
+                "bash": {
+                  "tokens": 4737,
+                  "dollars": 0.005076,
+                  "chars": 15309
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 350,
+                "dollars": 0.005265,
+                "chars": 770
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 4048,
+                  "dollars": 0.060705,
+                  "chars": 7789
+                },
+                "glob_files": {
+                  "tokens": 85,
+                  "dollars": 0.001278,
+                  "chars": 169
+                },
+                "grep": {
+                  "tokens": 468,
+                  "dollars": 0.007021,
+                  "chars": 937
+                },
+                "read_minified_file": {
+                  "tokens": 1927,
+                  "dollars": 0.028898,
+                  "chars": 3577
+                },
+                "bash": {
+                  "tokens": 1568,
+                  "dollars": 0.023507,
+                  "chars": 3106
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 2195,
+              "dollars": 0.008231
+            },
+            "cache_read": {
+              "tokens": 29276,
+              "dollars": 0.008783
+            },
+            "output": {
+              "tokens": 2514,
+              "dollars": 0.03771
+            },
+            "total": {
+              "tokens": 33988,
+              "dollars": 0.054733
+            }
+          },
+          "timing": {
+            "total_duration_ms": 41656,
+            "wall_clock_ms": 41656,
+            "avg_duration_ms": 41656
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 785,
+                  "dollars": 0.000235,
+                  "chars": 2562
+                },
+                "grep": {
+                  "tokens": 2755,
+                  "dollars": 0.000826,
+                  "chars": 8989
+                },
+                "read_minified_file": {
+                  "tokens": 10087,
+                  "dollars": 0.003026,
+                  "chars": 32908
+                },
+                "bash": {
+                  "tokens": 3596,
+                  "dollars": 0.001079,
+                  "chars": 11733
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 64,
+                  "dollars": 1.9e-05,
+                  "chars": 209
+                },
+                "grep": {
+                  "tokens": 336,
+                  "dollars": 0.000101,
+                  "chars": 1097
+                },
+                "read_minified_file": {
+                  "tokens": 1305,
+                  "dollars": 0.000391,
+                  "chars": 4257
+                },
+                "bash": {
+                  "tokens": 1050,
+                  "dollars": 0.000315,
+                  "chars": 3426
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 2514,
+                "dollars": 0.03771,
+                "chars": 8270
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 46,
+          "cost": {
+            "input": {
+              "tokens": 48,
+              "dollars": 0.000144
+            },
+            "cache_write": {
+              "tokens": 44269,
+              "dollars": 0.166008
+            },
+            "cache_read": {
+              "tokens": 1207026,
+              "dollars": 0.362107
+            },
+            "output": {
+              "tokens": 15192,
+              "dollars": 0.22788
+            },
+            "total": {
+              "tokens": 1266535,
+              "dollars": 0.756138
+            }
+          },
+          "timing": {
+            "total_duration_ms": 267871,
+            "wall_clock_ms": 294611,
+            "avg_duration_ms": 5823
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "read_file_uncompressed": {
+                  "tokens": 326350,
+                  "dollars": 0.131913,
+                  "chars": 1032811
+                },
+                "edit_file": {
+                  "tokens": 6758,
+                  "dollars": 0.003017,
+                  "chars": 21390
+                },
+                "write_file": {
+                  "tokens": 2422,
+                  "dollars": 0.000919,
+                  "chars": 7680
+                },
+                "bash": {
+                  "tokens": 127128,
+                  "dollars": 0.056007,
+                  "chars": 399744
+                },
+                "grep": {
+                  "tokens": 16018,
+                  "dollars": 0.008088,
+                  "chars": 50148
+                },
+                "delete_file": {
+                  "tokens": 119,
+                  "dollars": 0.000239,
+                  "chars": 372
+                }
+              },
+              "tool_calls": {
+                "read_file_uncompressed": {
+                  "tokens": 33715,
+                  "dollars": 0.013794,
+                  "chars": 106795
+                },
+                "edit_file": {
+                  "tokens": 52012,
+                  "dollars": 0.023901,
+                  "chars": 164363
+                },
+                "write_file": {
+                  "tokens": 12107,
+                  "dollars": 0.004598,
+                  "chars": 38400
+                },
+                "bash": {
+                  "tokens": 58258,
+                  "dollars": 0.027766,
+                  "chars": 182534
+                },
+                "grep": {
+                  "tokens": 10773,
+                  "dollars": 0.005033,
+                  "chars": 33741
+                },
+                "delete_file": {
+                  "tokens": 88,
+                  "dollars": 0.000178,
+                  "chars": 276
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 5847,
+                "dollars": 0.087727,
+                "chars": 16576
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 9345,
+                  "dollars": 0.140153,
+                  "chars": 21513
+                },
+                "read_file_uncompressed": {
+                  "tokens": 1780,
+                  "dollars": 0.026706,
+                  "chars": 2868
+                },
+                "edit_file": {
+                  "tokens": 2508,
+                  "dollars": 0.037615,
+                  "chars": 7549
+                },
+                "write_file": {
+                  "tokens": 348,
+                  "dollars": 0.005224,
+                  "chars": 920
+                },
+                "bash": {
+                  "tokens": 4021,
+                  "dollars": 0.0603,
+                  "chars": 8746
+                },
+                "grep": {
+                  "tokens": 640,
+                  "dollars": 0.009587,
+                  "chars": 1332
+                },
+                "delete_file": {
+                  "tokens": 48,
+                  "dollars": 0.000721,
+                  "chars": 98
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 25002,
+            "unnecessary_space_count": 139603,
+            "total_chars": 904367
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 28283,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 12,
+                  "chars": 17818
+                },
+                "/workspace/tests/regression/issue953.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 296
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 8590
+                },
+                "/workspace/src/value/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1579
+                }
+              }
+            },
+            "output": {
+              "files_written": 2,
+              "unique_files_written": 2,
+              "total_write_chars": 1574,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 808
+                },
+                "/workspace/tests/regression/issue979.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 766
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 19097,
+              "dollars": 0.008061,
+              "chars": 64050
+            },
+            "grep": {
+              "tokens": 55120,
+              "dollars": 0.029145,
+              "chars": 177790
+            },
+            "read_minified_file": {
+              "tokens": 163863,
+              "dollars": 0.082848,
+              "chars": 536674
+            },
+            "bash": {
+              "tokens": 146081,
+              "dollars": 0.074202,
+              "chars": 461122
+            },
+            "read_file_uncompressed": {
+              "tokens": 326350,
+              "dollars": 0.131913,
+              "chars": 1032811
+            },
+            "edit_file": {
+              "tokens": 6758,
+              "dollars": 0.003017,
+              "chars": 21390
+            },
+            "write_file": {
+              "tokens": 2422,
+              "dollars": 0.000919,
+              "chars": 7680
+            },
+            "delete_file": {
+              "tokens": 119,
+              "dollars": 0.000239,
+              "chars": 372
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 1560,
+              "dollars": 0.000654,
+              "chars": 5225
+            },
+            "grep": {
+              "tokens": 17000,
+              "dollars": 0.007991,
+              "chars": 54268
+            },
+            "read_minified_file": {
+              "tokens": 21643,
+              "dollars": 0.010814,
+              "chars": 71064
+            },
+            "bash": {
+              "tokens": 64045,
+              "dollars": 0.033157,
+              "chars": 201269
+            },
+            "read_file_uncompressed": {
+              "tokens": 33715,
+              "dollars": 0.013794,
+              "chars": 106795
+            },
+            "edit_file": {
+              "tokens": 52012,
+              "dollars": 0.023901,
+              "chars": 164363
+            },
+            "write_file": {
+              "tokens": 12107,
+              "dollars": 0.004598,
+              "chars": 38400
+            },
+            "delete_file": {
+              "tokens": 88,
+              "dollars": 0.000178,
+              "chars": 276
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 8711,
+            "dollars": 0.130702,
+            "chars": 25616
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 13393,
+              "dollars": 0.200858,
+              "chars": 29302
+            },
+            "glob_files": {
+              "tokens": 85,
+              "dollars": 0.001278,
+              "chars": 169
+            },
+            "grep": {
+              "tokens": 1108,
+              "dollars": 0.016608,
+              "chars": 2269
+            },
+            "read_minified_file": {
+              "tokens": 1927,
+              "dollars": 0.028898,
+              "chars": 3577
+            },
+            "bash": {
+              "tokens": 5589,
+              "dollars": 0.083807,
+              "chars": 11852
+            },
+            "read_file_uncompressed": {
+              "tokens": 1780,
+              "dollars": 0.026706,
+              "chars": 2868
+            },
+            "edit_file": {
+              "tokens": 2508,
+              "dollars": 0.037615,
+              "chars": 7549
+            },
+            "write_file": {
+              "tokens": 348,
+              "dollars": 0.005224,
+              "chars": 920
+            },
+            "delete_file": {
+              "tokens": 48,
+              "dollars": 0.000721,
+              "chars": 98
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 25002,
+        "unnecessary_space_count": 139603,
+        "total_chars": 904367
+      },
+      "total": {
+        "request_count": 72,
+        "cost": {
+          "input": {
+            "tokens": 78,
+            "dollars": 0.000234
+          },
+          "cache_write": {
+            "tokens": 69463,
+            "dollars": 0.260483
+          },
+          "cache_read": {
+            "tokens": 1692188,
+            "dollars": 0.507651
+          },
+          "output": {
+            "tokens": 22104,
+            "dollars": 0.33156
+          },
+          "total": {
+            "tokens": 1783833,
+            "dollars": 1.099935
+          }
+        },
+        "timing": {
+          "total_duration_ms": 385529,
+          "wall_clock_ms": 419173,
+          "avg_duration_ms": 5355
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 4,
+            "total_read_chars": 28283,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 12,
+                "chars": 17818
+              },
+              "/workspace/tests/regression/issue953.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 296
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 8590
+              },
+              "/workspace/src/value/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1579
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 1574,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 808
+              },
+              "/workspace/tests/regression/issue979.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 766
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-111946": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 61,
+          "cost": {
+            "input": {
+              "tokens": 67,
+              "dollars": 0.000201
+            },
+            "cache_write": {
+              "tokens": 64735,
+              "dollars": 0.242757
+            },
+            "cache_read": {
+              "tokens": 1408423,
+              "dollars": 0.422522
+            },
+            "output": {
+              "tokens": 19564,
+              "dollars": 0.29346
+            },
+            "total": {
+              "tokens": 1492789,
+              "dollars": 0.958944
+            }
+          },
+          "timing": {
+            "total_duration_ms": 371741,
+            "wall_clock_ms": 401942,
+            "avg_duration_ms": 6094
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 15,
+          "cost": {
+            "input": {
+              "tokens": 17,
+              "dollars": 5.1e-05
+            },
+            "cache_write": {
+              "tokens": 12951,
+              "dollars": 0.048568
+            },
+            "cache_read": {
+              "tokens": 194527,
+              "dollars": 0.058356
+            },
+            "output": {
+              "tokens": 2633,
+              "dollars": 0.039495
+            },
+            "total": {
+              "tokens": 210128,
+              "dollars": 0.14647
+            }
+          },
+          "timing": {
+            "total_duration_ms": 48245,
+            "wall_clock_ms": 48405,
+            "avg_duration_ms": 3216
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 10415,
+                  "dollars": 0.005453,
+                  "chars": 35868
+                },
+                "grep": {
+                  "tokens": 16271,
+                  "dollars": 0.012512,
+                  "chars": 54350
+                },
+                "read_minified_file": {
+                  "tokens": 39551,
+                  "dollars": 0.028297,
+                  "chars": 132759
+                },
+                "bash": {
+                  "tokens": 222,
+                  "dollars": 0.000833,
+                  "chars": 732
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 984,
+                  "dollars": 0.000516,
+                  "chars": 3388
+                },
+                "grep": {
+                  "tokens": 3354,
+                  "dollars": 0.002368,
+                  "chars": 11290
+                },
+                "read_minified_file": {
+                  "tokens": 8751,
+                  "dollars": 0.006388,
+                  "chars": 29393
+                },
+                "bash": {
+                  "tokens": 154,
+                  "dollars": 0.000577,
+                  "chars": 506
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 152,
+                "dollars": 0.00229,
+                "chars": 341
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2481,
+                  "dollars": 0.037205,
+                  "chars": 5021
+                },
+                "glob_files": {
+                  "tokens": 94,
+                  "dollars": 0.001403,
+                  "chars": 202
+                },
+                "grep": {
+                  "tokens": 563,
+                  "dollars": 0.008421,
+                  "chars": 1166
+                },
+                "read_minified_file": {
+                  "tokens": 1603,
+                  "dollars": 0.024066,
+                  "chars": 3187
+                },
+                "bash": {
+                  "tokens": 221,
+                  "dollars": 0.003315,
+                  "chars": 466
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1997,
+              "dollars": 0.007489
+            },
+            "cache_read": {
+              "tokens": 18784,
+              "dollars": 0.005635
+            },
+            "output": {
+              "tokens": 1569,
+              "dollars": 0.023535
+            },
+            "total": {
+              "tokens": 22353,
+              "dollars": 0.036668
+            }
+          },
+          "timing": {
+            "total_duration_ms": 25083,
+            "wall_clock_ms": 25083,
+            "avg_duration_ms": 25083
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 768,
+                  "dollars": 0.00023,
+                  "chars": 2562
+                },
+                "grep": {
+                  "tokens": 2255,
+                  "dollars": 0.000677,
+                  "chars": 7522
+                },
+                "read_minified_file": {
+                  "tokens": 4909,
+                  "dollars": 0.001473,
+                  "chars": 16374
+                },
+                "bash": {
+                  "tokens": 219,
+                  "dollars": 6.6e-05,
+                  "chars": 732
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 73,
+                  "dollars": 2.2e-05,
+                  "chars": 242
+                },
+                "grep": {
+                  "tokens": 410,
+                  "dollars": 0.000123,
+                  "chars": 1366
+                },
+                "read_minified_file": {
+                  "tokens": 1123,
+                  "dollars": 0.000337,
+                  "chars": 3747
+                },
+                "bash": {
+                  "tokens": 152,
+                  "dollars": 4.6e-05,
+                  "chars": 506
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1569,
+                "dollars": 0.023535,
+                "chars": 5170
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 45,
+          "cost": {
+            "input": {
+              "tokens": 47,
+              "dollars": 0.000141
+            },
+            "cache_write": {
+              "tokens": 49787,
+              "dollars": 0.1867
+            },
+            "cache_read": {
+              "tokens": 1195112,
+              "dollars": 0.358531
+            },
+            "output": {
+              "tokens": 15362,
+              "dollars": 0.23043
+            },
+            "total": {
+              "tokens": 1260308,
+              "dollars": 0.775806
+            }
+          },
+          "timing": {
+            "total_duration_ms": 298413,
+            "wall_clock_ms": 320944,
+            "avg_duration_ms": 6631
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "read_file_uncompressed": {
+                  "tokens": 354386,
+                  "dollars": 0.146942,
+                  "chars": 1140126
+                },
+                "edit_file": {
+                  "tokens": 4310,
+                  "dollars": 0.002063,
+                  "chars": 13950
+                },
+                "write_file": {
+                  "tokens": 2432,
+                  "dollars": 0.00091,
+                  "chars": 7872
+                },
+                "bash": {
+                  "tokens": 134588,
+                  "dollars": 0.05799,
+                  "chars": 434706
+                },
+                "grep": {
+                  "tokens": 44099,
+                  "dollars": 0.020554,
+                  "chars": 141732
+                },
+                "glob_files": {
+                  "tokens": 10399,
+                  "dollars": 0.004503,
+                  "chars": 33384
+                }
+              },
+              "tool_calls": {
+                "read_file_uncompressed": {
+                  "tokens": 36419,
+                  "dollars": 0.015704,
+                  "chars": 117374
+                },
+                "edit_file": {
+                  "tokens": 13274,
+                  "dollars": 0.007358,
+                  "chars": 42835
+                },
+                "write_file": {
+                  "tokens": 12147,
+                  "dollars": 0.004533,
+                  "chars": 39360
+                },
+                "bash": {
+                  "tokens": 6210,
+                  "dollars": 0.003783,
+                  "chars": 20033
+                },
+                "grep": {
+                  "tokens": 21977,
+                  "dollars": 0.009969,
+                  "chars": 70626
+                },
+                "glob_files": {
+                  "tokens": 1619,
+                  "dollars": 0.000708,
+                  "chars": 5200
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 9693,
+                "dollars": 0.145444,
+                "chars": 29338
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 5669,
+                  "dollars": 0.084986,
+                  "chars": 12117
+                },
+                "read_file_uncompressed": {
+                  "tokens": 2183,
+                  "dollars": 0.032731,
+                  "chars": 3788
+                },
+                "edit_file": {
+                  "tokens": 1135,
+                  "dollars": 0.017006,
+                  "chars": 3030
+                },
+                "write_file": {
+                  "tokens": 353,
+                  "dollars": 0.005295,
+                  "chars": 920
+                },
+                "bash": {
+                  "tokens": 803,
+                  "dollars": 0.01205,
+                  "chars": 1624
+                },
+                "grep": {
+                  "tokens": 1092,
+                  "dollars": 0.016359,
+                  "chars": 2595
+                },
+                "glob_files": {
+                  "tokens": 103,
+                  "dollars": 0.001545,
+                  "chars": 160
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 27455,
+            "unnecessary_space_count": 175673,
+            "total_chars": 1005085
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 4,
+              "total_read_chars": 33686,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 13,
+                  "chars": 20650
+                },
+                "/workspace/tests/regression/issue953.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 296
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 8590
+                },
+                "/workspace/src/read.rs": {
+                  "file_size": null,
+                  "calls": 3,
+                  "chars": 4150
+                }
+              }
+            },
+            "output": {
+              "files_written": 2,
+              "unique_files_written": 2,
+              "total_write_chars": 1296,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 530
+                },
+                "/workspace/tests/regression/issue979.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 766
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 21582,
+              "dollars": 0.010186,
+              "chars": 71814
+            },
+            "grep": {
+              "tokens": 62625,
+              "dollars": 0.033743,
+              "chars": 203604
+            },
+            "read_minified_file": {
+              "tokens": 44460,
+              "dollars": 0.02977,
+              "chars": 149133
+            },
+            "bash": {
+              "tokens": 135029,
+              "dollars": 0.058889,
+              "chars": 436170
+            },
+            "read_file_uncompressed": {
+              "tokens": 354386,
+              "dollars": 0.146942,
+              "chars": 1140126
+            },
+            "edit_file": {
+              "tokens": 4310,
+              "dollars": 0.002063,
+              "chars": 13950
+            },
+            "write_file": {
+              "tokens": 2432,
+              "dollars": 0.00091,
+              "chars": 7872
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 2676,
+              "dollars": 0.001246,
+              "chars": 8830
+            },
+            "grep": {
+              "tokens": 25741,
+              "dollars": 0.01246,
+              "chars": 83282
+            },
+            "read_minified_file": {
+              "tokens": 9874,
+              "dollars": 0.006725,
+              "chars": 33140
+            },
+            "bash": {
+              "tokens": 6516,
+              "dollars": 0.004406,
+              "chars": 21045
+            },
+            "read_file_uncompressed": {
+              "tokens": 36419,
+              "dollars": 0.015704,
+              "chars": 117374
+            },
+            "edit_file": {
+              "tokens": 13274,
+              "dollars": 0.007358,
+              "chars": 42835
+            },
+            "write_file": {
+              "tokens": 12147,
+              "dollars": 0.004533,
+              "chars": 39360
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 11414,
+            "dollars": 0.171269,
+            "chars": 34849
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 8150,
+              "dollars": 0.122191,
+              "chars": 17138
+            },
+            "glob_files": {
+              "tokens": 197,
+              "dollars": 0.002948,
+              "chars": 362
+            },
+            "grep": {
+              "tokens": 1655,
+              "dollars": 0.02478,
+              "chars": 3761
+            },
+            "read_minified_file": {
+              "tokens": 1603,
+              "dollars": 0.024066,
+              "chars": 3187
+            },
+            "bash": {
+              "tokens": 1024,
+              "dollars": 0.015365,
+              "chars": 2090
+            },
+            "read_file_uncompressed": {
+              "tokens": 2183,
+              "dollars": 0.032731,
+              "chars": 3788
+            },
+            "edit_file": {
+              "tokens": 1135,
+              "dollars": 0.017006,
+              "chars": 3030
+            },
+            "write_file": {
+              "tokens": 353,
+              "dollars": 0.005295,
+              "chars": 920
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 27455,
+        "unnecessary_space_count": 175673,
+        "total_chars": 1005085
+      },
+      "total": {
+        "request_count": 61,
+        "cost": {
+          "input": {
+            "tokens": 67,
+            "dollars": 0.000201
+          },
+          "cache_write": {
+            "tokens": 64735,
+            "dollars": 0.242757
+          },
+          "cache_read": {
+            "tokens": 1408423,
+            "dollars": 0.422522
+          },
+          "output": {
+            "tokens": 19564,
+            "dollars": 0.29346
+          },
+          "total": {
+            "tokens": 1492789,
+            "dollars": 0.958944
+          }
+        },
+        "timing": {
+          "total_duration_ms": 371741,
+          "wall_clock_ms": 401942,
+          "avg_duration_ms": 6094
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 4,
+            "total_read_chars": 33686,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 13,
+                "chars": 20650
+              },
+              "/workspace/tests/regression/issue953.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 296
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 8590
+              },
+              "/workspace/src/read.rs": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 4150
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 1296,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 530
+              },
+              "/workspace/tests/regression/issue979.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 766
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-111950": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 68,
+          "cost": {
+            "input": {
+              "tokens": 74,
+              "dollars": 0.000222
+            },
+            "cache_write": {
+              "tokens": 66103,
+              "dollars": 0.247886
+            },
+            "cache_read": {
+              "tokens": 1590742,
+              "dollars": 0.477222
+            },
+            "output": {
+              "tokens": 28151,
+              "dollars": 0.422265
+            },
+            "total": {
+              "tokens": 1685070,
+              "dollars": 1.147597
+            }
+          },
+          "timing": {
+            "total_duration_ms": 493295,
+            "wall_clock_ms": 522936,
+            "avg_duration_ms": 7254
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 17,
+          "cost": {
+            "input": {
+              "tokens": 19,
+              "dollars": 5.7e-05
+            },
+            "cache_write": {
+              "tokens": 11835,
+              "dollars": 0.04438
+            },
+            "cache_read": {
+              "tokens": 224184,
+              "dollars": 0.067254
+            },
+            "output": {
+              "tokens": 3047,
+              "dollars": 0.045705
+            },
+            "total": {
+              "tokens": 239085,
+              "dollars": 0.157398
+            }
+          },
+          "timing": {
+            "total_duration_ms": 59561,
+            "wall_clock_ms": 59745,
+            "avg_duration_ms": 3504
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 12106,
+                  "dollars": 0.005959,
+                  "chars": 40992
+                },
+                "grep": {
+                  "tokens": 4272,
+                  "dollars": 0.002453,
+                  "chars": 14265
+                },
+                "read_minified_file": {
+                  "tokens": 36060,
+                  "dollars": 0.022269,
+                  "chars": 119164
+                },
+                "bash": {
+                  "tokens": 19231,
+                  "dollars": 0.016584,
+                  "chars": 62584
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 1159,
+                  "dollars": 0.000569,
+                  "chars": 3920
+                },
+                "grep": {
+                  "tokens": 2545,
+                  "dollars": 0.001504,
+                  "chars": 8470
+                },
+                "read_minified_file": {
+                  "tokens": 7315,
+                  "dollars": 0.004367,
+                  "chars": 24197
+                },
+                "bash": {
+                  "tokens": 5910,
+                  "dollars": 0.005369,
+                  "chars": 19236
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 83,
+                "dollars": 0.001243,
+                "chars": 185
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2964,
+                  "dollars": 0.044462,
+                  "chars": 5796
+                },
+                "glob_files": {
+                  "tokens": 94,
+                  "dollars": 0.001408,
+                  "chars": 205
+                },
+                "grep": {
+                  "tokens": 334,
+                  "dollars": 0.005014,
+                  "chars": 642
+                },
+                "read_minified_file": {
+                  "tokens": 1000,
+                  "dollars": 0.014996,
+                  "chars": 1819
+                },
+                "bash": {
+                  "tokens": 1536,
+                  "dollars": 0.023044,
+                  "chars": 3130
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 2084,
+              "dollars": 0.007815
+            },
+            "cache_read": {
+              "tokens": 18670,
+              "dollars": 0.005601
+            },
+            "output": {
+              "tokens": 1917,
+              "dollars": 0.028755
+            },
+            "total": {
+              "tokens": 22674,
+              "dollars": 0.04218
+            }
+          },
+          "timing": {
+            "total_duration_ms": 32477,
+            "wall_clock_ms": 32477,
+            "avg_duration_ms": 32477
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 779,
+                  "dollars": 0.000234,
+                  "chars": 2562
+                },
+                "grep": {
+                  "tokens": 369,
+                  "dollars": 0.000111,
+                  "chars": 1213
+                },
+                "read_minified_file": {
+                  "tokens": 3466,
+                  "dollars": 0.00104,
+                  "chars": 11396
+                },
+                "bash": {
+                  "tokens": 3122,
+                  "dollars": 0.000937,
+                  "chars": 10264
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 75,
+                  "dollars": 2.2e-05,
+                  "chars": 245
+                },
+                "grep": {
+                  "tokens": 232,
+                  "dollars": 7e-05,
+                  "chars": 762
+                },
+                "read_minified_file": {
+                  "tokens": 663,
+                  "dollars": 0.000199,
+                  "chars": 2179
+                },
+                "bash": {
+                  "tokens": 1037,
+                  "dollars": 0.000311,
+                  "chars": 3410
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1917,
+                "dollars": 0.028755,
+                "chars": 6448
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 50,
+          "cost": {
+            "input": {
+              "tokens": 52,
+              "dollars": 0.000156
+            },
+            "cache_write": {
+              "tokens": 52184,
+              "dollars": 0.195691
+            },
+            "cache_read": {
+              "tokens": 1347888,
+              "dollars": 0.404367
+            },
+            "output": {
+              "tokens": 23187,
+              "dollars": 0.347805
+            },
+            "total": {
+              "tokens": 1423311,
+              "dollars": 0.948019
+            }
+          },
+          "timing": {
+            "total_duration_ms": 401257,
+            "wall_clock_ms": 419919,
+            "avg_duration_ms": 8025
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "read_file_uncompressed": {
+                  "tokens": 280327,
+                  "dollars": 0.117855,
+                  "chars": 909379
+                },
+                "edit_file": {
+                  "tokens": 7520,
+                  "dollars": 0.003198,
+                  "chars": 24608
+                },
+                "write_file": {
+                  "tokens": 5068,
+                  "dollars": 0.001893,
+                  "chars": 16556
+                },
+                "bash": {
+                  "tokens": 152146,
+                  "dollars": 0.061617,
+                  "chars": 494994
+                },
+                "grep": {
+                  "tokens": 17511,
+                  "dollars": 0.009434,
+                  "chars": 56767
+                }
+              },
+              "tool_calls": {
+                "read_file_uncompressed": {
+                  "tokens": 40543,
+                  "dollars": 0.017316,
+                  "chars": 131849
+                },
+                "edit_file": {
+                  "tokens": 17154,
+                  "dollars": 0.007557,
+                  "chars": 56088
+                },
+                "write_file": {
+                  "tokens": 31770,
+                  "dollars": 0.011865,
+                  "chars": 103838
+                },
+                "bash": {
+                  "tokens": 34512,
+                  "dollars": 0.014286,
+                  "chars": 112089
+                },
+                "grep": {
+                  "tokens": 9769,
+                  "dollars": 0.005276,
+                  "chars": 31682
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 16237,
+                "dollars": 0.243526,
+                "chars": 50930
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 6950,
+                  "dollars": 0.104278,
+                  "chars": 14792
+                },
+                "read_file_uncompressed": {
+                  "tokens": 2268,
+                  "dollars": 0.034037,
+                  "chars": 4049
+                },
+                "edit_file": {
+                  "tokens": 1271,
+                  "dollars": 0.019062,
+                  "chars": 3213
+                },
+                "write_file": {
+                  "tokens": 811,
+                  "dollars": 0.012167,
+                  "chars": 2334
+                },
+                "bash": {
+                  "tokens": 1812,
+                  "dollars": 0.027194,
+                  "chars": 3390
+                },
+                "grep": {
+                  "tokens": 788,
+                  "dollars": 0.011818,
+                  "chars": 1806
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 21097,
+            "unnecessary_space_count": 131303,
+            "total_chars": 777730
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 5,
+              "total_read_chars": 27281,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 15,
+                  "chars": 18541
+                },
+                "/workspace/tests/regression/issue953.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 296
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 4,
+                  "chars": 6885
+                },
+                "/workspace/src/error.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1269
+                },
+                "/workspace/src/lib.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 290
+                }
+              }
+            },
+            "output": {
+              "files_written": 3,
+              "unique_files_written": 3,
+              "total_write_chars": 1584,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 530
+                },
+                "/workspace/tests/regression/issue979.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 992
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 62
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 12885,
+              "dollars": 0.006193,
+              "chars": 43554
+            },
+            "grep": {
+              "tokens": 22152,
+              "dollars": 0.011998,
+              "chars": 72245
+            },
+            "read_minified_file": {
+              "tokens": 39526,
+              "dollars": 0.023309,
+              "chars": 130560
+            },
+            "bash": {
+              "tokens": 174499,
+              "dollars": 0.079138,
+              "chars": 567842
+            },
+            "read_file_uncompressed": {
+              "tokens": 280327,
+              "dollars": 0.117855,
+              "chars": 909379
+            },
+            "edit_file": {
+              "tokens": 7520,
+              "dollars": 0.003198,
+              "chars": 24608
+            },
+            "write_file": {
+              "tokens": 5068,
+              "dollars": 0.001893,
+              "chars": 16556
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 1234,
+              "dollars": 0.000591,
+              "chars": 4165
+            },
+            "grep": {
+              "tokens": 12546,
+              "dollars": 0.00685,
+              "chars": 40914
+            },
+            "read_minified_file": {
+              "tokens": 7978,
+              "dollars": 0.004566,
+              "chars": 26376
+            },
+            "bash": {
+              "tokens": 41459,
+              "dollars": 0.019966,
+              "chars": 134735
+            },
+            "read_file_uncompressed": {
+              "tokens": 40543,
+              "dollars": 0.017316,
+              "chars": 131849
+            },
+            "edit_file": {
+              "tokens": 17154,
+              "dollars": 0.007557,
+              "chars": 56088
+            },
+            "write_file": {
+              "tokens": 31770,
+              "dollars": 0.011865,
+              "chars": 103838
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 18237,
+            "dollars": 0.273524,
+            "chars": 57563
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 9914,
+              "dollars": 0.14874,
+              "chars": 20588
+            },
+            "glob_files": {
+              "tokens": 94,
+              "dollars": 0.001408,
+              "chars": 205
+            },
+            "grep": {
+              "tokens": 1122,
+              "dollars": 0.016832,
+              "chars": 2448
+            },
+            "read_minified_file": {
+              "tokens": 1000,
+              "dollars": 0.014996,
+              "chars": 1819
+            },
+            "bash": {
+              "tokens": 3348,
+              "dollars": 0.050238,
+              "chars": 6520
+            },
+            "read_file_uncompressed": {
+              "tokens": 2268,
+              "dollars": 0.034037,
+              "chars": 4049
+            },
+            "edit_file": {
+              "tokens": 1271,
+              "dollars": 0.019062,
+              "chars": 3213
+            },
+            "write_file": {
+              "tokens": 811,
+              "dollars": 0.012167,
+              "chars": 2334
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 21097,
+        "unnecessary_space_count": 131303,
+        "total_chars": 777730
+      },
+      "total": {
+        "request_count": 68,
+        "cost": {
+          "input": {
+            "tokens": 74,
+            "dollars": 0.000222
+          },
+          "cache_write": {
+            "tokens": 66103,
+            "dollars": 0.247886
+          },
+          "cache_read": {
+            "tokens": 1590742,
+            "dollars": 0.477222
+          },
+          "output": {
+            "tokens": 28151,
+            "dollars": 0.422265
+          },
+          "total": {
+            "tokens": 1685070,
+            "dollars": 1.147597
+          }
+        },
+        "timing": {
+          "total_duration_ms": 493295,
+          "wall_clock_ms": 522936,
+          "avg_duration_ms": 7254
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 5,
+            "total_read_chars": 27281,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 15,
+                "chars": 18541
+              },
+              "/workspace/tests/regression/issue953.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 296
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 4,
+                "chars": 6885
+              },
+              "/workspace/src/error.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1269
+              },
+              "/workspace/src/lib.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 290
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 1584,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 530
+              },
+              "/workspace/tests/regression/issue979.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 992
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 62
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-111955": {
+      "title": "vix",
+      "color": "#7B2FBE",
+      "by_model": {
+        "claude-sonnet-4-6": {
+          "request_count": 29,
+          "cost": {
+            "input": {
+              "tokens": 35,
+              "dollars": 0.000105
+            },
+            "cache_write": {
+              "tokens": 38663,
+              "dollars": 0.144987
+            },
+            "cache_read": {
+              "tokens": 373212,
+              "dollars": 0.111962
+            },
+            "output": {
+              "tokens": 6471,
+              "dollars": 0.097065
+            },
+            "total": {
+              "tokens": 418381,
+              "dollars": 0.35412
+            }
+          },
+          "timing": {
+            "total_duration_ms": 138304,
+            "wall_clock_ms": 166032,
+            "avg_duration_ms": 4769
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 17,
+          "cost": {
+            "input": {
+              "tokens": 19,
+              "dollars": 5.7e-05
+            },
+            "cache_write": {
+              "tokens": 22075,
+              "dollars": 0.082781
+            },
+            "cache_read": {
+              "tokens": 241545,
+              "dollars": 0.072462
+            },
+            "output": {
+              "tokens": 2739,
+              "dollars": 0.041085
+            },
+            "total": {
+              "tokens": 266378,
+              "dollars": 0.196386
+            }
+          },
+          "timing": {
+            "total_duration_ms": 74855,
+            "wall_clock_ms": 75040,
+            "avg_duration_ms": 4403
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 11985,
+                  "dollars": 0.005921,
+                  "chars": 40992
+                },
+                "grep": {
+                  "tokens": 46337,
+                  "dollars": 0.030936,
+                  "chars": 153199
+                },
+                "read_minified_file": {
+                  "tokens": 35850,
+                  "dollars": 0.021492,
+                  "chars": 119607
+                },
+                "bash": {
+                  "tokens": 9242,
+                  "dollars": 0.015237,
+                  "chars": 30195
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 1133,
+                  "dollars": 0.00056,
+                  "chars": 3872
+                },
+                "grep": {
+                  "tokens": 3648,
+                  "dollars": 0.002185,
+                  "chars": 12213
+                },
+                "read_minified_file": {
+                  "tokens": 7209,
+                  "dollars": 0.004351,
+                  "chars": 24092
+                },
+                "bash": {
+                  "tokens": 1978,
+                  "dollars": 0.002836,
+                  "chars": 6471
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 195,
+                "dollars": 0.00293,
+                "chars": 434
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2544,
+                  "dollars": 0.038155,
+                  "chars": 4923
+                },
+                "glob_files": {
+                  "tokens": 94,
+                  "dollars": 0.001403,
+                  "chars": 202
+                },
+                "grep": {
+                  "tokens": 478,
+                  "dollars": 0.007175,
+                  "chars": 945
+                },
+                "read_minified_file": {
+                  "tokens": 1001,
+                  "dollars": 0.01501,
+                  "chars": 1844
+                },
+                "bash": {
+                  "tokens": 971,
+                  "dollars": 0.014567,
+                  "chars": 1932
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 3,
+              "dollars": 9e-06
+            },
+            "cache_write": {
+              "tokens": 1528,
+              "dollars": 0.00573
+            },
+            "cache_read": {
+              "tokens": 23866,
+              "dollars": 0.00716
+            },
+            "output": {
+              "tokens": 1420,
+              "dollars": 0.0213
+            },
+            "total": {
+              "tokens": 26817,
+              "dollars": 0.034199
+            }
+          },
+          "timing": {
+            "total_duration_ms": 21608,
+            "wall_clock_ms": 21608,
+            "avg_duration_ms": 21608
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "glob_files": {
+                  "tokens": 776,
+                  "dollars": 0.000233,
+                  "chars": 2562
+                },
+                "grep": {
+                  "tokens": 5011,
+                  "dollars": 0.001503,
+                  "chars": 16555
+                },
+                "read_minified_file": {
+                  "tokens": 3266,
+                  "dollars": 0.00098,
+                  "chars": 10788
+                },
+                "bash": {
+                  "tokens": 3576,
+                  "dollars": 0.001073,
+                  "chars": 11812
+                }
+              },
+              "tool_calls": {
+                "glob_files": {
+                  "tokens": 73,
+                  "dollars": 2.2e-05,
+                  "chars": 242
+                },
+                "grep": {
+                  "tokens": 334,
+                  "dollars": 0.0001,
+                  "chars": 1105
+                },
+                "read_minified_file": {
+                  "tokens": 667,
+                  "dollars": 0.0002,
+                  "chars": 2204
+                },
+                "bash": {
+                  "tokens": 645,
+                  "dollars": 0.000193,
+                  "chars": 2132
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1420,
+                "dollars": 0.0213,
+                "chars": 4384
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 13,
+              "dollars": 3.9e-05
+            },
+            "cache_write": {
+              "tokens": 15060,
+              "dollars": 0.056476
+            },
+            "cache_read": {
+              "tokens": 107801,
+              "dollars": 0.03234
+            },
+            "output": {
+              "tokens": 2312,
+              "dollars": 0.03468
+            },
+            "total": {
+              "tokens": 125186,
+              "dollars": 0.123535
+            }
+          },
+          "timing": {
+            "total_duration_ms": 41841,
+            "wall_clock_ms": 64124,
+            "avg_duration_ms": 3804
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "read_file_uncompressed": {
+                  "tokens": 8228,
+                  "dollars": 0.008355,
+                  "chars": 28072
+                },
+                "edit_file": {
+                  "tokens": 598,
+                  "dollars": 0.000546,
+                  "chars": 2054
+                },
+                "write_file": {
+                  "tokens": 450,
+                  "dollars": 0.000318,
+                  "chars": 1536
+                },
+                "bash": {
+                  "tokens": 12318,
+                  "dollars": 0.011058,
+                  "chars": 41771
+                },
+                "grep": {
+                  "tokens": 201,
+                  "dollars": 0.000233,
+                  "chars": 680
+                }
+              },
+              "tool_calls": {
+                "read_file_uncompressed": {
+                  "tokens": 1266,
+                  "dollars": 0.001093,
+                  "chars": 4336
+                },
+                "edit_file": {
+                  "tokens": 2611,
+                  "dollars": 0.001959,
+                  "chars": 8995
+                },
+                "write_file": {
+                  "tokens": 2244,
+                  "dollars": 0.00158,
+                  "chars": 7680
+                },
+                "bash": {
+                  "tokens": 1498,
+                  "dollars": 0.001554,
+                  "chars": 5075
+                },
+                "grep": {
+                  "tokens": 247,
+                  "dollars": 0.000286,
+                  "chars": 832
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 527,
+                "dollars": 0.007911,
+                "chars": 1504
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 1785,
+                  "dollars": 0.026769,
+                  "chars": 3803
+                },
+                "read_file_uncompressed": {
+                  "tokens": 325,
+                  "dollars": 0.004872,
+                  "chars": 600
+                },
+                "edit_file": {
+                  "tokens": 458,
+                  "dollars": 0.006866,
+                  "chars": 1145
+                },
+                "write_file": {
+                  "tokens": 353,
+                  "dollars": 0.005295,
+                  "chars": 920
+                },
+                "bash": {
+                  "tokens": 547,
+                  "dollars": 0.008206,
+                  "chars": 970
+                },
+                "grep": {
+                  "tokens": 102,
+                  "dollars": 0.00153,
+                  "chars": 168
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 612,
+            "unnecessary_space_count": 2887,
+            "total_chars": 23646
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 4967,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 969
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 2,
+                  "chars": 3998
+                }
+              }
+            },
+            "output": {
+              "files_written": 3,
+              "unique_files_written": 3,
+              "total_write_chars": 1334,
+              "per_file": {
+                "/workspace/src/de.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 506
+                },
+                "/workspace/tests/regression/issue979.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 766
+                },
+                "/workspace/tests/test.rs": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 62
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "glob_files": {
+              "tokens": 12761,
+              "dollars": 0.006154,
+              "chars": 43554
+            },
+            "grep": {
+              "tokens": 51549,
+              "dollars": 0.032672,
+              "chars": 170434
+            },
+            "read_minified_file": {
+              "tokens": 39116,
+              "dollars": 0.022472,
+              "chars": 130395
+            },
+            "bash": {
+              "tokens": 25136,
+              "dollars": 0.027368,
+              "chars": 83778
+            },
+            "read_file_uncompressed": {
+              "tokens": 8228,
+              "dollars": 0.008355,
+              "chars": 28072
+            },
+            "edit_file": {
+              "tokens": 598,
+              "dollars": 0.000546,
+              "chars": 2054
+            },
+            "write_file": {
+              "tokens": 450,
+              "dollars": 0.000318,
+              "chars": 1536
+            }
+          },
+          "tool_calls": {
+            "glob_files": {
+              "tokens": 1206,
+              "dollars": 0.000582,
+              "chars": 4114
+            },
+            "grep": {
+              "tokens": 4229,
+              "dollars": 0.002571,
+              "chars": 14150
+            },
+            "read_minified_file": {
+              "tokens": 7876,
+              "dollars": 0.004551,
+              "chars": 26296
+            },
+            "bash": {
+              "tokens": 4121,
+              "dollars": 0.004583,
+              "chars": 13678
+            },
+            "read_file_uncompressed": {
+              "tokens": 1266,
+              "dollars": 0.001093,
+              "chars": 4336
+            },
+            "edit_file": {
+              "tokens": 2611,
+              "dollars": 0.001959,
+              "chars": 8995
+            },
+            "write_file": {
+              "tokens": 2244,
+              "dollars": 0.00158,
+              "chars": 7680
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 2142,
+            "dollars": 0.032141,
+            "chars": 6322
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 4329,
+              "dollars": 0.064924,
+              "chars": 8726
+            },
+            "glob_files": {
+              "tokens": 94,
+              "dollars": 0.001403,
+              "chars": 202
+            },
+            "grep": {
+              "tokens": 580,
+              "dollars": 0.008705,
+              "chars": 1113
+            },
+            "read_minified_file": {
+              "tokens": 1001,
+              "dollars": 0.01501,
+              "chars": 1844
+            },
+            "bash": {
+              "tokens": 1518,
+              "dollars": 0.022773,
+              "chars": 2902
+            },
+            "read_file_uncompressed": {
+              "tokens": 325,
+              "dollars": 0.004872,
+              "chars": 600
+            },
+            "edit_file": {
+              "tokens": 458,
+              "dollars": 0.006866,
+              "chars": 1145
+            },
+            "write_file": {
+              "tokens": 353,
+              "dollars": 0.005295,
+              "chars": 920
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 612,
+        "unnecessary_space_count": 2887,
+        "total_chars": 23646
+      },
+      "total": {
+        "request_count": 29,
+        "cost": {
+          "input": {
+            "tokens": 35,
+            "dollars": 0.000105
+          },
+          "cache_write": {
+            "tokens": 38663,
+            "dollars": 0.144987
+          },
+          "cache_read": {
+            "tokens": 373212,
+            "dollars": 0.111962
+          },
+          "output": {
+            "tokens": 6471,
+            "dollars": 0.097065
+          },
+          "total": {
+            "tokens": 418381,
+            "dollars": 0.35412
+          }
+        },
+        "timing": {
+          "total_duration_ms": 138304,
+          "wall_clock_ms": 166032,
+          "avg_duration_ms": 4769
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 4967,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 969
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 3998
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 1334,
+            "per_file": {
+              "/workspace/src/de.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 506
+              },
+              "/workspace/tests/regression/issue979.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 766
+              },
+              "/workspace/tests/test.rs": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 62
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "by_model": {
+    "claude-sonnet-4-6": {
+      "request_count": 279,
+      "cost": {
+        "input": {
+          "tokens": 309,
+          "dollars": 0.000927
+        },
+        "cache_write": {
+          "tokens": 304209,
+          "dollars": 1.140784
+        },
+        "cache_read": {
+          "tokens": 6008943,
+          "dollars": 1.802667
+        },
+        "output": {
+          "tokens": 92177,
+          "dollars": 1.382655
+        },
+        "total": {
+          "tokens": 6405638,
+          "dollars": 4.327048
+        }
+      },
+      "timing": {
+        "total_duration_ms": 1682209,
+        "avg_duration_ms": 6029
+      }
+    }
+  },
+  "by_source": {
+    "input": {
+      "tool_results": {
+        "glob_files": {
+          "tokens": 78269,
+          "dollars": 0.036505,
+          "chars": 263964
+        },
+        "grep": {
+          "tokens": 219666,
+          "dollars": 0.126033,
+          "chars": 717420
+        },
+        "read_minified_file": {
+          "tokens": 332587,
+          "dollars": 0.188614,
+          "chars": 1099821
+        },
+        "bash": {
+          "tokens": 588262,
+          "dollars": 0.304705,
+          "chars": 1899551
+        },
+        "read_file_uncompressed": {
+          "tokens": 1171410,
+          "dollars": 0.500061,
+          "chars": 3767094
+        },
+        "edit_file": {
+          "tokens": 23756,
+          "dollars": 0.011353,
+          "chars": 76914
+        },
+        "write_file": {
+          "tokens": 12064,
+          "dollars": 0.004729,
+          "chars": 39212
+        },
+        "delete_file": {
+          "tokens": 119,
+          "dollars": 0.000239,
+          "chars": 372
+        }
+      },
+      "tool_calls": {
+        "glob_files": {
+          "tokens": 7647,
+          "dollars": 0.003554,
+          "chars": 25662
+        },
+        "grep": {
+          "tokens": 70483,
+          "dollars": 0.035982,
+          "chars": 228659
+        },
+        "read_minified_file": {
+          "tokens": 55862,
+          "dollars": 0.032317,
+          "chars": 185387
+        },
+        "bash": {
+          "tokens": 120695,
+          "dollars": 0.065112,
+          "chars": 385603
+        },
+        "read_file_uncompressed": {
+          "tokens": 131904,
+          "dollars": 0.057594,
+          "chars": 425284
+        },
+        "edit_file": {
+          "tokens": 102710,
+          "dollars": 0.051265,
+          "chars": 329765
+        },
+        "write_file": {
+          "tokens": 66418,
+          "dollars": 0.025871,
+          "chars": 216016
+        },
+        "delete_file": {
+          "tokens": 88,
+          "dollars": 0.000178,
+          "chars": 276
+        }
+      }
+    },
+    "output": {
+      "llm_text": {
+        "tokens": 49464,
+        "dollars": 0.742026,
+        "chars": 152374
+      },
+      "tool_calls": {
+        "__total": {
+          "tokens": 42713,
+          "dollars": 0.640628,
+          "chars": 90768
+        },
+        "glob_files": {
+          "tokens": 554,
+          "dollars": 0.008292,
+          "chars": 1106
+        },
+        "grep": {
+          "tokens": 5569,
+          "dollars": 0.083489,
+          "chars": 11892
+        },
+        "read_minified_file": {
+          "tokens": 6999,
+          "dollars": 0.104987,
+          "chars": 13003
+        },
+        "bash": {
+          "tokens": 12229,
+          "dollars": 0.183435,
+          "chars": 24771
+        },
+        "read_file_uncompressed": {
+          "tokens": 8080,
+          "dollars": 0.121226,
+          "chars": 14278
+        },
+        "edit_file": {
+          "tokens": 7029,
+          "dollars": 0.105396,
+          "chars": 19644
+        },
+        "write_file": {
+          "tokens": 2205,
+          "dollars": 0.033081,
+          "chars": 5976
+        },
+        "delete_file": {
+          "tokens": 48,
+          "dollars": 0.000721,
+          "chars": 98
+        }
+      }
+    }
+  },
+  "read_file_whitespace": {
+    "line_returns_count": 89662,
+    "unnecessary_space_count": 545137,
+    "total_chars": 3292121
+  },
+  "total": {
+    "request_count": 279,
+    "cost": {
+      "input": {
+        "tokens": 309,
+        "dollars": 0.000927
+      },
+      "cache_write": {
+        "tokens": 304209,
+        "dollars": 1.140784
+      },
+      "cache_read": {
+        "tokens": 6008943,
+        "dollars": 1.802667
+      },
+      "output": {
+        "tokens": 92177,
+        "dollars": 1.382655
+      },
+      "total": {
+        "tokens": 6405638,
+        "dollars": 4.327048
+      }
+    },
+    "timing": {
+      "total_duration_ms": 1682209,
+      "avg_duration_ms": 6029
+    }
+  }
+}

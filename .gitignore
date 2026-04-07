@@ -1,0 +1,11 @@
+.env
+.venv
+.claude
+# These are exported when running `python scripts/export_flows.py`
+**/requests/
+__pycache__/
+*.pyc
+.DS_Store
+.vix-src/
+.vix/
+.vix-bin/

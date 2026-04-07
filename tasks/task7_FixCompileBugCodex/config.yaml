@@ -1,0 +1,16 @@
+test_id: task7_FixCompileBugCodex
+languages: [rust]
+description: >
+    Give both a repo + a CI log showing a build failure (compilation error, test failure, lint violation). Measures diagnostic cost — how many files does each agent read before it knows what to fix?
+
+repository:
+  url: https://github.com/kirby88/codex
+  commit: 7a393668185da6710425698885731b9af28ca0e0
+  
+agents:
+  claude-code:
+    type: claude-code
+    version: latest
+  vix:
+    type: vix
+    version: latest

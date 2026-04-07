@@ -1,0 +1,1 @@
+Short markdown spec with no existing logic to read, the goal is to measures pure synthesis cost and how much output token budget each agent uses to think vs write.

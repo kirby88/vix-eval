@@ -1,0 +1,4891 @@
+{
+  "title": "claude-code",
+  "color": "#8ebfa1",
+  "by_run": {
+    "20260406-122333": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 8,
+          "cost": {
+            "input": {
+              "tokens": 987,
+              "dollars": 0.000987
+            },
+            "cache_write": {
+              "tokens": 34912,
+              "dollars": 0.043641
+            },
+            "cache_read": {
+              "tokens": 109159,
+              "dollars": 0.010916
+            },
+            "output": {
+              "tokens": 3390,
+              "dollars": 0.01695
+            },
+            "total": {
+              "tokens": 148448,
+              "dollars": 0.072493
+            }
+          },
+          "timing": {
+            "total_duration_ms": 40329,
+            "wall_clock_ms": 178446,
+            "avg_duration_ms": 5041
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 33,
+          "cost": {
+            "input": {
+              "tokens": 35,
+              "dollars": 0.000105
+            },
+            "cache_write": {
+              "tokens": 78681,
+              "dollars": 0.295054
+            },
+            "cache_read": {
+              "tokens": 2393836,
+              "dollars": 0.718151
+            },
+            "output": {
+              "tokens": 39667,
+              "dollars": 0.595005
+            },
+            "total": {
+              "tokens": 2512219,
+              "dollars": 1.608316
+            }
+          },
+          "timing": {
+            "total_duration_ms": 521192,
+            "wall_clock_ms": 672382,
+            "avg_duration_ms": 15794
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 418,
+              "dollars": 0.000418
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 17,
+              "dollars": 8.5e-05
+            },
+            "total": {
+              "tokens": 435,
+              "dollars": 0.000503
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1689,
+            "wall_clock_ms": 1689,
+            "avg_duration_ms": 1689
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 17,
+                "dollars": 8.5e-05,
+                "chars": 58
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 7,
+          "cost": {
+            "input": {
+              "tokens": 61,
+              "dollars": 6.7e-05
+            },
+            "cache_write": {
+              "tokens": 40375,
+              "dollars": 0.064127
+            },
+            "cache_read": {
+              "tokens": 129807,
+              "dollars": 0.01711
+            },
+            "output": {
+              "tokens": 3641,
+              "dollars": 0.021035
+            },
+            "total": {
+              "tokens": 173884,
+              "dollars": 0.102339
+            }
+          },
+          "timing": {
+            "total_duration_ms": 43191,
+            "wall_clock_ms": 50336,
+            "avg_duration_ms": 6170
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 4159,
+                  "dollars": 0.001709,
+                  "chars": 14687
+                },
+                "Read": {
+                  "tokens": 59320,
+                  "dollars": 0.028672,
+                  "chars": 206239
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 718,
+                  "dollars": 0.000373,
+                  "chars": 2520
+                },
+                "Read": {
+                  "tokens": 111,
+                  "dollars": 5.4e-05,
+                  "chars": 390
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 3005,
+                "dollars": 0.015026,
+                "chars": 10177
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 636,
+                  "dollars": 0.006009,
+                  "chars": 1596
+                },
+                "Agent": {
+                  "tokens": 283,
+                  "dollars": 0.004245,
+                  "chars": 769
+                },
+                "Bash": {
+                  "tokens": 312,
+                  "dollars": 0.00156,
+                  "chars": 737
+                },
+                "Read": {
+                  "tokens": 41,
+                  "dollars": 0.000204,
+                  "chars": 90
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 4287,
+            "unnecessary_space_count": 34668,
+            "total_chars": 191358
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 63786,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 8,
+          "cost": {
+            "input": {
+              "tokens": 518,
+              "dollars": 0.000532
+            },
+            "cache_write": {
+              "tokens": 30714,
+              "dollars": 0.115177
+            },
+            "cache_read": {
+              "tokens": 268571,
+              "dollars": 0.080571
+            },
+            "output": {
+              "tokens": 6935,
+              "dollars": 0.103875
+            },
+            "total": {
+              "tokens": 306738,
+              "dollars": 0.300157
+            }
+          },
+          "timing": {
+            "total_duration_ms": 119918,
+            "wall_clock_ms": 128086,
+            "avg_duration_ms": 14990
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 18946,
+                  "dollars": 0.014796,
+                  "chars": 72756
+                },
+                "Read": {
+                  "tokens": 73486,
+                  "dollars": 0.086008,
+                  "chars": 276074
+                },
+                "Glob": {
+                  "tokens": 792,
+                  "dollars": 0.001375,
+                  "chars": 2991
+                },
+                "Write": {
+                  "tokens": 53,
+                  "dollars": 0.000199,
+                  "chars": 200
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 1474,
+                  "dollars": 0.001148,
+                  "chars": 5663
+                },
+                "Read": {
+                  "tokens": 370,
+                  "dollars": 0.000359,
+                  "chars": 1402
+                },
+                "Glob": {
+                  "tokens": 556,
+                  "dollars": 0.000803,
+                  "chars": 2101
+                },
+                "Write": {
+                  "tokens": 3001,
+                  "dollars": 0.011254,
+                  "chars": 11320
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 78,
+                "dollars": 0.001021,
+                "chars": 147
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 6857,
+                  "dollars": 0.102854,
+                  "chars": 11992
+                },
+                "Read": {
+                  "tokens": 138,
+                  "dollars": 0.00207,
+                  "chars": 197
+                },
+                "Glob": {
+                  "tokens": 2325,
+                  "dollars": 0.034875,
+                  "chars": 458
+                },
+                "Write": {
+                  "tokens": 4356,
+                  "dollars": 0.065339,
+                  "chars": 11280
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 5716,
+            "unnecessary_space_count": 46224,
+            "total_chars": 255576
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 10337,
+              "per_file": {
+                "/root/.claude/plans/zippy-purring-island.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 10337
+                }
+              }
+            }
+          }
+        },
+        "4": {
+          "request_count": 25,
+          "cost": {
+            "input": {
+              "tokens": 25,
+              "dollars": 7.5e-05
+            },
+            "cache_write": {
+              "tokens": 42504,
+              "dollars": 0.159391
+            },
+            "cache_read": {
+              "tokens": 2104617,
+              "dollars": 0.631386
+            },
+            "output": {
+              "tokens": 32464,
+              "dollars": 0.48696
+            },
+            "total": {
+              "tokens": 2179610,
+              "dollars": 1.27781
+            }
+          },
+          "timing": {
+            "total_duration_ms": 396723,
+            "wall_clock_ms": 494819,
+            "avg_duration_ms": 15869
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 70356,
+                  "dollars": 0.021106,
+                  "chars": 259700
+                },
+                "Read": {
+                  "tokens": 466713,
+                  "dollars": 0.140015,
+                  "chars": 1722750
+                },
+                "Glob": {
+                  "tokens": 7659,
+                  "dollars": 0.002296,
+                  "chars": 28275
+                },
+                "Write": {
+                  "tokens": 2039,
+                  "dollars": 0.000805,
+                  "chars": 7505
+                },
+                "ExitPlanMode": {
+                  "tokens": 79584,
+                  "dollars": 0.034691,
+                  "chars": 293765
+                },
+                "TaskCreate": {
+                  "tokens": 1095,
+                  "dollars": 0.000512,
+                  "chars": 4048
+                },
+                "TaskUpdate": {
+                  "tokens": 737,
+                  "dollars": 0.000502,
+                  "chars": 2696
+                },
+                "Bash": {
+                  "tokens": 60006,
+                  "dollars": 0.037555,
+                  "chars": 220791
+                },
+                "Edit": {
+                  "tokens": 4134,
+                  "dollars": 0.003431,
+                  "chars": 15216
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 5478,
+                  "dollars": 0.001643,
+                  "chars": 20225
+                },
+                "Read": {
+                  "tokens": 1876,
+                  "dollars": 0.000555,
+                  "chars": 6925
+                },
+                "Glob": {
+                  "tokens": 4725,
+                  "dollars": 0.001422,
+                  "chars": 17450
+                },
+                "Write": {
+                  "tokens": 492502,
+                  "dollars": 0.216169,
+                  "chars": 1812199
+                },
+                "ExitPlanMode": {
+                  "tokens": 652,
+                  "dollars": 0.000289,
+                  "chars": 2425
+                },
+                "TaskCreate": {
+                  "tokens": 2441,
+                  "dollars": 0.001083,
+                  "chars": 9000
+                },
+                "TaskUpdate": {
+                  "tokens": 863,
+                  "dollars": 0.000507,
+                  "chars": 3190
+                },
+                "Bash": {
+                  "tokens": 12754,
+                  "dollars": 0.007014,
+                  "chars": 46940
+                },
+                "Edit": {
+                  "tokens": 31340,
+                  "dollars": 0.022466,
+                  "chars": 115332
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1098,
+                "dollars": 0.016478,
+                "chars": 1446
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 31366,
+                  "dollars": 0.470482,
+                  "chars": 89878
+                },
+                "TaskCreate": {
+                  "tokens": 228,
+                  "dollars": 0.00342,
+                  "chars": 335
+                },
+                "TaskUpdate": {
+                  "tokens": 106,
+                  "dollars": 0.001589,
+                  "chars": 184
+                },
+                "Bash": {
+                  "tokens": 4749,
+                  "dollars": 0.071236,
+                  "chars": 2956
+                },
+                "Write": {
+                  "tokens": 21442,
+                  "dollars": 0.32163,
+                  "chars": 72779
+                },
+                "Edit": {
+                  "tokens": 4841,
+                  "dollars": 0.072607,
+                  "chars": 13624
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 35725,
+            "unnecessary_space_count": 288900,
+            "total_chars": 1596450
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 250,
+              "per_file": {
+                "/workspace/evaluation/usage/test_export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 250
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 64165,
+              "dollars": 0.039264,
+              "chars": 235478
+            },
+            "Read": {
+              "tokens": 599519,
+              "dollars": 0.254695,
+              "chars": 2205063
+            },
+            "Agent": {
+              "tokens": 89302,
+              "dollars": 0.035902,
+              "chars": 332456
+            },
+            "Glob": {
+              "tokens": 8451,
+              "dollars": 0.003671,
+              "chars": 31266
+            },
+            "Write": {
+              "tokens": 2092,
+              "dollars": 0.001004,
+              "chars": 7705
+            },
+            "ExitPlanMode": {
+              "tokens": 79584,
+              "dollars": 0.034691,
+              "chars": 293765
+            },
+            "TaskCreate": {
+              "tokens": 1095,
+              "dollars": 0.000512,
+              "chars": 4048
+            },
+            "TaskUpdate": {
+              "tokens": 737,
+              "dollars": 0.000502,
+              "chars": 2696
+            },
+            "Edit": {
+              "tokens": 4134,
+              "dollars": 0.003431,
+              "chars": 15216
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 13472,
+              "dollars": 0.007387,
+              "chars": 49460
+            },
+            "Read": {
+              "tokens": 2357,
+              "dollars": 0.000968,
+              "chars": 8717
+            },
+            "Agent": {
+              "tokens": 6952,
+              "dollars": 0.002791,
+              "chars": 25888
+            },
+            "Glob": {
+              "tokens": 5281,
+              "dollars": 0.002225,
+              "chars": 19551
+            },
+            "Write": {
+              "tokens": 495503,
+              "dollars": 0.227423,
+              "chars": 1823519
+            },
+            "ExitPlanMode": {
+              "tokens": 652,
+              "dollars": 0.000289,
+              "chars": 2425
+            },
+            "TaskCreate": {
+              "tokens": 2441,
+              "dollars": 0.001083,
+              "chars": 9000
+            },
+            "TaskUpdate": {
+              "tokens": 863,
+              "dollars": 0.000507,
+              "chars": 3190
+            },
+            "Edit": {
+              "tokens": 31340,
+              "dollars": 0.022466,
+              "chars": 115332
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 4198,
+            "dollars": 0.03261,
+            "chars": 11828
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 38859,
+              "dollars": 0.579345,
+              "chars": 103466
+            },
+            "Agent": {
+              "tokens": 283,
+              "dollars": 0.004245,
+              "chars": 769
+            },
+            "Bash": {
+              "tokens": 5061,
+              "dollars": 0.072796,
+              "chars": 3693
+            },
+            "Read": {
+              "tokens": 179,
+              "dollars": 0.002274,
+              "chars": 287
+            },
+            "Glob": {
+              "tokens": 2325,
+              "dollars": 0.034875,
+              "chars": 458
+            },
+            "Write": {
+              "tokens": 25798,
+              "dollars": 0.386969,
+              "chars": 84059
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "TaskCreate": {
+              "tokens": 228,
+              "dollars": 0.00342,
+              "chars": 335
+            },
+            "TaskUpdate": {
+              "tokens": 106,
+              "dollars": 0.001589,
+              "chars": 184
+            },
+            "Edit": {
+              "tokens": 4841,
+              "dollars": 0.072607,
+              "chars": 13624
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 45728,
+        "unnecessary_space_count": 369792,
+        "total_chars": 2043384
+      },
+      "total": {
+        "request_count": 41,
+        "cost": {
+          "input": {
+            "tokens": 1022,
+            "dollars": 0.001092
+          },
+          "cache_write": {
+            "tokens": 113593,
+            "dollars": 0.338695
+          },
+          "cache_read": {
+            "tokens": 2502995,
+            "dollars": 0.729067
+          },
+          "output": {
+            "tokens": 43057,
+            "dollars": 0.611955
+          },
+          "total": {
+            "tokens": 2660667,
+            "dollars": 1.680809
+          }
+        },
+        "timing": {
+          "total_duration_ms": 561521,
+          "wall_clock_ms": 672388,
+          "avg_duration_ms": 13696
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 127644,
+            "per_file": {
+              "/workspace/export_flows.py": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 127572
+              },
+              "/workspace/evaluation/usage/export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 72
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 10587,
+            "per_file": {
+              "/root/.claude/plans/zippy-purring-island.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 10337
+              },
+              "/workspace/evaluation/usage/test_export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 250
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-122537": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 16,
+          "cost": {
+            "input": {
+              "tokens": 1006,
+              "dollars": 0.001006
+            },
+            "cache_write": {
+              "tokens": 47344,
+              "dollars": 0.059181
+            },
+            "cache_read": {
+              "tokens": 272859,
+              "dollars": 0.027287
+            },
+            "output": {
+              "tokens": 4671,
+              "dollars": 0.023355
+            },
+            "total": {
+              "tokens": 325880,
+              "dollars": 0.110826
+            }
+          },
+          "timing": {
+            "total_duration_ms": 57643,
+            "wall_clock_ms": 1199886,
+            "avg_duration_ms": 3603
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 75,
+          "cost": {
+            "input": {
+              "tokens": 78,
+              "dollars": 0.000234
+            },
+            "cache_write": {
+              "tokens": 187667,
+              "dollars": 0.703751
+            },
+            "cache_read": {
+              "tokens": 4067825,
+              "dollars": 1.220342
+            },
+            "output": {
+              "tokens": 75502,
+              "dollars": 1.13253
+            },
+            "total": {
+              "tokens": 4331072,
+              "dollars": 3.056862
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1008101,
+            "wall_clock_ms": 1570193,
+            "avg_duration_ms": 13441
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 418,
+              "dollars": 0.000418
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 17,
+              "dollars": 8.5e-05
+            },
+            "total": {
+              "tokens": 435,
+              "dollars": 0.000503
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1286,
+            "wall_clock_ms": 1286,
+            "avg_duration_ms": 1286
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 17,
+                "dollars": 8.5e-05,
+                "chars": 58
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 10,
+          "cost": {
+            "input": {
+              "tokens": 50,
+              "dollars": 5.6e-05
+            },
+            "cache_write": {
+              "tokens": 48739,
+              "dollars": 0.074574
+            },
+            "cache_read": {
+              "tokens": 226769,
+              "dollars": 0.026807
+            },
+            "output": {
+              "tokens": 3919,
+              "dollars": 0.022105
+            },
+            "total": {
+              "tokens": 279477,
+              "dollars": 0.12354
+            }
+          },
+          "timing": {
+            "total_duration_ms": 45937,
+            "wall_clock_ms": 46494,
+            "avg_duration_ms": 4594
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Read": {
+                  "tokens": 118623,
+                  "dollars": 0.034651,
+                  "chars": 413854
+                },
+                "Bash": {
+                  "tokens": 8034,
+                  "dollars": 0.002348,
+                  "chars": 28257
+                }
+              },
+              "tool_calls": {
+                "Read": {
+                  "tokens": 554,
+                  "dollars": 0.000144,
+                  "chars": 1956
+                },
+                "Bash": {
+                  "tokens": 1566,
+                  "dollars": 0.000536,
+                  "chars": 5499
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 3172,
+                "dollars": 0.015863,
+                "chars": 10668
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 747,
+                  "dollars": 0.006242,
+                  "chars": 1731
+                },
+                "Agent": {
+                  "tokens": 251,
+                  "dollars": 0.003765,
+                  "chars": 667
+                },
+                "Read": {
+                  "tokens": 90,
+                  "dollars": 0.000449,
+                  "chars": 197
+                },
+                "Bash": {
+                  "tokens": 406,
+                  "dollars": 0.002028,
+                  "chars": 867
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 8574,
+            "unnecessary_space_count": 69336,
+            "total_chars": 383292
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 6,
+          "cost": {
+            "input": {
+              "tokens": 23,
+              "dollars": 2.5e-05
+            },
+            "cache_write": {
+              "tokens": 7255,
+              "dollars": 0.017045
+            },
+            "cache_read": {
+              "tokens": 92846,
+              "dollars": 0.014506
+            },
+            "output": {
+              "tokens": 1202,
+              "dollars": 0.00831
+            },
+            "total": {
+              "tokens": 101326,
+              "dollars": 0.039885
+            }
+          },
+          "timing": {
+            "total_duration_ms": 17860,
+            "wall_clock_ms": 17993,
+            "avg_duration_ms": 2977
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 2688,
+                  "dollars": 0.01008,
+                  "chars": 10585
+                },
+                "Bash": {
+                  "tokens": 3209,
+                  "dollars": 0.00138,
+                  "chars": 11547
+                },
+                "Glob": {
+                  "tokens": 337,
+                  "dollars": 0.000162,
+                  "chars": 1212
+                },
+                "Read": {
+                  "tokens": 1234,
+                  "dollars": 0.001543,
+                  "chars": 4368
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 180,
+                  "dollars": 0.000675,
+                  "chars": 707
+                },
+                "Bash": {
+                  "tokens": 341,
+                  "dollars": 0.000167,
+                  "chars": 1222
+                },
+                "Glob": {
+                  "tokens": 461,
+                  "dollars": 0.000222,
+                  "chars": 1656
+                },
+                "Read": {
+                  "tokens": 41,
+                  "dollars": 5.1e-05,
+                  "chars": 144
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 575,
+                "dollars": 0.002874,
+                "chars": 1893
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 627,
+                  "dollars": 0.005436,
+                  "chars": 1313
+                },
+                "Agent": {
+                  "tokens": 230,
+                  "dollars": 0.00345,
+                  "chars": 519
+                },
+                "Bash": {
+                  "tokens": 129,
+                  "dollars": 0.000648,
+                  "chars": 298
+                },
+                "Glob": {
+                  "tokens": 208,
+                  "dollars": 0.001042,
+                  "chars": 392
+                },
+                "Read": {
+                  "tokens": 59,
+                  "dollars": 0.000296,
+                  "chars": 104
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 99,
+            "unnecessary_space_count": 288,
+            "total_chars": 3869
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 3869,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 3869
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 54,
+          "cost": {
+            "input": {
+              "tokens": 55,
+              "dollars": 0.000165
+            },
+            "cache_write": {
+              "tokens": 90162,
+              "dollars": 0.338108
+            },
+            "cache_read": {
+              "tokens": 2468825,
+              "dollars": 0.740644
+            },
+            "output": {
+              "tokens": 41872,
+              "dollars": 0.62808
+            },
+            "total": {
+              "tokens": 2600914,
+              "dollars": 1.707002
+            }
+          },
+          "timing": {
+            "total_duration_ms": 594206,
+            "wall_clock_ms": 1059965,
+            "avg_duration_ms": 11004
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 6374,
+                  "dollars": 0.003388,
+                  "chars": 24428
+                },
+                "Read": {
+                  "tokens": 1003506,
+                  "dollars": 0.433308,
+                  "chars": 3397413
+                },
+                "Bash": {
+                  "tokens": 158968,
+                  "dollars": 0.069941,
+                  "chars": 531737
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 661,
+                  "dollars": 0.000688,
+                  "chars": 2532
+                },
+                "Read": {
+                  "tokens": 15626,
+                  "dollars": 0.005884,
+                  "chars": 52834
+                },
+                "Bash": {
+                  "tokens": 460374,
+                  "dollars": 0.219482,
+                  "chars": 1527514
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 8953,
+                "dollars": 0.134294,
+                "chars": 27024
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 32919,
+                  "dollars": 0.493786,
+                  "chars": 85337
+                },
+                "Read": {
+                  "tokens": 756,
+                  "dollars": 0.01134,
+                  "chars": 909
+                },
+                "Agent": {
+                  "tokens": 4041,
+                  "dollars": 0.060608,
+                  "chars": 7406
+                },
+                "Bash": {
+                  "tokens": 28122,
+                  "dollars": 0.421838,
+                  "chars": 77022
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 69793,
+            "unnecessary_space_count": 562459,
+            "total_chars": 3131153
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 128274,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 8,
+                  "chars": 128274
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "5": {
+          "request_count": 3,
+          "cost": {
+            "input": {
+              "tokens": 521,
+              "dollars": 0.000525
+            },
+            "cache_write": {
+              "tokens": 45617,
+              "dollars": 0.171064
+            },
+            "cache_read": {
+              "tokens": 83946,
+              "dollars": 0.025183
+            },
+            "output": {
+              "tokens": 2986,
+              "dollars": 0.04465
+            },
+            "total": {
+              "tokens": 133070,
+              "dollars": 0.241423
+            }
+          },
+          "timing": {
+            "total_duration_ms": 64214,
+            "wall_clock_ms": 75356,
+            "avg_duration_ms": 21405
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 21770,
+                  "dollars": 0.032613,
+                  "chars": 79704
+                },
+                "Read": {
+                  "tokens": 37548,
+                  "dollars": 0.011264,
+                  "chars": 137466
+                },
+                "Write": {
+                  "tokens": 55,
+                  "dollars": 0.000206,
+                  "chars": 201
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 4760,
+                  "dollars": 0.008446,
+                  "chars": 17424
+                },
+                "Read": {
+                  "tokens": 72,
+                  "dollars": 2.2e-05,
+                  "chars": 260
+                },
+                "Write": {
+                  "tokens": 2760,
+                  "dollars": 0.01035,
+                  "chars": 10103
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 22,
+                "dollars": 0.000196,
+                "chars": 64
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 2964,
+                  "dollars": 0.044454,
+                  "chars": 10120
+                },
+                "Write": {
+                  "tokens": 2926,
+                  "dollars": 0.043884,
+                  "chars": 10063
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2858,
+            "unnecessary_space_count": 23112,
+            "total_chars": 127572
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 63786,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 9285,
+              "per_file": {
+                "/root/.claude/plans/tingly-forging-canyon.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 9285
+                }
+              }
+            }
+          }
+        },
+        "6": {
+          "request_count": 17,
+          "cost": {
+            "input": {
+              "tokens": 17,
+              "dollars": 5.1e-05
+            },
+            "cache_write": {
+              "tokens": 43238,
+              "dollars": 0.162141
+            },
+            "cache_read": {
+              "tokens": 1468298,
+              "dollars": 0.440489
+            },
+            "output": {
+              "tokens": 30177,
+              "dollars": 0.452655
+            },
+            "total": {
+              "tokens": 1541730,
+              "dollars": 1.055335
+            }
+          },
+          "timing": {
+            "total_duration_ms": 342241,
+            "wall_clock_ms": 371517,
+            "avg_duration_ms": 20132
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 187060,
+                  "dollars": 0.056118,
+                  "chars": 677144
+                },
+                "Read": {
+                  "tokens": 322783,
+                  "dollars": 0.096832,
+                  "chars": 1168461
+                },
+                "Write": {
+                  "tokens": 1713,
+                  "dollars": 0.000889,
+                  "chars": 6174
+                },
+                "ExitPlanMode": {
+                  "tokens": 49476,
+                  "dollars": 0.024812,
+                  "chars": 179101
+                },
+                "TaskCreate": {
+                  "tokens": 1449,
+                  "dollars": 0.000825,
+                  "chars": 5228
+                },
+                "TaskUpdate": {
+                  "tokens": 1137,
+                  "dollars": 0.000914,
+                  "chars": 4084
+                },
+                "Bash": {
+                  "tokens": 52645,
+                  "dollars": 0.043855,
+                  "chars": 187950
+                },
+                "Edit": {
+                  "tokens": 463,
+                  "dollars": 0.000552,
+                  "chars": 1655
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 40914,
+                  "dollars": 0.012272,
+                  "chars": 148104
+                },
+                "Read": {
+                  "tokens": 605,
+                  "dollars": 0.00018,
+                  "chars": 2210
+                },
+                "Write": {
+                  "tokens": 297426,
+                  "dollars": 0.182073,
+                  "chars": 1067620
+                },
+                "ExitPlanMode": {
+                  "tokens": 452,
+                  "dollars": 0.000229,
+                  "chars": 1649
+                },
+                "TaskCreate": {
+                  "tokens": 2542,
+                  "dollars": 0.001324,
+                  "chars": 9183
+                },
+                "TaskUpdate": {
+                  "tokens": 1320,
+                  "dollars": 0.000896,
+                  "chars": 4764
+                },
+                "Bash": {
+                  "tokens": 2543,
+                  "dollars": 0.002168,
+                  "chars": 9114
+                },
+                "Edit": {
+                  "tokens": 1740,
+                  "dollars": 0.001868,
+                  "chars": 6213
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 469,
+                "dollars": 0.007034,
+                "chars": 1559
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 29708,
+                  "dollars": 0.445621,
+                  "chars": 101006
+                },
+                "TaskCreate": {
+                  "tokens": 266,
+                  "dollars": 0.00399,
+                  "chars": 512
+                },
+                "TaskUpdate": {
+                  "tokens": 284,
+                  "dollars": 0.00426,
+                  "chars": 368
+                },
+                "Bash": {
+                  "tokens": 681,
+                  "dollars": 0.010219,
+                  "chars": 1291
+                },
+                "Write": {
+                  "tokens": 27728,
+                  "dollars": 0.415923,
+                  "chars": 97569
+                },
+                "Edit": {
+                  "tokens": 749,
+                  "dollars": 0.011229,
+                  "chars": 1266
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 24293,
+            "unnecessary_space_count": 196452,
+            "total_chars": 1084362
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 63786,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 2,
+              "unique_files_written": 2,
+              "total_write_chars": 5569,
+              "per_file": {
+                "/workspace/evaluation/usage/conftest.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 5271
+                },
+                "/workspace/evaluation/usage/test_export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 298
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Read": {
+              "tokens": 1483694,
+              "dollars": 0.577598,
+              "chars": 5121562
+            },
+            "Bash": {
+              "tokens": 222856,
+              "dollars": 0.117524,
+              "chars": 759491
+            },
+            "Agent": {
+              "tokens": 217892,
+              "dollars": 0.102199,
+              "chars": 791861
+            },
+            "Glob": {
+              "tokens": 337,
+              "dollars": 0.000162,
+              "chars": 1212
+            },
+            "Write": {
+              "tokens": 1768,
+              "dollars": 0.001095,
+              "chars": 6375
+            },
+            "ExitPlanMode": {
+              "tokens": 49476,
+              "dollars": 0.024812,
+              "chars": 179101
+            },
+            "TaskCreate": {
+              "tokens": 1449,
+              "dollars": 0.000825,
+              "chars": 5228
+            },
+            "TaskUpdate": {
+              "tokens": 1137,
+              "dollars": 0.000914,
+              "chars": 4084
+            },
+            "Edit": {
+              "tokens": 463,
+              "dollars": 0.000552,
+              "chars": 1655
+            }
+          },
+          "tool_calls": {
+            "Read": {
+              "tokens": 16898,
+              "dollars": 0.006281,
+              "chars": 57404
+            },
+            "Bash": {
+              "tokens": 464824,
+              "dollars": 0.222353,
+              "chars": 1543349
+            },
+            "Agent": {
+              "tokens": 46515,
+              "dollars": 0.022081,
+              "chars": 168767
+            },
+            "Glob": {
+              "tokens": 461,
+              "dollars": 0.000222,
+              "chars": 1656
+            },
+            "Write": {
+              "tokens": 300186,
+              "dollars": 0.192423,
+              "chars": 1077723
+            },
+            "ExitPlanMode": {
+              "tokens": 452,
+              "dollars": 0.000229,
+              "chars": 1649
+            },
+            "TaskCreate": {
+              "tokens": 2542,
+              "dollars": 0.001324,
+              "chars": 9183
+            },
+            "TaskUpdate": {
+              "tokens": 1320,
+              "dollars": 0.000896,
+              "chars": 4764
+            },
+            "Edit": {
+              "tokens": 1740,
+              "dollars": 0.001868,
+              "chars": 6213
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 13208,
+            "dollars": 0.160346,
+            "chars": 41266
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 66965,
+              "dollars": 0.995539,
+              "chars": 199507
+            },
+            "Agent": {
+              "tokens": 4522,
+              "dollars": 0.067823,
+              "chars": 8592
+            },
+            "Read": {
+              "tokens": 905,
+              "dollars": 0.012085,
+              "chars": 1210
+            },
+            "Bash": {
+              "tokens": 29338,
+              "dollars": 0.434733,
+              "chars": 79478
+            },
+            "Glob": {
+              "tokens": 208,
+              "dollars": 0.001042,
+              "chars": 392
+            },
+            "Write": {
+              "tokens": 30654,
+              "dollars": 0.459807,
+              "chars": 107632
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "TaskCreate": {
+              "tokens": 266,
+              "dollars": 0.00399,
+              "chars": 512
+            },
+            "TaskUpdate": {
+              "tokens": 284,
+              "dollars": 0.00426,
+              "chars": 368
+            },
+            "Edit": {
+              "tokens": 749,
+              "dollars": 0.011229,
+              "chars": 1266
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 105617,
+        "unnecessary_space_count": 851647,
+        "total_chars": 4730248
+      },
+      "total": {
+        "request_count": 91,
+        "cost": {
+          "input": {
+            "tokens": 1084,
+            "dollars": 0.00124
+          },
+          "cache_write": {
+            "tokens": 235011,
+            "dollars": 0.762932
+          },
+          "cache_read": {
+            "tokens": 4340684,
+            "dollars": 1.247629
+          },
+          "output": {
+            "tokens": 80173,
+            "dollars": 1.155885
+          },
+          "total": {
+            "tokens": 4656952,
+            "dollars": 3.167688
+          }
+        },
+        "timing": {
+          "total_duration_ms": 1065744,
+          "wall_clock_ms": 1570199,
+          "avg_duration_ms": 11711
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 196001,
+            "per_file": {
+              "/workspace/evaluation/usage/export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 72
+              },
+              "/workspace/export_flows.py": {
+                "file_size": null,
+                "calls": 10,
+                "chars": 195929
+              }
+            }
+          },
+          "output": {
+            "files_written": 3,
+            "unique_files_written": 3,
+            "total_write_chars": 14854,
+            "per_file": {
+              "/root/.claude/plans/tingly-forging-canyon.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 9285
+              },
+              "/workspace/evaluation/usage/conftest.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 5271
+              },
+              "/workspace/evaluation/usage/test_export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 298
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-122539": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 8,
+          "cost": {
+            "input": {
+              "tokens": 1214,
+              "dollars": 0.001214
+            },
+            "cache_write": {
+              "tokens": 22584,
+              "dollars": 0.028231
+            },
+            "cache_read": {
+              "tokens": 100471,
+              "dollars": 0.010046
+            },
+            "output": {
+              "tokens": 7366,
+              "dollars": 0.03683
+            },
+            "total": {
+              "tokens": 131635,
+              "dollars": 0.076322
+            }
+          },
+          "timing": {
+            "total_duration_ms": 74711,
+            "wall_clock_ms": 448379,
+            "avg_duration_ms": 9339
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 47,
+          "cost": {
+            "input": {
+              "tokens": 170,
+              "dollars": 0.00051
+            },
+            "cache_write": {
+              "tokens": 155020,
+              "dollars": 0.581324
+            },
+            "cache_read": {
+              "tokens": 2664494,
+              "dollars": 0.799348
+            },
+            "output": {
+              "tokens": 54869,
+              "dollars": 0.823035
+            },
+            "total": {
+              "tokens": 2874553,
+              "dollars": 2.204221
+            }
+          },
+          "timing": {
+            "total_duration_ms": 755111,
+            "wall_clock_ms": 1481503,
+            "avg_duration_ms": 16066
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 418,
+              "dollars": 0.000418
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 18,
+              "dollars": 9e-05
+            },
+            "total": {
+              "tokens": 436,
+              "dollars": 0.000508
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1552,
+            "wall_clock_ms": 1552,
+            "avg_duration_ms": 1552
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 18,
+                "dollars": 9e-05,
+                "chars": 65
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 7,
+          "cost": {
+            "input": {
+              "tokens": 262,
+              "dollars": 0.000268
+            },
+            "cache_write": {
+              "tokens": 28047,
+              "dollars": 0.048717
+            },
+            "cache_read": {
+              "tokens": 121119,
+              "dollars": 0.01624
+            },
+            "output": {
+              "tokens": 7554,
+              "dollars": 0.03998
+            },
+            "total": {
+              "tokens": 156982,
+              "dollars": 0.105207
+            }
+          },
+          "timing": {
+            "total_duration_ms": 76947,
+            "wall_clock_ms": 77401,
+            "avg_duration_ms": 10992
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Bash": {
+                  "tokens": 4148,
+                  "dollars": 0.001758,
+                  "chars": 14775
+                },
+                "Read": {
+                  "tokens": 39565,
+                  "dollars": 0.026729,
+                  "chars": 137506
+                }
+              },
+              "tool_calls": {
+                "Bash": {
+                  "tokens": 809,
+                  "dollars": 0.000455,
+                  "chars": 2859
+                },
+                "Read": {
+                  "tokens": 74,
+                  "dollars": 5e-05,
+                  "chars": 260
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 6908,
+                "dollars": 0.034536,
+                "chars": 23382
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 646,
+                  "dollars": 0.005444,
+                  "chars": 1534
+                },
+                "Agent": {
+                  "tokens": 221,
+                  "dollars": 0.003315,
+                  "chars": 575
+                },
+                "Bash": {
+                  "tokens": 386,
+                  "dollars": 0.001933,
+                  "chars": 869
+                },
+                "Read": {
+                  "tokens": 39,
+                  "dollars": 0.000196,
+                  "chars": 90
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2858,
+            "unnecessary_space_count": 23112,
+            "total_chars": 127572
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 1,
+              "total_read_chars": 63786,
+              "per_file": {
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 19,
+          "cost": {
+            "input": {
+              "tokens": 140,
+              "dollars": 0.00042
+            },
+            "cache_write": {
+              "tokens": 55898,
+              "dollars": 0.209617
+            },
+            "cache_read": {
+              "tokens": 454637,
+              "dollars": 0.136392
+            },
+            "output": {
+              "tokens": 17240,
+              "dollars": 0.2586
+            },
+            "total": {
+              "tokens": 527915,
+              "dollars": 0.605029
+            }
+          },
+          "timing": {
+            "total_duration_ms": 269580,
+            "wall_clock_ms": 281486,
+            "avg_duration_ms": 14188
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 6151,
+                  "dollars": 0.023066,
+                  "chars": 23939
+                },
+                "Read": {
+                  "tokens": 202033,
+                  "dollars": 0.133398,
+                  "chars": 708251
+                },
+                "Bash": {
+                  "tokens": 3750,
+                  "dollars": 0.003044,
+                  "chars": 13186
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 158,
+                  "dollars": 0.000593,
+                  "chars": 615
+                },
+                "Read": {
+                  "tokens": 5120,
+                  "dollars": 0.003543,
+                  "chars": 17966
+                },
+                "Bash": {
+                  "tokens": 4523,
+                  "dollars": 0.003252,
+                  "chars": 15915
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 13386,
+                "dollars": 0.200806,
+                "chars": 39438
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3854,
+                  "dollars": 0.057794,
+                  "chars": 7675
+                },
+                "Agent": {
+                  "tokens": 1982,
+                  "dollars": 0.029729,
+                  "chars": 4519
+                },
+                "Read": {
+                  "tokens": 1114,
+                  "dollars": 0.016701,
+                  "chars": 1535
+                },
+                "Bash": {
+                  "tokens": 758,
+                  "dollars": 0.011364,
+                  "chars": 1621
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 14253,
+            "unnecessary_space_count": 111553,
+            "total_chars": 650172
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 68070,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 2092
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 12,
+                  "chars": 65978
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 9,
+          "cost": {
+            "input": {
+              "tokens": 545,
+              "dollars": 0.000561
+            },
+            "cache_write": {
+              "tokens": 32667,
+              "dollars": 0.122501
+            },
+            "cache_read": {
+              "tokens": 385774,
+              "dollars": 0.115733
+            },
+            "output": {
+              "tokens": 3835,
+              "dollars": 0.057375
+            },
+            "total": {
+              "tokens": 422821,
+              "dollars": 0.29617
+            }
+          },
+          "timing": {
+            "total_duration_ms": 82135,
+            "wall_clock_ms": 89418,
+            "avg_duration_ms": 9126
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 143346,
+                  "dollars": 0.08223,
+                  "chars": 526344
+                },
+                "Read": {
+                  "tokens": 24595,
+                  "dollars": 0.031963,
+                  "chars": 89997
+                },
+                "Glob": {
+                  "tokens": 178,
+                  "dollars": 0.000182,
+                  "chars": 652
+                },
+                "Write": {
+                  "tokens": 56,
+                  "dollars": 0.00021,
+                  "chars": 206
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 11273,
+                  "dollars": 0.007646,
+                  "chars": 41392
+                },
+                "Read": {
+                  "tokens": 894,
+                  "dollars": 0.000998,
+                  "chars": 3278
+                },
+                "Glob": {
+                  "tokens": 197,
+                  "dollars": 0.00017,
+                  "chars": 720
+                },
+                "Write": {
+                  "tokens": 3014,
+                  "dollars": 0.011303,
+                  "chars": 11005
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 86,
+                "dollars": 0.001146,
+                "chars": 176
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3749,
+                  "dollars": 0.056229,
+                  "chars": 11684
+                },
+                "Read": {
+                  "tokens": 438,
+                  "dollars": 0.006566,
+                  "chars": 582
+                },
+                "Glob": {
+                  "tokens": 58,
+                  "dollars": 0.00087,
+                  "chars": 80
+                },
+                "Write": {
+                  "tokens": 3215,
+                  "dollars": 0.048223,
+                  "chars": 10965
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1946,
+            "unnecessary_space_count": 14441,
+            "total_chars": 81713
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 23714,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 4,
+                  "chars": 23642
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 9917,
+              "per_file": {
+                "/root/.claude/plans/vectorized-noodling-newell.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 9917
+                }
+              }
+            }
+          }
+        },
+        "5": {
+          "request_count": 19,
+          "cost": {
+            "input": {
+              "tokens": 19,
+              "dollars": 5.7e-05
+            },
+            "cache_write": {
+              "tokens": 60992,
+              "dollars": 0.22872
+            },
+            "cache_read": {
+              "tokens": 1803435,
+              "dollars": 0.541029
+            },
+            "output": {
+              "tokens": 33588,
+              "dollars": 0.50382
+            },
+            "total": {
+              "tokens": 1898034,
+              "dollars": 1.273629
+            }
+          },
+          "timing": {
+            "total_duration_ms": 399608,
+            "wall_clock_ms": 1034040,
+            "avg_duration_ms": 21032
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 349600,
+                  "dollars": 0.104882,
+                  "chars": 1249972
+                },
+                "Read": {
+                  "tokens": 339994,
+                  "dollars": 0.144391,
+                  "chars": 1213515
+                },
+                "Glob": {
+                  "tokens": 544,
+                  "dollars": 0.000164,
+                  "chars": 1938
+                },
+                "Write": {
+                  "tokens": 1396,
+                  "dollars": 0.000603,
+                  "chars": 4970
+                },
+                "ExitPlanMode": {
+                  "tokens": 60804,
+                  "dollars": 0.029111,
+                  "chars": 217400
+                },
+                "TaskCreate": {
+                  "tokens": 670,
+                  "dollars": 0.000396,
+                  "chars": 2378
+                },
+                "TaskUpdate": {
+                  "tokens": 455,
+                  "dollars": 0.00042,
+                  "chars": 1606
+                },
+                "Bash": {
+                  "tokens": 50744,
+                  "dollars": 0.047223,
+                  "chars": 178724
+                },
+                "Edit": {
+                  "tokens": 516,
+                  "dollars": 0.000536,
+                  "chars": 1818
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 27493,
+                  "dollars": 0.008248,
+                  "chars": 98306
+                },
+                "Read": {
+                  "tokens": 7107,
+                  "dollars": 0.00274,
+                  "chars": 25367
+                },
+                "Glob": {
+                  "tokens": 639,
+                  "dollars": 0.00019,
+                  "chars": 2280
+                },
+                "Write": {
+                  "tokens": 348274,
+                  "dollars": 0.187259,
+                  "chars": 1236175
+                },
+                "ExitPlanMode": {
+                  "tokens": 518,
+                  "dollars": 0.000245,
+                  "chars": 1843
+                },
+                "TaskCreate": {
+                  "tokens": 1057,
+                  "dollars": 0.00057,
+                  "chars": 3766
+                },
+                "TaskUpdate": {
+                  "tokens": 524,
+                  "dollars": 0.00041,
+                  "chars": 1860
+                },
+                "Bash": {
+                  "tokens": 2910,
+                  "dollars": 0.002377,
+                  "chars": 10281
+                },
+                "Edit": {
+                  "tokens": 5707,
+                  "dollars": 0.005028,
+                  "chars": 20118
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1851,
+                "dollars": 0.027765,
+                "chars": 1938
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 31737,
+                  "dollars": 0.476055,
+                  "chars": 91008
+                },
+                "Read": {
+                  "tokens": 373,
+                  "dollars": 0.005598,
+                  "chars": 477
+                },
+                "TaskCreate": {
+                  "tokens": 3509,
+                  "dollars": 0.05264,
+                  "chars": 229
+                },
+                "TaskUpdate": {
+                  "tokens": 125,
+                  "dollars": 0.001873,
+                  "chars": 184
+                },
+                "Write": {
+                  "tokens": 25690,
+                  "dollars": 0.38535,
+                  "chars": 85550
+                },
+                "Bash": {
+                  "tokens": 769,
+                  "dollars": 0.011525,
+                  "chars": 1275
+                },
+                "Edit": {
+                  "tokens": 1271,
+                  "dollars": 0.019069,
+                  "chars": 3293
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 24848,
+            "unnecessary_space_count": 200866,
+            "total_chars": 1114844
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 64523,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 8,
+                  "chars": 64451
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 570,
+              "per_file": {
+                "/workspace/test_export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 570
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Bash": {
+              "tokens": 58642,
+              "dollars": 0.052025,
+              "chars": 206685
+            },
+            "Read": {
+              "tokens": 606187,
+              "dollars": 0.336481,
+              "chars": 2149269
+            },
+            "Agent": {
+              "tokens": 499097,
+              "dollars": 0.210178,
+              "chars": 1800255
+            },
+            "Glob": {
+              "tokens": 722,
+              "dollars": 0.000346,
+              "chars": 2590
+            },
+            "Write": {
+              "tokens": 1452,
+              "dollars": 0.000813,
+              "chars": 5176
+            },
+            "ExitPlanMode": {
+              "tokens": 60804,
+              "dollars": 0.029111,
+              "chars": 217400
+            },
+            "TaskCreate": {
+              "tokens": 670,
+              "dollars": 0.000396,
+              "chars": 2378
+            },
+            "TaskUpdate": {
+              "tokens": 455,
+              "dollars": 0.00042,
+              "chars": 1606
+            },
+            "Edit": {
+              "tokens": 516,
+              "dollars": 0.000536,
+              "chars": 1818
+            }
+          },
+          "tool_calls": {
+            "Bash": {
+              "tokens": 8242,
+              "dollars": 0.006084,
+              "chars": 29055
+            },
+            "Read": {
+              "tokens": 13195,
+              "dollars": 0.007331,
+              "chars": 46871
+            },
+            "Agent": {
+              "tokens": 38924,
+              "dollars": 0.016487,
+              "chars": 140313
+            },
+            "Glob": {
+              "tokens": 836,
+              "dollars": 0.00036,
+              "chars": 3000
+            },
+            "Write": {
+              "tokens": 351288,
+              "dollars": 0.198562,
+              "chars": 1247180
+            },
+            "ExitPlanMode": {
+              "tokens": 518,
+              "dollars": 0.000245,
+              "chars": 1843
+            },
+            "TaskCreate": {
+              "tokens": 1057,
+              "dollars": 0.00057,
+              "chars": 3766
+            },
+            "TaskUpdate": {
+              "tokens": 524,
+              "dollars": 0.00041,
+              "chars": 1860
+            },
+            "Edit": {
+              "tokens": 5707,
+              "dollars": 0.005028,
+              "chars": 20118
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 22249,
+            "dollars": 0.264343,
+            "chars": 64999
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 39986,
+              "dollars": 0.595522,
+              "chars": 111901
+            },
+            "Agent": {
+              "tokens": 2203,
+              "dollars": 0.033044,
+              "chars": 5094
+            },
+            "Bash": {
+              "tokens": 1913,
+              "dollars": 0.024822,
+              "chars": 3765
+            },
+            "Read": {
+              "tokens": 1964,
+              "dollars": 0.029061,
+              "chars": 2684
+            },
+            "Glob": {
+              "tokens": 58,
+              "dollars": 0.00087,
+              "chars": 80
+            },
+            "Write": {
+              "tokens": 28905,
+              "dollars": 0.433573,
+              "chars": 96515
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "TaskCreate": {
+              "tokens": 3509,
+              "dollars": 0.05264,
+              "chars": 229
+            },
+            "TaskUpdate": {
+              "tokens": 125,
+              "dollars": 0.001873,
+              "chars": 184
+            },
+            "Edit": {
+              "tokens": 1271,
+              "dollars": 0.019069,
+              "chars": 3293
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 43905,
+        "unnecessary_space_count": 349972,
+        "total_chars": 1974301
+      },
+      "total": {
+        "request_count": 55,
+        "cost": {
+          "input": {
+            "tokens": 1384,
+            "dollars": 0.001724
+          },
+          "cache_write": {
+            "tokens": 177604,
+            "dollars": 0.609555
+          },
+          "cache_read": {
+            "tokens": 2764965,
+            "dollars": 0.809394
+          },
+          "output": {
+            "tokens": 62235,
+            "dollars": 0.859865
+          },
+          "total": {
+            "tokens": 3006188,
+            "dollars": 2.280543
+          }
+        },
+        "timing": {
+          "total_duration_ms": 829822,
+          "wall_clock_ms": 1481511,
+          "avg_duration_ms": 15088
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 196379,
+            "per_file": {
+              "/workspace/export_flows.py": {
+                "file_size": null,
+                "calls": 21,
+                "chars": 194215
+              },
+              "/workspace/evaluation/usage/export_flows.py": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 2164
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 10487,
+            "per_file": {
+              "/root/.claude/plans/vectorized-noodling-newell.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 9917
+              },
+              "/workspace/test_export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 570
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-122541": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 11,
+          "cost": {
+            "input": {
+              "tokens": 1187,
+              "dollars": 0.001187
+            },
+            "cache_write": {
+              "tokens": 45870,
+              "dollars": 0.057338
+            },
+            "cache_read": {
+              "tokens": 139369,
+              "dollars": 0.013935
+            },
+            "output": {
+              "tokens": 5215,
+              "dollars": 0.026075
+            },
+            "total": {
+              "tokens": 191641,
+              "dollars": 0.098537
+            }
+          },
+          "timing": {
+            "total_duration_ms": 62285,
+            "wall_clock_ms": 144833,
+            "avg_duration_ms": 5662
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 22,
+          "cost": {
+            "input": {
+              "tokens": 24,
+              "dollars": 7.2e-05
+            },
+            "cache_write": {
+              "tokens": 70703,
+              "dollars": 0.265138
+            },
+            "cache_read": {
+              "tokens": 1365603,
+              "dollars": 0.409679
+            },
+            "output": {
+              "tokens": 29878,
+              "dollars": 0.44817
+            },
+            "total": {
+              "tokens": 1466208,
+              "dollars": 1.123057
+            }
+          },
+          "timing": {
+            "total_duration_ms": 362665,
+            "wall_clock_ms": 552743,
+            "avg_duration_ms": 16485
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 418,
+              "dollars": 0.000418
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 21,
+              "dollars": 0.000105
+            },
+            "total": {
+              "tokens": 439,
+              "dollars": 0.000523
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1071,
+            "wall_clock_ms": 1071,
+            "avg_duration_ms": 1071
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 21,
+                "dollars": 0.000105,
+                "chars": 62
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 6,
+          "cost": {
+            "input": {
+              "tokens": 237,
+              "dollars": 0.000243
+            },
+            "cache_write": {
+              "tokens": 28834,
+              "dollars": 0.049693
+            },
+            "cache_read": {
+              "tokens": 107842,
+              "dollars": 0.014912
+            },
+            "output": {
+              "tokens": 4478,
+              "dollars": 0.02474
+            },
+            "total": {
+              "tokens": 141391,
+              "dollars": 0.089589
+            }
+          },
+          "timing": {
+            "total_duration_ms": 47938,
+            "wall_clock_ms": 48346,
+            "avg_duration_ms": 7990
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Read": {
+                  "tokens": 40055,
+                  "dollars": 0.026963,
+                  "chars": 139258
+                },
+                "Glob": {
+                  "tokens": 114,
+                  "dollars": 4.4e-05,
+                  "chars": 404
+                },
+                "Bash": {
+                  "tokens": 3468,
+                  "dollars": 0.001578,
+                  "chars": 12295
+                }
+              },
+              "tool_calls": {
+                "Read": {
+                  "tokens": 240,
+                  "dollars": 0.000112,
+                  "chars": 848
+                },
+                "Bash": {
+                  "tokens": 799,
+                  "dollars": 0.000439,
+                  "chars": 2816
+                },
+                "Glob": {
+                  "tokens": 160,
+                  "dollars": 6.1e-05,
+                  "chars": 568
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 3758,
+                "dollars": 0.01879,
+                "chars": 12633
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 720,
+                  "dollars": 0.00595,
+                  "chars": 1744
+                },
+                "Agent": {
+                  "tokens": 235,
+                  "dollars": 0.003525,
+                  "chars": 612
+                },
+                "Read": {
+                  "tokens": 88,
+                  "dollars": 0.000438,
+                  "chars": 197
+                },
+                "Bash": {
+                  "tokens": 352,
+                  "dollars": 0.001759,
+                  "chars": 833
+                },
+                "Glob": {
+                  "tokens": 46,
+                  "dollars": 0.000229,
+                  "chars": 102
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2868,
+            "unnecessary_space_count": 23112,
+            "total_chars": 128896
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 64376,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 64304
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 5,
+          "cost": {
+            "input": {
+              "tokens": 24,
+              "dollars": 2.6e-05
+            },
+            "cache_write": {
+              "tokens": 26308,
+              "dollars": 0.042415
+            },
+            "cache_read": {
+              "tokens": 78283,
+              "dollars": 0.013049
+            },
+            "output": {
+              "tokens": 1144,
+              "dollars": 0.0078
+            },
+            "total": {
+              "tokens": 105759,
+              "dollars": 0.063291
+            }
+          },
+          "timing": {
+            "total_duration_ms": 18814,
+            "wall_clock_ms": 19155,
+            "avg_duration_ms": 3763
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 3233,
+                  "dollars": 0.012124,
+                  "chars": 12693
+                },
+                "Read": {
+                  "tokens": 19937,
+                  "dollars": 0.024806,
+                  "chars": 69304
+                },
+                "Bash": {
+                  "tokens": 2203,
+                  "dollars": 0.001121,
+                  "chars": 7873
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 166,
+                  "dollars": 0.000623,
+                  "chars": 652
+                },
+                "Read": {
+                  "tokens": 160,
+                  "dollars": 0.000104,
+                  "chars": 571
+                },
+                "Bash": {
+                  "tokens": 272,
+                  "dollars": 0.00016,
+                  "chars": 967
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 727,
+                "dollars": 0.00363,
+                "chars": 2492
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 417,
+                  "dollars": 0.00417,
+                  "chars": 878
+                },
+                "Agent": {
+                  "tokens": 208,
+                  "dollars": 0.00312,
+                  "chars": 386
+                },
+                "Read": {
+                  "tokens": 89,
+                  "dollars": 0.000444,
+                  "chars": 197
+                },
+                "Bash": {
+                  "tokens": 121,
+                  "dollars": 0.000606,
+                  "chars": 295
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1429,
+            "unnecessary_space_count": 11556,
+            "total_chars": 64002
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "4": {
+          "request_count": 6,
+          "cost": {
+            "input": {
+              "tokens": 517,
+              "dollars": 0.000527
+            },
+            "cache_write": {
+              "tokens": 25967,
+              "dollars": 0.097377
+            },
+            "cache_read": {
+              "tokens": 172858,
+              "dollars": 0.051857
+            },
+            "output": {
+              "tokens": 3927,
+              "dollars": 0.058755
+            },
+            "total": {
+              "tokens": 203269,
+              "dollars": 0.208516
+            }
+          },
+          "timing": {
+            "total_duration_ms": 68934,
+            "wall_clock_ms": 77291,
+            "avg_duration_ms": 11489
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 19308,
+                  "dollars": 0.007783,
+                  "chars": 74470
+                },
+                "Read": {
+                  "tokens": 37010,
+                  "dollars": 0.07512,
+                  "chars": 138254
+                },
+                "Bash": {
+                  "tokens": 128,
+                  "dollars": 0.000204,
+                  "chars": 487
+                },
+                "Write": {
+                  "tokens": 56,
+                  "dollars": 0.00021,
+                  "chars": 210
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 1397,
+                  "dollars": 0.000792,
+                  "chars": 5390
+                },
+                "Read": {
+                  "tokens": 223,
+                  "dollars": 0.000315,
+                  "chars": 848
+                },
+                "Bash": {
+                  "tokens": 173,
+                  "dollars": 0.000245,
+                  "chars": 657
+                },
+                "Write": {
+                  "tokens": 1541,
+                  "dollars": 0.005779,
+                  "chars": 5784
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 62,
+                "dollars": 0.000786,
+                "chars": 112
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 3865,
+                  "dollars": 0.057969,
+                  "chars": 6237
+                },
+                "Read": {
+                  "tokens": 157,
+                  "dollars": 0.002355,
+                  "chars": 197
+                },
+                "Bash": {
+                  "tokens": 97,
+                  "dollars": 0.001455,
+                  "chars": 179
+                },
+                "Write": {
+                  "tokens": 3538,
+                  "dollars": 0.053064,
+                  "chars": 5744
+                },
+                "ExitPlanMode": {
+                  "tokens": 73,
+                  "dollars": 0.001095,
+                  "chars": 117
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 2858,
+            "unnecessary_space_count": 23112,
+            "total_chars": 127860
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 4971,
+              "per_file": {
+                "/root/.claude/plans/adaptive-discovering-snowflake.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 4971
+                }
+              }
+            }
+          }
+        },
+        "5": {
+          "request_count": 15,
+          "cost": {
+            "input": {
+              "tokens": 15,
+              "dollars": 4.5e-05
+            },
+            "cache_write": {
+              "tokens": 35464,
+              "dollars": 0.132991
+            },
+            "cache_read": {
+              "tokens": 1145989,
+              "dollars": 0.343796
+            },
+            "output": {
+              "tokens": 25523,
+              "dollars": 0.382845
+            },
+            "total": {
+              "tokens": 1206991,
+              "dollars": 0.859675
+            }
+          },
+          "timing": {
+            "total_duration_ms": 288193,
+            "wall_clock_ms": 411226,
+            "avg_duration_ms": 19213
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 60506,
+                  "dollars": 0.018151,
+                  "chars": 223290
+                },
+                "Read": {
+                  "tokens": 280098,
+                  "dollars": 0.08403,
+                  "chars": 1033650
+                },
+                "Bash": {
+                  "tokens": 46162,
+                  "dollars": 0.037138,
+                  "chars": 168833
+                },
+                "Write": {
+                  "tokens": 1186,
+                  "dollars": 0.00053,
+                  "chars": 4366
+                },
+                "ExitPlanMode": {
+                  "tokens": 25306,
+                  "dollars": 0.013348,
+                  "chars": 93385
+                },
+                "TaskCreate": {
+                  "tokens": 647,
+                  "dollars": 0.000383,
+                  "chars": 2378
+                },
+                "TaskUpdate": {
+                  "tokens": 437,
+                  "dollars": 0.000412,
+                  "chars": 1606
+                },
+                "Edit": {
+                  "tokens": 1540,
+                  "dollars": 0.001613,
+                  "chars": 5630
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 4383,
+                  "dollars": 0.001311,
+                  "chars": 16170
+                },
+                "Read": {
+                  "tokens": 1129,
+                  "dollars": 0.000337,
+                  "chars": 4155
+                },
+                "Bash": {
+                  "tokens": 4171,
+                  "dollars": 0.002839,
+                  "chars": 15304
+                },
+                "Write": {
+                  "tokens": 256106,
+                  "dollars": 0.143078,
+                  "chars": 941256
+                },
+                "ExitPlanMode": {
+                  "tokens": 638,
+                  "dollars": 0.00034,
+                  "chars": 2355
+                },
+                "TaskCreate": {
+                  "tokens": 1201,
+                  "dollars": 0.000648,
+                  "chars": 4438
+                },
+                "TaskUpdate": {
+                  "tokens": 504,
+                  "dollars": 0.000398,
+                  "chars": 1860
+                },
+                "Edit": {
+                  "tokens": 6366,
+                  "dollars": 0.006192,
+                  "chars": 23282
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 882,
+                "dollars": 0.013228,
+                "chars": 1662
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 24641,
+                  "dollars": 0.369617,
+                  "chars": 77494
+                },
+                "TaskCreate": {
+                  "tokens": 229,
+                  "dollars": 0.003435,
+                  "chars": 277
+                },
+                "TaskUpdate": {
+                  "tokens": 125,
+                  "dollars": 0.001876,
+                  "chars": 184
+                },
+                "Write": {
+                  "tokens": 20032,
+                  "dollars": 0.30048,
+                  "chars": 71168
+                },
+                "Bash": {
+                  "tokens": 820,
+                  "dollars": 0.012299,
+                  "chars": 1479
+                },
+                "Edit": {
+                  "tokens": 3435,
+                  "dollars": 0.051527,
+                  "chars": 4386
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 21435,
+            "unnecessary_space_count": 173340,
+            "total_chars": 957870
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 415,
+              "per_file": {
+                "/workspace/test_export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 415
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Read": {
+              "tokens": 377100,
+              "dollars": 0.210919,
+              "chars": 1380466
+            },
+            "Glob": {
+              "tokens": 114,
+              "dollars": 4.4e-05,
+              "chars": 404
+            },
+            "Bash": {
+              "tokens": 51961,
+              "dollars": 0.040041,
+              "chars": 189488
+            },
+            "Agent": {
+              "tokens": 83047,
+              "dollars": 0.038058,
+              "chars": 310453
+            },
+            "Write": {
+              "tokens": 1242,
+              "dollars": 0.00074,
+              "chars": 4576
+            },
+            "ExitPlanMode": {
+              "tokens": 25306,
+              "dollars": 0.013348,
+              "chars": 93385
+            },
+            "TaskCreate": {
+              "tokens": 647,
+              "dollars": 0.000383,
+              "chars": 2378
+            },
+            "TaskUpdate": {
+              "tokens": 437,
+              "dollars": 0.000412,
+              "chars": 1606
+            },
+            "Edit": {
+              "tokens": 1540,
+              "dollars": 0.001613,
+              "chars": 5630
+            }
+          },
+          "tool_calls": {
+            "Read": {
+              "tokens": 1752,
+              "dollars": 0.000868,
+              "chars": 6422
+            },
+            "Bash": {
+              "tokens": 5415,
+              "dollars": 0.003683,
+              "chars": 19744
+            },
+            "Glob": {
+              "tokens": 160,
+              "dollars": 6.1e-05,
+              "chars": 568
+            },
+            "Agent": {
+              "tokens": 5946,
+              "dollars": 0.002726,
+              "chars": 22212
+            },
+            "Write": {
+              "tokens": 257647,
+              "dollars": 0.148857,
+              "chars": 947040
+            },
+            "ExitPlanMode": {
+              "tokens": 638,
+              "dollars": 0.00034,
+              "chars": 2355
+            },
+            "TaskCreate": {
+              "tokens": 1201,
+              "dollars": 0.000648,
+              "chars": 4438
+            },
+            "TaskUpdate": {
+              "tokens": 504,
+              "dollars": 0.000398,
+              "chars": 1860
+            },
+            "Edit": {
+              "tokens": 6366,
+              "dollars": 0.006192,
+              "chars": 23282
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 5450,
+            "dollars": 0.036539,
+            "chars": 16961
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 29643,
+              "dollars": 0.437706,
+              "chars": 86353
+            },
+            "Agent": {
+              "tokens": 443,
+              "dollars": 0.006645,
+              "chars": 998
+            },
+            "Read": {
+              "tokens": 334,
+              "dollars": 0.003237,
+              "chars": 591
+            },
+            "Bash": {
+              "tokens": 1390,
+              "dollars": 0.016119,
+              "chars": 2786
+            },
+            "Glob": {
+              "tokens": 46,
+              "dollars": 0.000229,
+              "chars": 102
+            },
+            "Write": {
+              "tokens": 23570,
+              "dollars": 0.353544,
+              "chars": 76912
+            },
+            "ExitPlanMode": {
+              "tokens": 73,
+              "dollars": 0.001095,
+              "chars": 117
+            },
+            "TaskCreate": {
+              "tokens": 229,
+              "dollars": 0.003435,
+              "chars": 277
+            },
+            "TaskUpdate": {
+              "tokens": 125,
+              "dollars": 0.001876,
+              "chars": 184
+            },
+            "Edit": {
+              "tokens": 3435,
+              "dollars": 0.051527,
+              "chars": 4386
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 28590,
+        "unnecessary_space_count": 231120,
+        "total_chars": 1278628
+      },
+      "total": {
+        "request_count": 33,
+        "cost": {
+          "input": {
+            "tokens": 1211,
+            "dollars": 0.001259
+          },
+          "cache_write": {
+            "tokens": 116573,
+            "dollars": 0.322476
+          },
+          "cache_read": {
+            "tokens": 1504972,
+            "dollars": 0.423614
+          },
+          "output": {
+            "tokens": 35093,
+            "dollars": 0.474245
+          },
+          "total": {
+            "tokens": 1657849,
+            "dollars": 1.221594
+          }
+        },
+        "timing": {
+          "total_duration_ms": 424950,
+          "wall_clock_ms": 552747,
+          "avg_duration_ms": 12877
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 192092,
+            "per_file": {
+              "/workspace/evaluation/usage/export_flows.py": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 216
+              },
+              "/workspace/export_flows.py": {
+                "file_size": null,
+                "calls": 3,
+                "chars": 191876
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 5386,
+            "per_file": {
+              "/root/.claude/plans/adaptive-discovering-snowflake.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 4971
+              },
+              "/workspace/test_export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 415
+              }
+            }
+          }
+        }
+      }
+    },
+    "20260406-122543": {
+      "title": "claude-code",
+      "color": "#8ebfa1",
+      "by_model": {
+        "claude-haiku-4-5": {
+          "request_count": 6,
+          "cost": {
+            "input": {
+              "tokens": 1339,
+              "dollars": 0.001339
+            },
+            "cache_write": {
+              "tokens": 22525,
+              "dollars": 0.028156
+            },
+            "cache_read": {
+              "tokens": 53092,
+              "dollars": 0.005308
+            },
+            "output": {
+              "tokens": 7982,
+              "dollars": 0.03991
+            },
+            "total": {
+              "tokens": 84938,
+              "dollars": 0.074714
+            }
+          },
+          "timing": {
+            "total_duration_ms": 78435,
+            "wall_clock_ms": 228401,
+            "avg_duration_ms": 13072
+          }
+        },
+        "claude-sonnet-4-6": {
+          "request_count": 26,
+          "cost": {
+            "input": {
+              "tokens": 28,
+              "dollars": 8.4e-05
+            },
+            "cache_write": {
+              "tokens": 97611,
+              "dollars": 0.366042
+            },
+            "cache_read": {
+              "tokens": 2052474,
+              "dollars": 0.615738
+            },
+            "output": {
+              "tokens": 48833,
+              "dollars": 0.732495
+            },
+            "total": {
+              "tokens": 2198946,
+              "dollars": 1.714361
+            }
+          },
+          "timing": {
+            "total_duration_ms": 617894,
+            "wall_clock_ms": 880188,
+            "avg_duration_ms": 23765
+          }
+        }
+      },
+      "by_step": {
+        "1": {
+          "request_count": 1,
+          "cost": {
+            "input": {
+              "tokens": 418,
+              "dollars": 0.000418
+            },
+            "cache_write": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "cache_read": {
+              "tokens": 0,
+              "dollars": 0.0
+            },
+            "output": {
+              "tokens": 17,
+              "dollars": 8.5e-05
+            },
+            "total": {
+              "tokens": 435,
+              "dollars": 0.000503
+            }
+          },
+          "timing": {
+            "total_duration_ms": 1116,
+            "wall_clock_ms": 1116,
+            "avg_duration_ms": 1116
+          },
+          "by_source": {
+            "input": {},
+            "output": {
+              "llm_text": {
+                "tokens": 17,
+                "dollars": 8.5e-05,
+                "chars": 58
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 0,
+                  "dollars": 0.0,
+                  "chars": 0
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 0,
+            "unnecessary_space_count": 0,
+            "total_chars": 0
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 0,
+              "total_read_chars": 0,
+              "per_file": {}
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "2": {
+          "request_count": 5,
+          "cost": {
+            "input": {
+              "tokens": 403,
+              "dollars": 0.000409
+            },
+            "cache_write": {
+              "tokens": 27986,
+              "dollars": 0.048635
+            },
+            "cache_read": {
+              "tokens": 73740,
+              "dollars": 0.011502
+            },
+            "output": {
+              "tokens": 8257,
+              "dollars": 0.044355
+            },
+            "total": {
+              "tokens": 110386,
+              "dollars": 0.104902
+            }
+          },
+          "timing": {
+            "total_duration_ms": 81480,
+            "wall_clock_ms": 81890,
+            "avg_duration_ms": 16296
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Glob": {
+                  "tokens": 169,
+                  "dollars": 8.1e-05,
+                  "chars": 606
+                },
+                "Read": {
+                  "tokens": 20118,
+                  "dollars": 0.025032,
+                  "chars": 69826
+                },
+                "Bash": {
+                  "tokens": 2312,
+                  "dollars": 0.001281,
+                  "chars": 8248
+                }
+              },
+              "tool_calls": {
+                "Read": {
+                  "tokens": 160,
+                  "dollars": 0.000104,
+                  "chars": 571
+                },
+                "Glob": {
+                  "tokens": 232,
+                  "dollars": 0.000111,
+                  "chars": 828
+                },
+                "Bash": {
+                  "tokens": 414,
+                  "dollars": 0.000302,
+                  "chars": 1466
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 7503,
+                "dollars": 0.037509,
+                "chars": 24876
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 754,
+                  "dollars": 0.006846,
+                  "chars": 1869
+                },
+                "Agent": {
+                  "tokens": 307,
+                  "dollars": 0.004605,
+                  "chars": 872
+                },
+                "Read": {
+                  "tokens": 88,
+                  "dollars": 0.000443,
+                  "chars": 197
+                },
+                "Glob": {
+                  "tokens": 85,
+                  "dollars": 0.000423,
+                  "chars": 196
+                },
+                "Bash": {
+                  "tokens": 275,
+                  "dollars": 0.001376,
+                  "chars": 604
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 1434,
+            "unnecessary_space_count": 11556,
+            "total_chars": 64520
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 64376,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 64304
+                }
+              }
+            },
+            "output": {
+              "files_written": 0,
+              "unique_files_written": 0,
+              "total_write_chars": 0,
+              "per_file": {}
+            }
+          }
+        },
+        "3": {
+          "request_count": 7,
+          "cost": {
+            "input": {
+              "tokens": 527,
+              "dollars": 0.000539
+            },
+            "cache_write": {
+              "tokens": 35068,
+              "dollars": 0.131505
+            },
+            "cache_read": {
+              "tokens": 240085,
+              "dollars": 0.072026
+            },
+            "output": {
+              "tokens": 6943,
+              "dollars": 0.103995
+            },
+            "total": {
+              "tokens": 282623,
+              "dollars": 0.308065
+            }
+          },
+          "timing": {
+            "total_duration_ms": 124184,
+            "wall_clock_ms": 146478,
+            "avg_duration_ms": 17741
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 40556,
+                  "dollars": 0.035065,
+                  "chars": 153790
+                },
+                "Read": {
+                  "tokens": 55834,
+                  "dollars": 0.081169,
+                  "chars": 207164
+                },
+                "Glob": {
+                  "tokens": 120,
+                  "dollars": 0.000163,
+                  "chars": 448
+                },
+                "Bash": {
+                  "tokens": 87,
+                  "dollars": 0.000195,
+                  "chars": 320
+                },
+                "Write": {
+                  "tokens": 54,
+                  "dollars": 0.000203,
+                  "chars": 202
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 1443,
+                  "dollars": 0.001246,
+                  "chars": 5472
+                },
+                "Read": {
+                  "tokens": 318,
+                  "dollars": 0.000357,
+                  "chars": 1195
+                },
+                "Glob": {
+                  "tokens": 127,
+                  "dollars": 0.000146,
+                  "chars": 480
+                },
+                "Bash": {
+                  "tokens": 124,
+                  "dollars": 0.000252,
+                  "chars": 462
+                },
+                "Write": {
+                  "tokens": 2970,
+                  "dollars": 0.011137,
+                  "chars": 11078
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 368,
+                "dollars": 0.005364,
+                "chars": 182
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 6575,
+                  "dollars": 0.098631,
+                  "chars": 11577
+                },
+                "Read": {
+                  "tokens": 573,
+                  "dollars": 0.008595,
+                  "chars": 211
+                },
+                "Glob": {
+                  "tokens": 58,
+                  "dollars": 0.00087,
+                  "chars": 80
+                },
+                "Bash": {
+                  "tokens": 369,
+                  "dollars": 0.005535,
+                  "chars": 191
+                },
+                "Write": {
+                  "tokens": 5537,
+                  "dollars": 0.083061,
+                  "chars": 11038
+                },
+                "ExitPlanMode": {
+                  "tokens": 38,
+                  "dollars": 0.00057,
+                  "chars": 57
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 4287,
+            "unnecessary_space_count": 34668,
+            "total_chars": 191718
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 10015,
+              "per_file": {
+                "/root/.claude/plans/smooth-sauteeing-petal.md": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 10015
+                }
+              }
+            }
+          }
+        },
+        "4": {
+          "request_count": 19,
+          "cost": {
+            "input": {
+              "tokens": 19,
+              "dollars": 5.7e-05
+            },
+            "cache_write": {
+              "tokens": 57082,
+              "dollars": 0.214058
+            },
+            "cache_read": {
+              "tokens": 1791741,
+              "dollars": 0.537518
+            },
+            "output": {
+              "tokens": 41598,
+              "dollars": 0.62397
+            },
+            "total": {
+              "tokens": 1890440,
+              "dollars": 1.375605
+            }
+          },
+          "timing": {
+            "total_duration_ms": 489549,
+            "wall_clock_ms": 652763,
+            "avg_duration_ms": 25766
+          },
+          "by_source": {
+            "input": {
+              "tool_results": {
+                "Agent": {
+                  "tokens": 132178,
+                  "dollars": 0.039652,
+                  "chars": 486875
+                },
+                "Read": {
+                  "tokens": 355443,
+                  "dollars": 0.106633,
+                  "chars": 1309290
+                },
+                "Glob": {
+                  "tokens": 529,
+                  "dollars": 0.000152,
+                  "chars": 1938
+                },
+                "Bash": {
+                  "tokens": 81861,
+                  "dollars": 0.057563,
+                  "chars": 300450
+                },
+                "Write": {
+                  "tokens": 1490,
+                  "dollars": 0.000618,
+                  "chars": 5486
+                },
+                "ExitPlanMode": {
+                  "tokens": 59377,
+                  "dollars": 0.028523,
+                  "chars": 218711
+                },
+                "TaskCreate": {
+                  "tokens": 711,
+                  "dollars": 0.000387,
+                  "chars": 2614
+                },
+                "TaskUpdate": {
+                  "tokens": 558,
+                  "dollars": 0.000448,
+                  "chars": 2042
+                },
+                "Edit": {
+                  "tokens": 4121,
+                  "dollars": 0.003674,
+                  "chars": 15112
+                }
+              },
+              "tool_calls": {
+                "Agent": {
+                  "tokens": 4705,
+                  "dollars": 0.001408,
+                  "chars": 17328
+                },
+                "Read": {
+                  "tokens": 1501,
+                  "dollars": 0.000453,
+                  "chars": 5529
+                },
+                "Glob": {
+                  "tokens": 620,
+                  "dollars": 0.00019,
+                  "chars": 2280
+                },
+                "Bash": {
+                  "tokens": 5740,
+                  "dollars": 0.003321,
+                  "chars": 21086
+                },
+                "Write": {
+                  "tokens": 418178,
+                  "dollars": 0.203098,
+                  "chars": 1537714
+                },
+                "ExitPlanMode": {
+                  "tokens": 497,
+                  "dollars": 0.000241,
+                  "chars": 1843
+                },
+                "TaskCreate": {
+                  "tokens": 1452,
+                  "dollars": 0.000709,
+                  "chars": 5346
+                },
+                "TaskUpdate": {
+                  "tokens": 649,
+                  "dollars": 0.000446,
+                  "chars": 2392
+                },
+                "Edit": {
+                  "tokens": 36246,
+                  "dollars": 0.032473,
+                  "chars": 132831
+                }
+              }
+            },
+            "output": {
+              "llm_text": {
+                "tokens": 1174,
+                "dollars": 0.017606,
+                "chars": 1775
+              },
+              "tool_calls": {
+                "__total": {
+                  "tokens": 40424,
+                  "dollars": 0.606364,
+                  "chars": 107544
+                },
+                "TaskCreate": {
+                  "tokens": 184,
+                  "dollars": 0.00276,
+                  "chars": 257
+                },
+                "TaskUpdate": {
+                  "tokens": 124,
+                  "dollars": 0.001865,
+                  "chars": 184
+                },
+                "Write": {
+                  "tokens": 23226,
+                  "dollars": 0.34839,
+                  "chars": 82912
+                },
+                "Bash": {
+                  "tokens": 840,
+                  "dollars": 0.012605,
+                  "chars": 1483
+                },
+                "Edit": {
+                  "tokens": 16050,
+                  "dollars": 0.240744,
+                  "chars": 22708
+                }
+              }
+            }
+          },
+          "read_file_whitespace": {
+            "line_returns_count": 27151,
+            "unnecessary_space_count": 219564,
+            "total_chars": 1213302
+          },
+          "file_ops": {
+            "input": {
+              "unique_files_read": 2,
+              "total_read_chars": 63858,
+              "per_file": {
+                "/workspace/evaluation/usage/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 72
+                },
+                "/workspace/export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 63786
+                }
+              }
+            },
+            "output": {
+              "files_written": 1,
+              "unique_files_written": 1,
+              "total_write_chars": 1684,
+              "per_file": {
+                "/workspace/test_export_flows.py": {
+                  "file_size": null,
+                  "calls": 1,
+                  "chars": 1684
+                }
+              }
+            }
+          }
+        }
+      },
+      "by_source": {
+        "input": {
+          "tool_results": {
+            "Glob": {
+              "tokens": 818,
+              "dollars": 0.000396,
+              "chars": 2992
+            },
+            "Read": {
+              "tokens": 431395,
+              "dollars": 0.212834,
+              "chars": 1586280
+            },
+            "Bash": {
+              "tokens": 84260,
+              "dollars": 0.059039,
+              "chars": 309018
+            },
+            "Agent": {
+              "tokens": 172734,
+              "dollars": 0.074717,
+              "chars": 640665
+            },
+            "Write": {
+              "tokens": 1544,
+              "dollars": 0.000821,
+              "chars": 5688
+            },
+            "ExitPlanMode": {
+              "tokens": 59377,
+              "dollars": 0.028523,
+              "chars": 218711
+            },
+            "TaskCreate": {
+              "tokens": 711,
+              "dollars": 0.000387,
+              "chars": 2614
+            },
+            "TaskUpdate": {
+              "tokens": 558,
+              "dollars": 0.000448,
+              "chars": 2042
+            },
+            "Edit": {
+              "tokens": 4121,
+              "dollars": 0.003674,
+              "chars": 15112
+            }
+          },
+          "tool_calls": {
+            "Read": {
+              "tokens": 1979,
+              "dollars": 0.000914,
+              "chars": 7295
+            },
+            "Glob": {
+              "tokens": 979,
+              "dollars": 0.000447,
+              "chars": 3588
+            },
+            "Bash": {
+              "tokens": 6278,
+              "dollars": 0.003875,
+              "chars": 23014
+            },
+            "Agent": {
+              "tokens": 6148,
+              "dollars": 0.002654,
+              "chars": 22800
+            },
+            "Write": {
+              "tokens": 421148,
+              "dollars": 0.214235,
+              "chars": 1548792
+            },
+            "ExitPlanMode": {
+              "tokens": 497,
+              "dollars": 0.000241,
+              "chars": 1843
+            },
+            "TaskCreate": {
+              "tokens": 1452,
+              "dollars": 0.000709,
+              "chars": 5346
+            },
+            "TaskUpdate": {
+              "tokens": 649,
+              "dollars": 0.000446,
+              "chars": 2392
+            },
+            "Edit": {
+              "tokens": 36246,
+              "dollars": 0.032473,
+              "chars": 132831
+            }
+          }
+        },
+        "output": {
+          "llm_text": {
+            "tokens": 9062,
+            "dollars": 0.060564,
+            "chars": 26891
+          },
+          "tool_calls": {
+            "__total": {
+              "tokens": 47753,
+              "dollars": 0.711841,
+              "chars": 120990
+            },
+            "Agent": {
+              "tokens": 307,
+              "dollars": 0.004605,
+              "chars": 872
+            },
+            "Read": {
+              "tokens": 661,
+              "dollars": 0.009038,
+              "chars": 408
+            },
+            "Glob": {
+              "tokens": 143,
+              "dollars": 0.001293,
+              "chars": 276
+            },
+            "Bash": {
+              "tokens": 1484,
+              "dollars": 0.019516,
+              "chars": 2278
+            },
+            "Write": {
+              "tokens": 28763,
+              "dollars": 0.431451,
+              "chars": 93950
+            },
+            "ExitPlanMode": {
+              "tokens": 38,
+              "dollars": 0.00057,
+              "chars": 57
+            },
+            "TaskCreate": {
+              "tokens": 184,
+              "dollars": 0.00276,
+              "chars": 257
+            },
+            "TaskUpdate": {
+              "tokens": 124,
+              "dollars": 0.001865,
+              "chars": 184
+            },
+            "Edit": {
+              "tokens": 16050,
+              "dollars": 0.240744,
+              "chars": 22708
+            }
+          }
+        }
+      },
+      "read_file_whitespace": {
+        "line_returns_count": 32872,
+        "unnecessary_space_count": 265788,
+        "total_chars": 1469540
+      },
+      "total": {
+        "request_count": 32,
+        "cost": {
+          "input": {
+            "tokens": 1367,
+            "dollars": 0.001423
+          },
+          "cache_write": {
+            "tokens": 120136,
+            "dollars": 0.394198
+          },
+          "cache_read": {
+            "tokens": 2105566,
+            "dollars": 0.621046
+          },
+          "output": {
+            "tokens": 56815,
+            "dollars": 0.772405
+          },
+          "total": {
+            "tokens": 2283884,
+            "dollars": 1.789075
+          }
+        },
+        "timing": {
+          "total_duration_ms": 696329,
+          "wall_clock_ms": 880194,
+          "avg_duration_ms": 21760
+        },
+        "file_ops": {
+          "input": {
+            "unique_files_read": 2,
+            "total_read_chars": 128234,
+            "per_file": {
+              "/workspace/evaluation/usage/export_flows.py": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 144
+              },
+              "/workspace/export_flows.py": {
+                "file_size": null,
+                "calls": 2,
+                "chars": 128090
+              }
+            }
+          },
+          "output": {
+            "files_written": 2,
+            "unique_files_written": 2,
+            "total_write_chars": 11699,
+            "per_file": {
+              "/root/.claude/plans/smooth-sauteeing-petal.md": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 10015
+              },
+              "/workspace/test_export_flows.py": {
+                "file_size": null,
+                "calls": 1,
+                "chars": 1684
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "by_model": {
+    "claude-haiku-4-5": {
+      "request_count": 49,
+      "cost": {
+        "input": {
+          "tokens": 5733,
+          "dollars": 0.005733
+        },
+        "cache_write": {
+          "tokens": 173235,
+          "dollars": 0.216547
+        },
+        "cache_read": {
+          "tokens": 674950,
+          "dollars": 0.067492
+        },
+        "output": {
+          "tokens": 28624,
+          "dollars": 0.14312
+        },
+        "total": {
+          "tokens": 882542,
+          "dollars": 0.432892
+        }
+      },
+      "timing": {
+        "total_duration_ms": 313403,
+        "avg_duration_ms": 6396
+      }
+    },
+    "claude-sonnet-4-6": {
+      "request_count": 203,
+      "cost": {
+        "input": {
+          "tokens": 335,
+          "dollars": 0.001005
+        },
+        "cache_write": {
+          "tokens": 589682,
+          "dollars": 2.211309
+        },
+        "cache_read": {
+          "tokens": 12544232,
+          "dollars": 3.763258
+        },
+        "output": {
+          "tokens": 248749,
+          "dollars": 3.731235
+        },
+        "total": {
+          "tokens": 13382998,
+          "dollars": 9.706817
+        }
+      },
+      "timing": {
+        "total_duration_ms": 3264963,
+        "avg_duration_ms": 16084
+      }
+    }
+  },
+  "by_source": {
+    "input": {
+      "tool_results": {
+        "Bash": {
+          "tokens": 481884,
+          "dollars": 0.307893,
+          "chars": 1700160
+        },
+        "Read": {
+          "tokens": 3497895,
+          "dollars": 1.592527,
+          "chars": 12442640
+        },
+        "Agent": {
+          "tokens": 1062072,
+          "dollars": 0.461054,
+          "chars": 3875690
+        },
+        "Glob": {
+          "tokens": 10442,
+          "dollars": 0.004619,
+          "chars": 38464
+        },
+        "Write": {
+          "tokens": 8098,
+          "dollars": 0.004473,
+          "chars": 29520
+        },
+        "ExitPlanMode": {
+          "tokens": 274547,
+          "dollars": 0.130485,
+          "chars": 1002362
+        },
+        "TaskCreate": {
+          "tokens": 4572,
+          "dollars": 0.002503,
+          "chars": 16646
+        },
+        "TaskUpdate": {
+          "tokens": 3324,
+          "dollars": 0.002696,
+          "chars": 12034
+        },
+        "Edit": {
+          "tokens": 10774,
+          "dollars": 0.009806,
+          "chars": 39431
+        }
+      },
+      "tool_calls": {
+        "Bash": {
+          "tokens": 498231,
+          "dollars": 0.243382,
+          "chars": 1664622
+        },
+        "Read": {
+          "tokens": 36181,
+          "dollars": 0.016362,
+          "chars": 126709
+        },
+        "Agent": {
+          "tokens": 104485,
+          "dollars": 0.046739,
+          "chars": 379980
+        },
+        "Glob": {
+          "tokens": 7717,
+          "dollars": 0.003315,
+          "chars": 28363
+        },
+        "Write": {
+          "tokens": 1825772,
+          "dollars": 0.9815,
+          "chars": 6644254
+        },
+        "ExitPlanMode": {
+          "tokens": 2757,
+          "dollars": 0.001344,
+          "chars": 10115
+        },
+        "TaskCreate": {
+          "tokens": 8693,
+          "dollars": 0.004334,
+          "chars": 31733
+        },
+        "TaskUpdate": {
+          "tokens": 3860,
+          "dollars": 0.002657,
+          "chars": 14066
+        },
+        "Edit": {
+          "tokens": 81399,
+          "dollars": 0.068027,
+          "chars": 297776
+        }
+      }
+    },
+    "output": {
+      "llm_text": {
+        "tokens": 54167,
+        "dollars": 0.554402,
+        "chars": 161945
+      },
+      "tool_calls": {
+        "__total": {
+          "tokens": 223206,
+          "dollars": 3.319953,
+          "chars": 622217
+        },
+        "Agent": {
+          "tokens": 7758,
+          "dollars": 0.116362,
+          "chars": 16325
+        },
+        "Bash": {
+          "tokens": 39186,
+          "dollars": 0.567986,
+          "chars": 92000
+        },
+        "Read": {
+          "tokens": 4043,
+          "dollars": 0.055695,
+          "chars": 5180
+        },
+        "Glob": {
+          "tokens": 2780,
+          "dollars": 0.038309,
+          "chars": 1308
+        },
+        "Write": {
+          "tokens": 137690,
+          "dollars": 2.065344,
+          "chars": 459068
+        },
+        "ExitPlanMode": {
+          "tokens": 225,
+          "dollars": 0.003375,
+          "chars": 345
+        },
+        "TaskCreate": {
+          "tokens": 4416,
+          "dollars": 0.066245,
+          "chars": 1610
+        },
+        "TaskUpdate": {
+          "tokens": 764,
+          "dollars": 0.011463,
+          "chars": 1104
+        },
+        "Edit": {
+          "tokens": 26346,
+          "dollars": 0.395176,
+          "chars": 45277
+        }
+      }
+    }
+  },
+  "read_file_whitespace": {
+    "line_returns_count": 256712,
+    "unnecessary_space_count": 2068319,
+    "total_chars": 11496101
+  },
+  "total": {
+    "request_count": 252,
+    "cost": {
+      "input": {
+        "tokens": 6068,
+        "dollars": 0.006738
+      },
+      "cache_write": {
+        "tokens": 762917,
+        "dollars": 2.427856
+      },
+      "cache_read": {
+        "tokens": 13219182,
+        "dollars": 3.83075
+      },
+      "output": {
+        "tokens": 277373,
+        "dollars": 3.874355
+      },
+      "total": {
+        "tokens": 14265540,
+        "dollars": 10.139709
+      }
+    },
+    "timing": {
+      "total_duration_ms": 3578366,
+      "avg_duration_ms": 14200
+    }
+  }
+}

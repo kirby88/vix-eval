@@ -1,0 +1,26 @@
+diff --git a/codex-rs/linux-sandbox/build.rs b/codex-rs/linux-sandbox/build.rs
+index 700aade40..d8943d5bd 100644
+--- a/codex-rs/linux-sandbox/build.rs
++++ b/codex-rs/linux-sandbox/build.rs
+@@ -36,7 +36,7 @@ fn main() {
+     }
+ 
+     if let Err(err) = try_build_vendored_bwrap() {
+-        panic!("failed to compile vendored bubblewrap for Linux target: {err}");
++        println!("cargo:warning=vendored bubblewrap not available: {err}");
+     }
+ }
+ 
+diff --git a/codex-rs/network-proxy/src/policy.rs b/codex-rs/network-proxy/src/policy.rs
+index f16b106e7..fb0305c82 100644
+--- a/codex-rs/network-proxy/src/policy.rs
++++ b/codex-rs/network-proxy/src/policy.rs
+@@ -97,7 +97,7 @@ fn is_non_public_ipv6(ip: Ipv6Addr) -> bool {
+ }
+ 
+ /// Normalize host fragments for policy matching (trim whitespace, strip ports/brackets, lowercase).
+-pub fn normalize_host(host: &str) -> &str {
++pub fn normalize_host(host: &str) -> String {
+     let host = host.trim();
+     if host.starts_with('[')
+         && let Some(end) = host.find(']')

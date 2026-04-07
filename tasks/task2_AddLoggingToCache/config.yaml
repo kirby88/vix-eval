@@ -1,0 +1,16 @@
+test_id: task2_AddLoggingToCache
+languages: [swift]
+description: >
+  Three variants of the same task: trivial → medium → hard. E.g. "add logging to one function" → "add structured logging across the package" → "add distributed tracing with context propagation." Measures how cost scales with complexity, a linear agent vs one that explores efficiently should diverge here.
+
+repository:
+  url: https://github.com/maquannene/Track
+  
+
+agents:
+  claude-code:
+    type: claude-code
+    version: latest
+  vix:
+    type: vix
+    version: latest
