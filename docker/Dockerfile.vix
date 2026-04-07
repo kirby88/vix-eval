@@ -4,7 +4,7 @@ COPY .vix-src /src
 WORKDIR /src
 RUN mkdir -p /out \
     && go build -o /out/vix ./cmd/vix \
-    && go build -o /out/vix-daemon ./cmd/vix-daemon
+    && go build -o /out/vixd ./cmd/vixd
 
 # ---- Runtime ----
 FROM node:20-bookworm
@@ -32,7 +32,7 @@ RUN pipx install mitmproxy && pipx ensurepath \
     && rm -rf /tmp/* /root/.cache
 
 COPY --from=builder /out/vix /usr/local/bin/vix
-COPY --from=builder /out/vix-daemon /usr/local/bin/vix-daemon
+COPY --from=builder /out/vixd /usr/local/bin/vixd
 
 EXPOSE 58000 8099
 

@@ -22,8 +22,8 @@ docker run --rm \
     bash -c "apt-get update -qq && apt-get install -y -qq gcc && \
              echo 'Building vix...' && \
              go build -o /out/vix ./cmd/vix && \
-             echo 'Building vix-daemon...' && \
-             go build -o /out/vix-daemon ./cmd/vix-daemon"
+             echo 'Building vixd...' && \
+             go build -o /out/vixd ./cmd/vixd"
 
 if [ $? -eq 0 ]; then
     echo ""
@@ -31,7 +31,7 @@ if [ $? -eq 0 ]; then
     echo "Binary info:"
     ls -lh "$VIX_BIN_STAGED/"
     file "$VIX_BIN_STAGED/vix"
-    file "$VIX_BIN_STAGED/vix-daemon"
+    file "$VIX_BIN_STAGED/vixd"
     rm -rf "$VIX_BIN_STAGED"
 else
     echo "❌ Build failed"

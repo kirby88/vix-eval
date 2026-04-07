@@ -10,12 +10,12 @@ if [ -d /staged-settings ]; then
     cp -r /staged-settings/. /root/.vix/
 fi
 
-# --- Start vix-daemon (after proxy so it inherits ANTHROPIC_BASE_URL) ---
-VIX_DAEMON_LOG="/output/vix-daemon.log"
-echo "Starting vix-daemon (workdir: /workspace) ..."
-vix-daemon > "$VIX_DAEMON_LOG" 2>&1 &
+# --- Start vixd (after proxy so it inherits ANTHROPIC_BASE_URL) ---
+VIX_DAEMON_LOG="/output/vixd.log"
+echo "Starting vixd (workdir: /workspace) ..."
+vixd > "$VIX_DAEMON_LOG" 2>&1 &
 VIX_DAEMON_PID=$!
-echo -e "  ${C_DIM}Daemon${C_RESET}    ${C_GREEN}on${C_RESET} ${C_DIM}|${C_RESET} PID ${VIX_DAEMON_PID} ${C_DIM}|${C_RESET} tail -f /output/vix-daemon.log"
+echo -e "  ${C_DIM}Daemon${C_RESET}    ${C_GREEN}on${C_RESET} ${C_DIM}|${C_RESET} PID ${VIX_DAEMON_PID} ${C_DIM}|${C_RESET} tail -f /output/vixd.log"
 echo -e "${C_CYAN}  ============================================${C_RESET}"
 echo ""
 

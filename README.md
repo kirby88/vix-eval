@@ -149,18 +149,18 @@ http://localhost:8099
 
 The UI lets you inspect all API traffic between the agent and Anthropic in real time — requests, responses, headers, and bodies. The port is configurable via `proxy.web_port` in the test config.
 
-## vix-daemon
+## vixd
 
-For `type: vix` agents, `vix-daemon` starts automatically in the background when the container launches. Its working directory is `/workspace` (the cloned repo).
+For `type: vix` agents, `vixd` starts automatically in the background when the container launches. Its working directory is `/workspace` (the cloned repo).
 
-Logs are written to `/output/vix-daemon.log` and persisted to the host alongside other artifacts:
+Logs are written to `/output/vixd.log` and persisted to the host alongside other artifacts:
 
 ```bash
 # Inside container
-tail -f /output/vix-daemon.log
+tail -f /output/vixd.log
 
 # From host
-tail -f tasks/<task_dir>/results/<agent_name>/<timestamp>/vix-daemon.log
+tail -f tasks/<task_dir>/results/<agent_name>/<timestamp>/vixd.log
 ```
 
 The daemon PID and log path are shown in the container banner at startup.
